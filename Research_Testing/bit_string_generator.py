@@ -1,2 +1,7 @@
 from random import randint
-bit_string = "".join([str(randint(0, 1)) for _ in range(2042)])
+
+def generate_string(length):
+    return "".join([str(randint(0, 1)) for _ in range(length)])
+
+if __name__ == "__main__":
+    print(generate_string(25))
