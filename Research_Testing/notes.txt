@@ -1,0 +1,3 @@
+Compress bits first with a normal bit reduction or pattern reduction method. Then diagonalize them into a grid for the picross reduction?
+Flip bits in each column and row to have the highest possible compressibility and decompressibility rating (come up with an algorithm for compressibility and decompressibility ratings)
+Instead of specifying single bits, maybe just specify their location on the grid since they can't be compressed, maybe the same with 2s
