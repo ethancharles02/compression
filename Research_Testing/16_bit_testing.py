@@ -48,5 +48,3 @@ if __name__ == "__main__":
     with open("Research_Testing\\research_test.txt", "w") as f:
         for _tuple in data:
             f.write("{}:\t\t{}\n".format(_tuple[1], _tuple[0]))
-
-    

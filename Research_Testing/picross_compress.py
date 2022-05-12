@@ -7,17 +7,25 @@ ROW_LENGTH = 5
 
 class bit_grid:
     def __init__(self, bit_list, row_length):
-        bits = "".join(bit_list).replace(" ", "")
-        
-        self.rows = len(bits) // row_length
-
+        bits = self.create_bit_string(bit_list)
+        if row_length > 0:
+            self.row_length = row_length
+        else:
+            raise(ValueError("Row length must be greater than zero!"))
+        self.num_rows = len(bits) // self.row_length
         # Initialize bit list
-        self.grid = []
+        self.grid = self.__create_grid(bits)
 
-        for y in range(self.rows):
-            self.grid.append([])
-            for x in range(row_length):
-                self.grid[y].append(bits[y * row_length + x])
+    def create_bit_string(self, bit_list):
+        return "".join(bit_list).replace(" ", "")
+
+    def __create_grid(self, bits):
+        grid = []
+        for y in range(self.num_rows):
+            grid.append([])
+            for x in range(self.row_length):
+                grid[y].append(bits[y * self.row_length + x])
+        return grid
     
     def compress(self):
         pass
