@@ -22,11 +22,11 @@ class TestCompressor(unittest.TestCase):
         self.assertRaises(FileNotFoundError, self.compressor.compress, "")
 
     def test_compressor_creates_compressed_file(self):
-        self.compressor.compress("".join([TEST_FILE_FOLDER,"\\random_bit_strings_1.txt"]))
-        self.assertTrue(os.path.exists("".join([TEST_FILE_FOLDER, "\\random_bit_strings_1.lor"])))
+        self.compressor.compress(f"{TEST_FILE_FOLDER}\\random_bit_strings_1.txt")
+        self.assertTrue(os.path.exists(f"{TEST_FILE_FOLDER}\\random_bit_strings_1.lor"))
 
     def test_reads_correct_chunk_size(self):
-        self.compressor.compress("".join([TEST_FILE_FOLDER,"\\random_bit_strings_1.txt"]))
+        self.compressor.compress(f"{TEST_FILE_FOLDER}\\random_bit_strings_1.txt")
         
     # def test_can_create_grid()
 
