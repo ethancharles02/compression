@@ -2,7 +2,8 @@ from re import T
 import unittest
 import compression
 import os.path
-TEST_FILE_FOLDER = "C:\\Users\\joshd\\Documents\\_College Classes\\2022 - Spring\\CSE 499\\compression\\Research_Testing\\random_string_files"
+# TEST_FILE_FOLDER = "C:\\Users\\joshd\\Documents\\_College Classes\\2022 - Spring\\CSE 499\\compression\\Research_Testing\\random_string_files"
+TEST_FILE_FOLDER = ""
 
 
 class TestCompressor(unittest.TestCase):
