@@ -105,7 +105,8 @@ class bit_grid:
         return str(bin(int(int_string) - offset))[2:]
 
 if __name__ == "__main__":
-    with open("Research_Testing/random_string_files/random_bit_strings_1.txt") as f:
+    # with open("Research_Testing/random_string_files/random_bit_strings_1.txt") as f:
+    with open("random_string_files/random_bit_strings_1.txt") as f:
         bitlist = f.read(25)
     
     grid = bit_grid(bitlist, ROW_LENGTH, COLUMN_HEIGHT)
