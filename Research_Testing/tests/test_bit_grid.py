@@ -1,3 +1,6 @@
+# Notes:
+# Test new compression
+
 import unittest
 
 from sys import path
@@ -19,6 +22,11 @@ class TestBit_Grid(unittest.TestCase):
         
     def test_grid_compression_all_1s(self):
         self.grid = bit_grid("1"*25, 5, 5)
-        self.assertEqual(self.grid.compress(),"1100b1100b1100b1100b1100c1100b1100b1100b1100b1100")
+        self.assertEqual(self.grid.compress(),"1101b1101b1101b1101b1101c1101b1101b1101b1101b1101")
         # 1 100 b 1 100 b 1 100 b 1 100 b 1 100
         # c 1 100 b 1 100 b 1 100 b 1 100 b 1 100
+    
+    def test_grid_compression_random(self):
+        self.grid = bit_grid("1001000000100000111011000", 5, 5)
+        self.assertEqual(self.grid.compress(),"11a1b1b11b111b110c11a1a1b110b11b11a1b1")
+
