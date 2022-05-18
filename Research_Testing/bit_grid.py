@@ -1,5 +1,6 @@
 # Notes:
 # Count number of row b delimiters until it == num_rows then switch to columns
+# Add function to optimize for compressibility and decompressibility
 
 from bit_string_generator import generate_string
 from constants import *
