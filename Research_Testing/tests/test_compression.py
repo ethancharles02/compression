@@ -3,7 +3,7 @@ from sys import path
 path.append("..")
 from compression import compressor
 import os.path
-TEST_FILE_FOLDER = "C:\\Users\\joshd\\Documents\\_College Classes\\2022 - Spring\\CSE 499\\compression\\Research_Testing\\random_string_files"
+TEST_FILE_FOLDER = "..\\..\\random_string_files"
 
 
 class TestCompressor(unittest.TestCase):
