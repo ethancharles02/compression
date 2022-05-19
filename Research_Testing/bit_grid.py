@@ -1,6 +1,7 @@
 # TODO
 # Count number of row b delimiters until it == num_rows then switch to columns
 # Finish compressibility by inverting the rating (subtract the value from the max compressibility size) and multiple the two ratings together?
+# Add tests for all functions
 
 from bit_string_generator import generate_string
 from constants import *
