@@ -2,6 +2,7 @@
 # Count number of row b delimiters until it == num_rows then switch to columns
 # Finish compressibility by inverting the rating (subtract the value from the max compressibility size) and multiple the two ratings together?
 # Add tests for all functions
+# Maybe add a mode that doesn't have symbol specifiers at the start of each column or row (default to 1). See if it changes much
 
 from bit_string_generator import generate_string
 from constants import *
