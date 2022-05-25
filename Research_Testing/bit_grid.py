@@ -37,13 +37,13 @@ class bit_grid(object):
         return x >= self.grid_width-1
 
     def fill_index_with(self, col, row, data):
-        self.grid[row-1][col-1] = data
+        self.grid[row][col] = data
 
     def get_row(self, row):
-        return self.grid[row-1]
+        return self.grid[row]
 
     def get_col(self, target_col):
-        result_col = [row[target_col-1] for row in self.grid]
+        result_col = [row[target_col] for row in self.grid]
         return result_col
     
     def print_grid(self):

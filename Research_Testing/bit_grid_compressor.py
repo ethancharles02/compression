@@ -7,13 +7,14 @@
 from bit_string_generator import generate_string
 from constants import *
 from math import floor, ceil, log2
+from bit_grid import bit_grid
 
 # NUM_COLUMNS = 16
 # NUM_ROWS = 64
 NUM_COLUMNS = 5
 NUM_ROWS = 5
 
-class bit_grid:
+class bit_grid_compressor:
     def __init__(self, bit_string:str, num_columns:int, num_rows:int):
         # bits = self.create_bit_string(bit_string)
         if num_columns > 0:
@@ -26,13 +27,16 @@ class bit_grid:
         else:
             raise(ValueError("Column height must be greater than zero!"))
 
-        self.grid_size = self.num_rows * self.num_columns
+        self.grid = bit_grid(self.num_rows, self.num_columns)
 
-        if self.grid_size > len(bit_string):
-            raise(ValueError(f"Grid must not be larger than the number of bits. Bits given was {len(bit_string)} while the size of the grid was {self.grid_size}"))
+        if self.grid.grid_area > len(bit_string):
+            raise(ValueError(f"Grid must not be larger than the number of bits. Bits given was {len(bit_string)} while the size of the grid was {self.grid.grid_area}"))
 
         # Initialize bit list
-        self.grid = self._create_grid(bit_string)
+        # self.grid = self._create_grid(bit_string)
+        leftover_bits = self.grid.fill_grid_with(bit_string)
+        if leftover_bits != None:
+            raise Exception("There were too many bits")
 
         # Create delimiters for rows and columns
         self._row_a_delimiter = "0" * self.get_num_bin_bits_for_dec(self.num_columns) + "10"
@@ -52,10 +56,6 @@ class bit_grid:
         # Find the worst case scenario for compression in number of bits
         self._max_row_compression_size = self._max_row_individual_bits + (self._max_row_individual_bits - 1) * self._row_a_delimiter_length
         self._max_column_compression_size = self._max_column_individual_bits + (self._max_column_individual_bits - 1) * self._column_a_delimiter_length
-
-    def print_grid(self):
-        for row in self.grid:
-            print(row)
 
     def convert_to_binary(self, num, offset=0) -> str:
         return str(bin(num - offset))[2:]
@@ -120,14 +120,11 @@ class bit_grid:
         return grid
 
     def _get_row_nums(self, row_num:int, symbol:str="1") -> tuple:
-        return (symbol, self._get_symbol_counts(self.grid[row_num], symbol))
+        return (symbol, self._get_symbol_counts(self.grid.get_row(row_num), symbol))
 
     def _get_column_nums(self, column_num, symbol="1") -> tuple:
-        bit_list = self._get_column(column_num)
+        bit_list = self.grid.get_col(column_num)
         return (symbol, self._get_symbol_counts(bit_list, symbol))
-    
-    def _get_column(self, column_num) -> list:
-        return [self.grid[i][column_num] for i in range(self.num_rows)]
 
     def _get_symbol_counts(self, iterable, symbol="1", type_conversion=str) -> list:
         num_list = []
@@ -182,10 +179,10 @@ if __name__ == "__main__":
     with open("random_string_files/random_bit_strings_1.txt") as f:
         bitlist = f.read(25)
     
-    grid = bit_grid(bitlist, NUM_COLUMNS, NUM_ROWS)
+    grid_compressor = bit_grid_compressor(bitlist, NUM_COLUMNS, NUM_ROWS)
 
-    grid.print_grid()
-    print(grid.compress())
-    print(grid._get_optimal_count_symbol(grid._get_column(0), False))
+    grid_compressor.grid.print_grid()
+    print(grid_compressor.compress())
+    print(grid_compressor._get_optimal_count_symbol(grid_compressor.grid.get_col(0), False))
     # grid._rate_compressibility()
     # grid._rate_decompressibility()

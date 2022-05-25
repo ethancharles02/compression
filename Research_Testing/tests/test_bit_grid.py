@@ -37,13 +37,13 @@ class Test_Bit_Grid(unittest.TestCase):
     def test_fill_row_1_col_1_with_0(self):
         _char = "0"
         self.base_grid[0][0] = _char
-        self.fiveByFive.fill_index_with(1,1,_char)
+        self.fiveByFive.fill_index_with(0,0,_char)
         self.assertEqual(self.fiveByFive.grid, self.base_grid)
 
     def test_fill_index_1_5_with_0(self):
         _char = "0"
         self.base_grid[4][0] = _char
-        self.fiveByFive.fill_index_with(1,5,_char)
+        self.fiveByFive.fill_index_with(0,4,_char)
         self.assertEqual(self.fiveByFive.grid, self.base_grid)
 
     def test_fill_grid_with_five_chars(self):
@@ -64,10 +64,10 @@ class Test_Bit_Grid(unittest.TestCase):
 
     def test_get_row(self):
         self.fiveByFive.fill_grid_with("0"*25)
-        self.assertEqual(self.fiveByFive.get_row(5), self.fiveByFive.grid[4])
+        self.assertEqual(self.fiveByFive.get_row(4), self.fiveByFive.grid[4])
 
     def test_get_col(self):
         self.fiveByFive.fill_grid_with(("0"*10)+("1"*15))
-        self.assertEqual(self.fiveByFive.get_col(5), (["0"]*2)+(['1']*3))
+        self.assertEqual(self.fiveByFive.get_col(4), (["0"]*2)+(['1']*3))
 
 

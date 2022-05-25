@@ -4,8 +4,8 @@
 import unittest
 
 from sys import path
+from Research_Testing.bit_grid_compressor import bit_grid_compressor
 path.append("..")
-from bit_grid_compressor import bit_grid
 
 from os import getcwd
 
@@ -15,19 +15,19 @@ class TestBit_Grid(unittest.TestCase):
         pass
 
     def test_grid_compression_all_0s(self):
-        self.grid = bit_grid("0"*25, 5, 5)
+        self.grid = bit_grid_compressor("0"*25, 5, 5)
         # 00010 is the "a" delimiter
         # 00011 is the "b" delimiter
         self.assertEqual(self.grid.compress(),"0000010100000101 1 00011 1 00011 1 00011 1 00011 1 00011 1 00011 1 00011 1 00011 1 00011 1 00011".replace(" ", ""))
         
     def test_grid_compression_all_1s(self):
-        self.grid = bit_grid("1"*25, 5, 5)
+        self.grid = bit_grid_compressor("1"*25, 5, 5)
         # 00010 is the "a" delimiter
         # 00011 is the "b" delimiter
         self.assertEqual(self.grid.compress(),"0000010100000101 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011".replace(" ", ""))
     
     def test_grid_compression_random(self):
-        self.grid = bit_grid("1001000000100000111011000", 5, 5)
+        self.grid = bit_grid_compressor("1001000000100000111011000", 5, 5)
         # 10010
         # 00000
         # 10000
