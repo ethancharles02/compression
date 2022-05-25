@@ -24,8 +24,9 @@ class TestBit_Grid(unittest.TestCase):
         self.grid = bit_grid_compressor("1"*25, 5, 5)
         # 00010 is the "a" delimiter
         # 00011 is the "b" delimiter
-        self.assertEqual(self.grid.compress(),"0000010100000101 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011".replace(" ", ""))
-    
+        # self.assertEqual(self.grid.compress(),"0000010100000101 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011 1101 00011".replace(" ", ""))
+        self.assertEqual(self.grid.compress(),"0000010100000101 0 00011 0 00011 0 00011 0 00011 0 00011 0 00011 0 00011 0 00011 0 00011 0 00011".replace(" ", ""))
+        
     def test_grid_compression_random(self):
         self.grid = bit_grid_compressor("1001000000100000111011000", 5, 5)
         # 10010
@@ -35,5 +36,4 @@ class TestBit_Grid(unittest.TestCase):
         # 11000
         # 00010 is the "a" delimiter
         # 00011 is the "b" delimiter
-        self.assertEqual(self.grid.compress(),"0000010100000101 11 00010 1 00011 1 00011 11 00011 111 00011 110 00011 11 00010 1 00010 1 00011 110 00011 11 00011 11 00010 1 00011 1 00011".replace(" ", ""))
-        
+        self.assertEqual(self.grid.compress(),"0000010100000101 1 1 00010 1 00011 1 00011 11 00011 111 00011 110 00011 11 00010 1 00010 1 00011 110 00011 11 00011 11 00010 1 00011 1 00011".replace(" ", ""))

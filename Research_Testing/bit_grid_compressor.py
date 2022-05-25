@@ -1,8 +1,8 @@
 # TODO
 # Count number of row b delimiters until it == num_rows then switch to columns
-# Finish compressibility by inverting the rating (subtract the value from the max compressibility size) and multiple the two ratings together?
 # Add tests for all functions
 # Maybe add a mode that doesn't have symbol specifiers at the start of each column or row (default to 1). See if it changes much
+# Prioritize decompressibility to a certain level (finish decompression to figure this out) This could mean that a certain percentage needs to be reached
 
 from bit_string_generator import generate_string
 from constants import *
@@ -70,13 +70,13 @@ class bit_grid_compressor:
         # Converting rows and columns to their condensed numbers in binary
         rows = []
         for y in range(self.num_rows):
-            data, num_list = self._get_row_nums(y)
-            rows.append((data, [self.convert_to_binary(number) for number in num_list]))
+            symbol, num_list = self._get_optimal_counts(self.grid.get_row(y), True)
+            rows.append((symbol, [self.convert_to_binary(number) for number in num_list]))
 
         columns = []
         for x in range(self.num_columns):
-            data, num_list = self._get_column_nums(x)
-            columns.append((data, [self.convert_to_binary(number) for number in num_list]))
+            symbol, num_list = self._get_optimal_counts(self.grid.get_col(x), False)
+            columns.append((symbol, [self.convert_to_binary(number) for number in num_list]))
         
         # Columns and rows with the delimited a's between numbers
         compressed_rows_list = [self._row_a_delimiter.join(row[1]) for row in rows]
@@ -144,35 +144,37 @@ class bit_grid_compressor:
         return num_list
 
     def _rate_decompressibility(self, row_or_column_nums:list, is_row:bool = True) -> int:
+        # Divides the number of given spaces (including spacers) by the total number of spaces
         part_1 = sum(row_or_column_nums) + len(row_or_column_nums) - 1
         part_2 = part_1 / (self.num_columns if is_row else self.num_rows)
 
-        print(part_2)
-        return part_2
+        print(1 - part_2)
+        return 1 - part_2
 
     def _rate_compressibility(self, row_or_column_nums:list, is_row) -> int:
+        # Returns the number of bits it would take to compress given row or column
         part_1 = (self._row_a_delimiter_length if is_row else self._column_a_delimiter_length) * (len(row_or_column_nums) - 1)
-        print(row_or_column_nums)
         part_2 = sum([self.get_num_bin_bits_for_dec(num) for num in row_or_column_nums])
         final_length = part_1 + part_2
 
         print(final_length)
-        return final_length
+        return (final_length / (self._max_row_compression_size if is_row else self._max_column_compression_size))
 
 
-    def _get_optimal_count_symbol(self, row_or_column:list, is_row:bool = True) -> str:
+    def _get_optimal_counts(self, row_or_column:list, is_row:bool = True) -> str:
+        # Gets optimal count and symbol, returns the symbol first then the counts
         one_symbol_counts = self._get_symbol_counts(row_or_column, "1", int)
-        one_rating = self._rate_compressibility(one_symbol_counts, is_row) +\
+        one_rating = self._rate_compressibility(one_symbol_counts, is_row) *\
                      self._rate_decompressibility(one_symbol_counts, is_row)
 
         zero_symbol_counts = self._get_symbol_counts(row_or_column, "0", int)
-        zero_rating = self._rate_compressibility(zero_symbol_counts, is_row) +\
+        zero_rating = self._rate_compressibility(zero_symbol_counts, is_row) *\
                       self._rate_decompressibility(zero_symbol_counts, is_row)
 
         # zero_rating = self._rate_compressibility(row_or_column)
         # one_rating = self._rate_compressibility(row_or_column)
         
-        return "0" if zero_rating > one_rating else "1"
+        return ("0", zero_symbol_counts) if zero_rating < one_rating else ("1", one_symbol_counts)
 
 if __name__ == "__main__":
     # with open("Research_Testing/random_string_files/random_bit_strings_1.txt") as f:
@@ -183,6 +185,8 @@ if __name__ == "__main__":
 
     grid_compressor.grid.print_grid()
     print(grid_compressor.compress())
-    print(grid_compressor._get_optimal_count_symbol(grid_compressor.grid.get_col(0), False))
+
+    print(grid_compressor._get_optimal_counts(["1", "1", "1", "1", "1"], True))
+    print(grid_compressor._max_row_compression_size, grid_compressor._max_column_compression_size)
     # grid._rate_compressibility()
     # grid._rate_decompressibility()
