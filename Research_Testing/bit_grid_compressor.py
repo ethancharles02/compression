@@ -3,6 +3,8 @@
 # Add tests for all functions
 # Maybe add a mode that doesn't have symbol specifiers at the start of each column or row (default to 1). See if it changes much
 # Prioritize decompressibility to a certain level (finish decompression to figure this out) This could mean that a certain percentage needs to be reached
+# Add functionality for a file to be compressed in multiple grids
+# Add 1 to the optimization ratings so that 0 doesn't adversely affect them? add conditional for 0 on decompression since it is actually very decompressible when there is no information
 
 from bit_string_generator import generate_string
 from constants import *
