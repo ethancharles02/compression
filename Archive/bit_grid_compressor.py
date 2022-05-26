@@ -4,7 +4,6 @@
 # Maybe add a mode that doesn't have symbol specifiers at the start of each column or row (default to 1). See if it changes much
 # Prioritize decompressibility to a certain level (finish decompression to figure this out) This could mean that a certain percentage needs to be reached
 # Add functionality for a file to be compressed in multiple grids
-# Add 1 to the optimization ratings so that 0 doesn't adversely affect them? add conditional for 0 on decompression since it is actually very decompressible when there is no information
 
 from bit_string_generator import generate_string
 from constants import *
@@ -13,12 +12,11 @@ from bit_grid import bit_grid
 
 # NUM_COLUMNS = 16
 # NUM_ROWS = 64
-NUM_COLUMNS = 5
-NUM_ROWS = 5
+NUM_COLUMNS = 4096
+NUM_ROWS = 4096
 
 class bit_grid_compressor:
     def __init__(self, bit_string:str, num_columns:int, num_rows:int):
-        # bits = self.create_bit_string(bit_string)
         if num_columns > 0:
             self.num_columns = num_columns
         else:
@@ -35,7 +33,6 @@ class bit_grid_compressor:
             raise(ValueError(f"Grid must not be larger than the number of bits. Bits given was {len(bit_string)} while the size of the grid was {self.grid.grid_area}"))
 
         # Initialize bit list
-        # self.grid = self._create_grid(bit_string)
         leftover_bits = self.grid.fill_grid_with(bit_string)
         if leftover_bits != None:
             raise Exception("There were too many bits")
@@ -44,12 +41,10 @@ class bit_grid_compressor:
         self._row_a_delimiter = "0" * self.get_num_bin_bits_for_dec(self.num_columns) + "10"
         self._row_b_delimiter = "0" * self.get_num_bin_bits_for_dec(self.num_columns) + "11"
         self._row_a_delimiter_length = len(self._row_a_delimiter)
-        # self._row_b_delimiter_length = len(self._row_b_delimiter)
 
         self._column_a_delimiter = "0" * self.get_num_bin_bits_for_dec(self.num_rows) + "10"
         self._column_b_delimiter = "0" * self.get_num_bin_bits_for_dec(self.num_rows) + "11"
         self._column_a_delimiter_length = len(self._column_a_delimiter)
-        
 
         # Find the maximum numbers of countable symbols in a row or column
         self._max_row_individual_bits = ceil(self.num_columns / 2)
@@ -150,7 +145,6 @@ class bit_grid_compressor:
         part_1 = sum(row_or_column_nums) + len(row_or_column_nums) - 1
         part_2 = part_1 / (self.num_columns if is_row else self.num_rows)
 
-        print(1 - part_2)
         return 1 - part_2
 
     def _rate_compressibility(self, row_or_column_nums:list, is_row) -> int:
@@ -159,7 +153,6 @@ class bit_grid_compressor:
         part_2 = sum([self.get_num_bin_bits_for_dec(num) for num in row_or_column_nums])
         final_length = part_1 + part_2
 
-        print(final_length)
         return (final_length / (self._max_row_compression_size if is_row else self._max_column_compression_size))
 
 
@@ -173,22 +166,17 @@ class bit_grid_compressor:
         zero_rating = self._rate_compressibility(zero_symbol_counts, is_row) *\
                       self._rate_decompressibility(zero_symbol_counts, is_row)
 
-        # zero_rating = self._rate_compressibility(row_or_column)
-        # one_rating = self._rate_compressibility(row_or_column)
-        
         return ("0", zero_symbol_counts) if zero_rating < one_rating else ("1", one_symbol_counts)
-
 if __name__ == "__main__":
     # with open("Research_Testing/random_string_files/random_bit_strings_1.txt") as f:
-    with open("random_string_files/random_bit_strings_1.txt") as f:
+    with open("../Research_Testing/random_string_files/random_bit_strings_1.txt") as f:
         bitlist = f.read(25)
     
-    grid_compressor = bit_grid_compressor(bitlist, NUM_COLUMNS, NUM_ROWS)
+    # grid_compressor = bit_grid_compressor(bitlist, NUM_COLUMNS, NUM_ROWS)
+    grid_compressor = bit_grid_compressor(generate_string(NUM_COLUMNS*NUM_ROWS), NUM_COLUMNS, NUM_ROWS)
+    print(len(grid_compressor.compress()))
 
-    grid_compressor.grid.print_grid()
-    print(grid_compressor.compress())
+    # grid_compressor.grid.print_grid()
 
-    print(grid_compressor._get_optimal_counts(["1", "1", "1", "1", "1"], True))
-    print(grid_compressor._max_row_compression_size, grid_compressor._max_column_compression_size)
     # grid._rate_compressibility()
     # grid._rate_decompressibility()
