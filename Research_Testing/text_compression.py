@@ -1,24 +1,63 @@
 # TODO
-# Continue TDD
+# Add docstrings
 
 class Text_Compressor(object):
-    def __init__(self):
-        self.data = None
+    def __init__(self, look_ahead:int):
+        self.look_ahead = look_ahead
+        self.data = []
+        self.potential_ref_dict = {}
+        self.potential_ref_list = []
 
     def compress(self, string:str):
-        self.data = string.split(" ")
-        if len(self.data) <= 1:
-            pass
-        elif self.data[0] == self.data[1]:
-            if len(self.data[0]) > 2:
-                self.data[1] = "<1"
+        # Add escape characters
+        string = string.replace("<","~<")
+        # Split the string into a list
+        new_data = string.split(" ")
+        # Prepend the new list of strings onto the old list
+        self.data = new_data + self.data
+        # Update the reference dictionary indexes to account for the length of the new list
+        self._update_dict_ref_indexes(len(new_data))
         
-        self.data = " ".join(self.data)
+        # Set the index for moving backwards through the new data
+        i = len(new_data) - 1
+        for item in reversed(new_data):
+            if self._item_should_be_referenced(item):
+                # If there is a current word in the dictionary, replace old word with a reference
+                if item in self.potential_ref_dict:
+                    ref_loc = self.potential_ref_dict[item]
+                    self._update_data_at(ref_loc, ref_loc - i)
+                self._add_item_to_potential_refs(i, item)
+            self._clean_potential_refs(i)
+            i -= 1
 
+    def _clean_potential_refs(self, curr_index):
+        if self.potential_ref_list:
+            old_index, old_value = self.potential_ref_list[0]
+            if old_index - curr_index >= self.look_ahead:
+                self.potential_ref_dict.pop(old_value)
+                self.potential_ref_list.pop(0)
+
+    def _add_item_to_potential_refs(self, index, value):
+        self.potential_ref_dict[value] = index
+        self.potential_ref_list.append((index, value))
+
+    def _item_should_be_referenced(self, item):
+        return len(item) > 2
+
+    def _update_data_at(self, index:int, ref_dist):
+        self.data[index] = f"<{ref_dist}"
+
+    def _update_dict_ref_indexes(self, num:int):
+        for item in self.potential_ref_dict.keys():
+            self.potential_ref_dict[item] += num
+        
     def get_compressed_data(self):
-        return self.data
+        self.output = " ".join(self.data)
+        self.data.clear()
+        self.potential_ref_dict.clear()
+        return self.output
         
 if __name__ == "__main__":
     compressor = Text_Compressor()
-    compressor.compress("  ")
+    compressor.compress(" ")
     print(compressor.get_compressed_data())
