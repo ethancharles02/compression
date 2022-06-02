@@ -1,4 +1,3 @@
-from bz2 import compress
 import unittest
 from sys import path
 path.append("..")
@@ -7,7 +6,7 @@ from text_compression import Text_Compressor
 # TEST_FILE_FOLDER = "..\\random_string_files"
 
 
-class TestCompressor(unittest.TestCase):
+class TestTextCompression(unittest.TestCase):
     def setUp(self):
         self.compressor = Text_Compressor(5)
 
@@ -89,3 +88,30 @@ class TestCompressor(unittest.TestCase):
         string = "word n1 n2 n3 n4 n5 word"
         self.compressor.compress(string)
         self.assertEqual(self.compressor.get_compressed_data(), string)
+
+    def test_get_look_ahead_value(self):
+        self.assertEqual(self.compressor.look_ahead, self.compressor._look_ahead)
+
+    def test_set_look_ahead_value(self):
+        x = 10
+        self.compressor.look_ahead = x
+        self.assertEqual(self.compressor._look_ahead, x)
+
+    def test_set_min_ref_length_when_look_ahead_is_reset(self):
+        self.compressor.look_ahead = 300
+        self.assertEqual(self.compressor._min_reference_length, 4)
+
+    def test_look_ahead_ignores_small_string(self):
+        self.compressor.look_ahead = 5
+        string = "www n1 www n1 w n3 w n4 word n5 word"
+        expected_string = "www n1 <2 n1 w n3 w n4 word n5 <2"
+        self.compressor.compress(string)
+        self.assertEqual(self.compressor.get_compressed_data(), expected_string)
+
+    def test_look_ahead_change_after_compression(self):
+        self.test_look_ahead_ignores_small_string()
+        self.compressor.look_ahead = 10
+        string = "www n1 www n1 w n3 w n4 word n5 word"
+        expected_string = "www n1 www n1 w n3 w n4 word n5 <2"
+        self.compressor.compress(string)
+        self.assertEqual(self.compressor.get_compressed_data(), expected_string)

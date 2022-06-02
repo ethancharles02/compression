@@ -3,7 +3,8 @@
 
 class Text_Compressor(object):
     def __init__(self, look_ahead:int):
-        self.look_ahead = look_ahead
+        self._look_ahead = look_ahead
+        self._update_min_ref_length()
         self.data = []
         self.potential_ref_dict = {}
         self.potential_ref_list = []
@@ -30,11 +31,15 @@ class Text_Compressor(object):
             self._clean_potential_refs(i)
             i -= 1
 
+    def _update_min_ref_length(self):
+        self._min_reference_length = len(str(self._look_ahead)) + 1
+
     def _clean_potential_refs(self, curr_index):
         if self.potential_ref_list:
             old_index, old_value = self.potential_ref_list[0]
             if old_index - curr_index >= self.look_ahead:
-                self.potential_ref_dict.pop(old_value)
+                if self.potential_ref_dict[old_value] == old_index:
+                    self.potential_ref_dict.pop(old_value)
                 self.potential_ref_list.pop(0)
 
     def _add_item_to_potential_refs(self, index, value):
@@ -42,7 +47,7 @@ class Text_Compressor(object):
         self.potential_ref_list.append((index, value))
 
     def _item_should_be_referenced(self, item):
-        return len(item) > 2
+        return len(item) > self._min_reference_length
 
     def _update_data_at(self, index:int, ref_dist):
         self.data[index] = f"<{ref_dist}"
@@ -50,7 +55,20 @@ class Text_Compressor(object):
     def _update_dict_ref_indexes(self, num:int):
         for item in self.potential_ref_dict.keys():
             self.potential_ref_dict[item] += num
+    
+    def _get_look_ahead(self):
+        return self._look_ahead
         
+    def _set_look_ahead(self, value):
+        self._look_ahead = value
+        self._update_min_ref_length()
+
+    look_ahead = property(
+        fget=_get_look_ahead,
+        fset=_set_look_ahead,
+        doc="Look Ahead Property"
+    )
+
     def get_compressed_data(self):
         self.output = " ".join(self.data)
         self.data.clear()

@@ -1,8 +1,13 @@
 # TODO
 # Get sentence grammar from discrete math code
 # Create a smaller list for each set of words
+
 from random import *
 from sys import *
+from math import floor
+
+TEXTSTRING_FOLDER_PATH = "../random_textstring_files"
+FILE_PATTERN = "textstring_%1words_%2lines.txt"
 
 lineNum = 0
 
@@ -15,6 +20,7 @@ verbSingular = [line.rstrip('\n') for line in open('verbSingular.txt')]
 verbPresent = [line.rstrip('\n') for line in open('verbPresent.txt')]
 verbPast = [line.rstrip('\n') for line in open('verbPast.txt')]
 verbSimplePast = [line.rstrip('\n') for line in open('verbSimplePast.txt')]
+ARTICLES = ["the", "a", "an"]
 
 sentForm = [line.rstrip('\n') for line in open('sentenceFormats.txt')]
 
@@ -50,12 +56,44 @@ def randVerbSimplePast():
 def randAdjective():
     randomAdjective = adjective[randint(0, len(adjective) - 1)]
     return randomAdjective
+
+# def randArticle():
+#     randomArticle = ARTICLES[randint(0, len(ARTICLES) - 1)]
+#     return randomArticle
   
 function_list = [randNoun, randVerb, randVerbSingular, randVerbPresent, randVerbPast, randVerbSimplePast, randAdjective]
 
+def randWordFuntion():
+    randomFuntion = function_list[randint(0, len(function_list) - 1)]
+    return randomFuntion
+
+def create_textstring_file(num_words_per_line, num_lines, percentage_duplicate = 0.5):
+    pool_size = floor(num_words_per_line * (1 - percentage_duplicate)) + 1
+    pool = [randWordFuntion()() for _ in range(pool_size)] + ARTICLES
+    with open(f"{TEXTSTRING_FOLDER_PATH}/{FILE_PATTERN.replace('%1', str(num_words_per_line)).replace('%2', str(num_lines))}", "w") as file:
+        for _ in range(num_lines):
+            for _ in range(num_words_per_line):
+                file.write(choice(pool) + " ")
+            file.write("\n")
+
 if __name__ == "__main__":
-    sentence_length = 10
-    print(" ".join([choice(function_list)() for _ in range(sentence_length)]))
+    create_textstring_file(5, 10, 0.5)
+    # pool_size = 15
+    # pool = []
+    # for function in function_list:
+    #     for _ in range(pool_size):
+    #         pool.append(function())
+    
+    
+    # pool = [randWordFuntion()() for _ in range(pool_size)] + ARTICLES
+
+    # pool = pool + ARTICLES
+    
+    # pools = [[function() for _ in range(pool_size)] + ARTICLES for function in function_list]
+    # print(pools)
+    # print(pool)
+    # sentence_length = 10
+    # print(" ".join([choice(function_list)() for _ in range(sentence_length)]))
     
 # if False:
 #   for i in range(10):
