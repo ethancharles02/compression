@@ -1,34 +1,116 @@
 # TODO
 # Finish setting up tests between files
-# Add a dump folder that will get deleted between every test (be careful when deleting all the files)
-# Compress a file and output to the dump folder, check the dumped file with the reference file to test equality
+# Add comments to add any necessary context to tests (especially the folder one)
+# Maybe make a custom function for replacing the file extension
 
 import unittest
 
 from sys import path
 path.append("..")
-from os import getcwd
+from os import getcwd, listdir, remove as os_remove, path as os_path
 
 from compression import compressor
 
 TXT_FOLDER = "Research_Testing/tests/compressor_text_files"
 TST_FOLDER = f"{TXT_FOLDER}/test_files"
 REF_FOLDER = f"{TXT_FOLDER}/reference_files"
+DUMP_FOLDER = f"{TXT_FOLDER}/dump_files"
 
 class TestCompressor(unittest.TestCase):
     def setUp(self):
-        self.compressor = compressor(20)
+        self.compressor = compressor(24, 5)
+        self.compressor.input_folder = TST_FOLDER
+        self.compressor.output_folder = DUMP_FOLDER
     
     def tearDown(self):
-        print("test")
+        for f in listdir(DUMP_FOLDER):
+            os_remove(os_path.join(DUMP_FOLDER, f))
 
-    def are_files_equal_to_each_other(self, tst_path, ref_path):
-        with open(f"{TST_FOLDER}/{tst_path}") as f:
+    def assert_files_in_test_folders_are_equal(self, tst_filename, ref_filename):
+        with open(f"{DUMP_FOLDER}/{tst_filename}") as f:
             test_list = list(f)
-        with open(f"{REF_FOLDER}/{ref_path}") as f:
+        with open(f"{REF_FOLDER}/{ref_filename}") as f:
             ref_list = list(f)
         self.assertListEqual(test_list, ref_list)
 
     def test_empty_file_compresses(self):
         filename = "text_empty.txt"
-        self.are_files_equal_to_each_other(filename, filename)
+        self.compressor.run(filename)
+        output_file = filename.replace(".txt", ".lor")
+        self.assert_files_in_test_folders_are_equal(output_file, output_file)
+
+    def test_generic_file_compresses(self):
+        filename = "text_generic.txt"
+        self.compressor.run(filename)
+        output_file = filename.replace(".txt", ".lor")
+        self.assert_files_in_test_folders_are_equal(output_file, output_file)
+
+    def test_wont_compress_single_word_out_of_chunk_range(self):
+        filename = "text_out_of_chunk_range.txt"
+        self.compressor.run(filename)
+        output_file = filename.replace(".txt", ".lor")
+        self.assert_files_in_test_folders_are_equal(output_file, output_file)
+
+    def test_compress_single_word_when_on_the_chunk_border(self):
+        filename = "text_on_chunk_border.txt"
+        self.compressor.run(filename)
+        output_file = filename.replace(".txt", ".lor")
+        self.assert_files_in_test_folders_are_equal(output_file, output_file)
+
+    def test_compress_three_chunks(self):
+        filename = "text_three_chunks.txt"
+        self.compressor.run(filename)
+        output_file = filename.replace(".txt", ".lor")
+        self.assert_files_in_test_folders_are_equal(output_file, output_file)
+
+# Write test for newlines
+
+class TestCompressor_folder_functionality(unittest.TestCase):
+    def assert_files_are_equal(self, tst_filename, ref_filename):
+        with open(tst_filename) as f:
+            test_list = list(f)
+        with open(ref_filename) as f:
+            ref_list = list(f)
+        self.assertListEqual(test_list, ref_list)
+
+    @classmethod
+    def setUpClass(cls):
+        generic_text = "test2 n1 n2 test2"
+        generic_compressed_text = "test2 n1 n2 <3"
+        cls.in_file = "__test_folder_functionality.txt"
+        cls.ref_file = "__ref_test_folder_functionality.lor"
+        with open(cls.in_file, "w") as f:
+            f.write(generic_text)
+        with open(cls.ref_file, "w") as f:
+            f.write(generic_compressed_text)
+
+    @classmethod
+    def tearDownClass(cls):
+        os_remove(cls.in_file)
+        os_remove(cls.ref_file)
+
+    def setUp(self):
+        self.compressor = compressor(24, 5)
+        self.result_file = "__test_folder_functionality.lor"
+
+    def tearDown(self):
+        if os_path.exists(self.result_file):
+            os_remove(self.result_file)
+
+    def test_compress_no_input_folder(self):
+        self.compressor.output_folder = DUMP_FOLDER
+
+        self.compressor.run(self.in_file, self.result_file)
+        self.assert_files_are_equal(f"{DUMP_FOLDER}/{self.result_file}", self.ref_file)
+        os_remove(f"{DUMP_FOLDER}/{self.result_file}")
+
+    def test_compress_no_output_folder(self):
+        self.compressor.input_folder = TST_FOLDER
+        filename = "text_generic.txt"
+
+        self.compressor.run(filename, self.result_file)
+        self.assert_files_are_equal(self.result_file, self.ref_file)
+
+    def test_compress_no_io_folders(self):
+        self.compressor.run(self.in_file, self.result_file)
+        self.assert_files_are_equal(self.result_file, self.ref_file)
