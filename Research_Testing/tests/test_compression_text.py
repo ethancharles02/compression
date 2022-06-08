@@ -2,8 +2,6 @@ import unittest
 from sys import path
 path.append("..")
 from text_compression import Text_Compressor
-# import os.path
-# TEST_FILE_FOLDER = "..\\random_string_files"
 
 
 class TestTextCompression(unittest.TestCase):

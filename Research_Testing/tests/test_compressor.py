@@ -9,7 +9,7 @@ from sys import path
 path.append("..")
 from os import getcwd, listdir, remove as os_remove, path as os_path
 
-from compression import compressor
+from compressor import compressor
 
 TXT_FOLDER = "Research_Testing/tests/compressor_text_files"
 TST_FOLDER = f"{TXT_FOLDER}/test_files"
@@ -26,7 +26,9 @@ class TestCompressor(unittest.TestCase):
         for f in listdir(DUMP_FOLDER):
             os_remove(os_path.join(DUMP_FOLDER, f))
 
-    def assert_files_in_test_folders_are_equal(self, tst_filename, ref_filename):
+    def assert_files_in_test_folders_are_equal(self, tst_filename, ref_filename = None):
+        if ref_filename == None:
+            ref_filename = tst_filename
         with open(f"{DUMP_FOLDER}/{tst_filename}") as f:
             test_list = list(f)
         with open(f"{REF_FOLDER}/{ref_filename}") as f:
@@ -37,33 +39,46 @@ class TestCompressor(unittest.TestCase):
         filename = "text_empty.txt"
         self.compressor.run(filename)
         output_file = filename.replace(".txt", ".lor")
-        self.assert_files_in_test_folders_are_equal(output_file, output_file)
+        self.assert_files_in_test_folders_are_equal(output_file)
 
     def test_generic_file_compresses(self):
         filename = "text_generic.txt"
         self.compressor.run(filename)
         output_file = filename.replace(".txt", ".lor")
-        self.assert_files_in_test_folders_are_equal(output_file, output_file)
+        self.assert_files_in_test_folders_are_equal(output_file)
 
     def test_wont_compress_single_word_out_of_chunk_range(self):
         filename = "text_out_of_chunk_range.txt"
         self.compressor.run(filename)
         output_file = filename.replace(".txt", ".lor")
-        self.assert_files_in_test_folders_are_equal(output_file, output_file)
+        self.assert_files_in_test_folders_are_equal(output_file)
 
     def test_compress_single_word_when_on_the_chunk_border(self):
         filename = "text_on_chunk_border.txt"
         self.compressor.run(filename)
         output_file = filename.replace(".txt", ".lor")
-        self.assert_files_in_test_folders_are_equal(output_file, output_file)
+        self.assert_files_in_test_folders_are_equal(output_file)
 
     def test_compress_three_chunks(self):
         filename = "text_three_chunks.txt"
         self.compressor.run(filename)
         output_file = filename.replace(".txt", ".lor")
-        self.assert_files_in_test_folders_are_equal(output_file, output_file)
-
-# Write test for newlines
+        self.assert_files_in_test_folders_are_equal(output_file)
+    
+    def test_compress_with_newlines(self):
+        # AssertionError: Lists differ: ['test2 n1 n2\n', 'test2 n1 test n3\n', 'n4 n5 <3'] != ['test2 n1 n2\n', '<3 <3 test n3\n', 'n4 n5 <4']
+        # First differing element 1:
+        # 'test2 n1 test n3\n'
+        # '<3 <3 test n3\n'
+        # - ['test2 n1 n2\n', 'test2 n1 test n3\n', 'n4 n5 <3']
+        # ?                        ---------                ^
+        # + ['test2 n1 n2\n', '<3 <3 test n3\n', 'n4 n5 <4']
+        # ?                    ++++++                    ^               ++++++                   ^^
+        self.compressor.chunk_size = 200
+        filename = "text_with_newlines.txt"
+        self.compressor.run(filename)
+        output_file = filename.replace(".txt", ".lor")
+        self.assert_files_in_test_folders_are_equal(output_file)
 
 class TestCompressor_folder_functionality(unittest.TestCase):
     def assert_files_are_equal(self, tst_filename, ref_filename):
