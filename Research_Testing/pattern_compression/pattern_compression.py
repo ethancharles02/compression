@@ -136,6 +136,7 @@ class Pattern_Compressor(object):
                 if number_of_patterns >= 1:
                     if self._will_compression_compress(string_slice, number_of_patterns):
                         self._compress_string_patterns(string_position, string_slice, number_of_patterns)
+                        break
                 look_ahead -= 1
             string_position += 1
             look_ahead = self._max_look_ahead

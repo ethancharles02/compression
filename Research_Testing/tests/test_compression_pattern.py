@@ -101,3 +101,5 @@ class TestPatternCompression(unittest.TestCase):
 
     def test_compress_dynamic_pattern_bit_allocation(self):
         pass
+
+    # Add test for compressible string inside of a larger compressible string
