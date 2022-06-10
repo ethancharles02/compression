@@ -1,5 +1,2 @@
-# Dedicated space in bits for the start of a compressed file
-# DEDICATED_ROW_SPACE = 8
-# DEDICATED_COLUMN_SPACE = 8
-DEDICATED_ROW_SPACE = 13
-DEDICATED_COLUMN_SPACE = 13
+# Since 0 will never be an occurrence of a pattern, 0 in binary can be 1
+PATTERN_BIT_OFFSET = 1

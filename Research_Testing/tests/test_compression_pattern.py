@@ -9,7 +9,7 @@ from pattern_compression.pattern_compression import Pattern_Compressor
 
 class TestPatternCompression(unittest.TestCase):
     def setUp(self):
-        self.compressor = Pattern_Compressor(max_look_ahead = 10, raw_delimiter = "111", pattern_count_num_bits = 3)
+        self.compressor = Pattern_Compressor(max_look_ahead = 15, raw_delimiter = "111", pattern_count_num_bits = 3, pattern_bit_offset = 1)
     
     def test_compress_empty_string(self):
         self.compressor.compress("")
@@ -23,18 +23,18 @@ class TestPatternCompression(unittest.TestCase):
         self.assertEqual(self.compressor.get_compressed_data(), "0")
 
     def test_compressor_pattern_count_bits_setter_getter(self):
-        self.assertEqual(self.compressor.is_pattern_count_limited, True)
-        self.assertEqual(self.compressor.pattern_count_bits, 3)
+        self.assertEqual(self.compressor._is_pattern_count_limited, True)
+        self.assertEqual(self.compressor.pattern_count_num_bits, 3)
 
-        self.compressor.pattern_count_bits = None
+        self.compressor.pattern_count_num_bits = None
 
-        self.assertEqual(self.compressor.is_pattern_count_limited, False)
-        self.assertIsNone(self.compressor.pattern_count_bits)
+        self.assertEqual(self.compressor._is_pattern_count_limited, False)
+        self.assertIsNone(self.compressor.pattern_count_num_bits)
 
-        self.compressor.pattern_count_bits = 10
+        self.compressor.pattern_count_num_bits = 10
 
-        self.assertEqual(self.compressor.is_pattern_count_limited, True)
-        self.assertEqual(self.compressor.pattern_count_bits, 10)
+        self.assertEqual(self.compressor._is_pattern_count_limited, True)
+        self.assertEqual(self.compressor.pattern_count_num_bits, 10)
     
     def test_compress_adds_bits_to_one_existing_delimiter_strings(self):
         self.compressor.compress("111")
@@ -63,25 +63,41 @@ class TestPatternCompression(unittest.TestCase):
         self.assertEqual(self.compressor._delimiter_length, 5)
 
     def test_compressor_delimiter_costs_change_as_necessary(self):
-        self.assertEqual(self.compressor.delimiter_cost, 4*2)
+        self.assertEqual(self.compressor._delimiter_cost, 4*2)
 
-        self.compressor.pattern_count_bits = None
-        self.assertEqual(self.compressor.delimiter_cost, 4*3)
+        self.compressor.pattern_count_num_bits = None
+        self.assertEqual(self.compressor._delimiter_cost, 4*3)
 
-        self.compressor.pattern_count_bits = 10
-        self.assertEqual(self.compressor.delimiter_cost, 4*2)
+        self.compressor.pattern_count_num_bits = 10
+        self.assertEqual(self.compressor._delimiter_cost, 4*2)
 
         self.compressor.raw_delimiter = "1111"
-        self.assertEqual(self.compressor.delimiter_cost, 5*2)
+        self.assertEqual(self.compressor._delimiter_cost, 5*2)
 
-        self.compressor.pattern_count_bits = None
-        self.assertEqual(self.compressor.delimiter_cost, 5*3)
+        self.compressor.pattern_count_num_bits = None
+        self.assertEqual(self.compressor._delimiter_cost, 5*3)
 
-    # def test_compress_one_pattern_with_internal_patterns_that_shouldnt_compress(self):
-    #     self.compressor.compress("100110001001 100110001001".replace(" ", ""))
-    #     self.assertEqual(self.compressor.get_compressed_data(), "1111 100110001001 1111 000".replace(" ", ""))
+    def test_compress_one_pattern_with_internal_patterns_that_shouldnt_compress(self):
+        self.compressor.compress("100110001001 100110001001".replace(" ", ""))
+        self.assertEqual(self.compressor.get_compressed_data(), "1111 100110001001 1111 000".replace(" ", ""))
 
-    # # This wouldn't normally compress if we were counting based on the original string
-    # def test_compress_one_pattern_with_delimiter_patterns(self):
-    #     self.compressor.compress("100111001001 100111001001".replace(" ", ""))
-    #     self.assertEqual(self.compressor.get_compressed_data(), "1111 1001110001001 1111 000".replace(" ", ""))
+    def test_compress_one_pattern_with_delimiter_patterns(self):
+        self.compressor.compress("100111001001 100111001001".replace(" ", ""))
+        self.assertEqual(self.compressor.get_compressed_data(), "1111 1001110001001 1111 000".replace(" ", ""))
+    
+    def test_compress_multiple_patterns(self):
+        self.compressor.compress("100110001001 100110001001 100110001001 100110001001".replace(" ", ""))
+        self.assertEqual(self.compressor.get_compressed_data(), "1111 100110001001 1111 010".replace(" ", ""))
+
+    def test_compress_multiple_patterns_with_extra_bits_on_outside(self):
+        self.compressor.compress("0000 100110001001 100110001001 100110001001 100110001001 0000".replace(" ", ""))
+        self.assertEqual(self.compressor.get_compressed_data(), "0000 1111 100110001001 1111 010 0000".replace(" ", ""))
+    
+    def test_compress_pattern_longer_than_allocated_bits(self):
+        raise NotImplementedError
+    
+    def test_compress_multiple_pieces_of_data(self):
+        pass
+
+    def test_compress_dynamic_pattern_bit_allocation(self):
+        pass
