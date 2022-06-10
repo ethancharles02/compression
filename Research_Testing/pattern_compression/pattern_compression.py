@@ -14,6 +14,7 @@ class Pattern_Compressor(object):
         self.data = []
         self.max_look_ahead = max_look_ahead
 
+        # Store the raw delimiter along with the version for normal delimiting and for replacing existing raw delimiters
         self._raw_delimiter = raw_delimiter
         self._delimiter = self._raw_delimiter + "1"
         self._delimiter_replace_string = self._raw_delimiter + "0"
