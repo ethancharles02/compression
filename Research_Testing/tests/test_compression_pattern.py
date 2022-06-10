@@ -97,9 +97,9 @@ class TestPatternCompression(unittest.TestCase):
         raise NotImplementedError
     
     def test_compress_multiple_pieces_of_data(self):
-        pass
+        raise NotImplementedError
 
     def test_compress_dynamic_pattern_bit_allocation(self):
-        pass
+        raise NotImplementedError
 
     # Add test for compressible string inside of a larger compressible string
