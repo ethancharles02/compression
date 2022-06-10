@@ -73,7 +73,6 @@ class compressor(object):
     def _update_chunk_data_to_end_of_word(self, f):
         # Keeps reading in chunk data till the last character is a space
         while self._chunk_data[-1] != " ":
-            # new_character = f.read(1)
             new_character = self._read_chunk_data(f, 1)
             # Updates the chunk data unless it hits the end of the file
             if new_character:
