@@ -136,6 +136,8 @@ class Pattern_Compressor(object):
                 if number_of_patterns >= 1:
                     if self._will_compression_compress(string_slice, number_of_patterns):
                         self._compress_string_patterns(string_position, string_slice, number_of_patterns)
+                        # Add position to skip to the end of the compressed portion of the string
+                        # Have compress string patterns method return end position of the string?
                         break
                 look_ahead -= 1
             string_position += 1
