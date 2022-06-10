@@ -75,6 +75,7 @@ class TestCompressor(unittest.TestCase):
         # + ['test2 n1 n2\n', '<3 <3 test n3\n', 'n4 n5 <4']
         # ?                    ++++++                    ^               ++++++                   ^^
         # Fails due to newlines not getting split, the newline connects n3 with n4 like "n3\nn4" which is one word
+        # Possible fix: replace "\n" with " \n " so that it is split as its own word
         self.compressor.chunk_size = 200
         filename = "text_with_newlines.txt"
         self.compressor.run(filename)
