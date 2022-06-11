@@ -4,7 +4,7 @@ class Text_Decompressor(object):
     def decompress(self, compressed_data):
         data = compressed_data.replace(" \n ", "\n").split(" ")
         for i in range(len(data)):
-            if self.is_reference(data, i):
+            if self.is_reference(data[i]):
                 self.update_data(data, i)
 
         self.decompressed_data = " ".join(list(data)).replace("~<", "<")
@@ -19,8 +19,8 @@ class Text_Decompressor(object):
             else:
                 data[i] = data[i-ref_distance]
 
-    def is_reference(self, data, i):
-        return "<" in data[i] and "~" not in data[i]
+    def is_reference(self, item):
+        return "<" in item and "~" not in item
 
     def get_reference_distance(self, reference):
         return int(reference.split("<")[-1])

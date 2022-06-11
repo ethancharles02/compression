@@ -1,4 +1,3 @@
-from bz2 import decompress
 import unittest
 from sys import path
 path.append("..")
