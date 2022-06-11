@@ -21,7 +21,10 @@ class compressor(object):
         self._print_cur_time = 0
         
     def run(self, in_file:str, out_file=None):
+        # Create initial compressed file
         in_file, out_file = self._check_and_update_io_files(in_file, out_file)
+        with open(out_file, 'w') as f:
+            f.write(f"[{self.look_ahead}]")
 
         with open(in_file, 'r') as f:
             self._file_size = fstat(f.fileno()).st_size
@@ -29,9 +32,6 @@ class compressor(object):
             # self.chunk_data = f.read(self.chunk_size)
             self._chunk_data = self._read_chunk_data(f, self.chunk_size)
 
-            # Create initial compressed file
-            with open(out_file, 'x'):
-                pass
             
             self._print_cur_time = monotonic()
 

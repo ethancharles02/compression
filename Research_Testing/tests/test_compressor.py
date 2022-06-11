@@ -91,7 +91,7 @@ class TestCompressor_folder_functionality(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         generic_text = "test2 n1 n2 test2"
-        generic_compressed_text = "test2 n1 n2 <3"
+        generic_compressed_text = "[5]test2 n1 n2 <3"
         cls.in_file = "__test_folder_functionality.txt"
         cls.ref_file = "__ref_test_folder_functionality.lor"
         with open(cls.in_file, "w") as f:
