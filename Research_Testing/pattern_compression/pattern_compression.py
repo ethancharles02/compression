@@ -131,6 +131,7 @@ class Pattern_Compressor(object):
         look_ahead = self._max_look_ahead
         while string_position < self._working_string_length:
             while look_ahead > 0:
+                # if self._working_string_length
                 string_slice = self._working_string[string_position : string_position + look_ahead]
                 number_of_patterns = self._get_num_patterns(string_position, string_slice)
                 if number_of_patterns >= 1:

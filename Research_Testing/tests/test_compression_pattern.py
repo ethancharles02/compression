@@ -94,9 +94,16 @@ class TestPatternCompression(unittest.TestCase):
         self.assertEqual(self.compressor.get_compressed_data(), "0000 1111 100110001001 1111 010 0000".replace(" ", ""))
     
     def test_compress_pattern_longer_than_allocated_bits(self):
-        raise NotImplementedError
+        self.compressor.pattern_count_num_bits = 2
+        self.compressor.compress("100111001001 100111001001 100111001001 100111001001 100111001001 100111001001".replace(" ", ""))
+        self.assertEqual(self.compressor.get_compressed_data(), "1111 100110001001 1111 11".replace(" ", ""))
+
+        self.compressor.compress("100111001001 100111001001 100111001001 100111001001 100111001001 100111001001 100111001001".replace(" ", ""))
+        self.assertEqual(self.compressor.get_compressed_data(), "1111 100110001001 1111 11 100110001001".replace(" ", ""))
     
     def test_compress_multiple_pieces_of_data(self):
+        # self.compressor.compress("100111001001 100111001001".replace(" ", ""))
+        # self.assertEqual(self.compressor.get_compressed_data(), "1111 1001110001001 1111 000".replace(" ", ""))
         raise NotImplementedError
 
     def test_compress_dynamic_pattern_bit_allocation(self):
