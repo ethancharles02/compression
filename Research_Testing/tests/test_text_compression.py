@@ -67,9 +67,9 @@ class TestTextCompression(unittest.TestCase):
         self.assertEqual(self.compressor.get_compressed_data(), expected_string)
 
     def test_compress_two_consecutive_strings_with_line_breaks(self):
-        string2 = "word n1\n"
-        string1 = "n2 \nword2 n3 word"
-        expected_string = "word n1\n n2 \nword2 n3 <5"
+        string2 = "word2 n1\n"
+        string1 = "n2\nword2 n3 word"
+        expected_string = "word2 n1\n n2\n<6 n3 word"
         self.compressor.compress(string1)
         self.compressor.compress(string2)
         self.assertEqual(self.compressor.get_compressed_data(), expected_string)
@@ -113,3 +113,5 @@ class TestTextCompression(unittest.TestCase):
         expected_string = "www n1 www n1 w n3 w n4 word n5 <2"
         self.compressor.compress(string)
         self.assertEqual(self.compressor.get_compressed_data(), expected_string)
+    
+    

@@ -1,6 +1,6 @@
 # TODO
 # Add docstrings
-from os import path, listdir, fstat
+from os import path, listdir, fstat, remove as os_remove
 from text_compression import Text_Compressor
 from time import monotonic
 
@@ -22,11 +22,11 @@ class compressor(object):
         
     def run(self, in_file:str, out_file=None):
         # Create initial compressed file
-        in_file, out_file = self._check_and_update_io_files(in_file, out_file)
-        with open(out_file, 'w') as f:
+        in_filepath, out_filepath = self._check_and_update_io_files(in_file, out_file)
+        with open(out_filepath, 'w') as f:
             f.write(f"[{self.look_ahead}]")
 
-        with open(in_file, 'r') as f:
+        with open(in_filepath, 'r') as f:
             self._file_size = fstat(f.fileno()).st_size
             # Get chunk data
             # self.chunk_data = f.read(self.chunk_size)
@@ -47,13 +47,28 @@ class compressor(object):
                 # Compress the chunk 
                 self.text_compressor.compress(self._chunk_data)
                 # write the chunk to the output file
-                with open(out_file, 'a') as new_f:
+                with open(out_filepath, 'a') as new_f:
                     new_f.write(self.text_compressor.get_compressed_data())
                 
                 # Get new chunk data
                 # self.chunk_data = f.read(self.chunk_size)
                 self._chunk_data = self._read_chunk_data(f, self.chunk_size)
             self._print_percentage_completion(2)
+        
+        if self._compressed_successfully(in_filepath, out_filepath):
+            return True
+        else:
+            os_remove(out_filepath)
+            return False
+
+    def _compressed_successfully(self, input_filepath, output_filepath):
+        with open(input_filepath, 'r') as f:
+            input_size = fstat(f.fileno()).st_size
+
+        with open(output_filepath, 'r') as f:
+            output_size = fstat(f.fileno()).st_size
+        
+        return output_size < input_size
 
     def _print_percentage_completion(self, decimals):
         print(f"{round(self._get_percentage_completion() * 100, decimals)}%")

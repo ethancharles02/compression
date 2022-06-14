@@ -11,7 +11,7 @@ class Text_Compressor(object):
 
     def compress(self, string:str):
         # Add escape characters
-        string = string.replace("<","~<")
+        string = string.replace("<","~<").replace("\n", " \n ")
         # Split the string into a list
         new_data = string.split(" ")
         # Prepend the new list of strings onto the old list
@@ -70,7 +70,7 @@ class Text_Compressor(object):
     )
 
     def get_compressed_data(self):
-        self.output = " ".join(self.data)
+        self.output = (" ".join(self.data)).replace(" \n ", "\n")
         self.data.clear()
         self.potential_ref_dict.clear()
         return self.output

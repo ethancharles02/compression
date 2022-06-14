@@ -35,7 +35,7 @@ class Test_Decompressor(unittest.TestCase):
         self.assertRaises(WrongFileFormatError, self.decompressor.run, "wrong_format.txt")
 
     def test_gets_correct_look_ahead_value_from_generic_file(self):
-        filename = "text_empty.lor"
+        filename = "text_generic.lor"
         self.decompressor.run(filename)
         self.assertEqual(self.decompressor.look_ahead, 5)
 
@@ -49,7 +49,7 @@ class Test_Decompressor(unittest.TestCase):
         with open(f"{REF_FOLDER}/{filename}", "r") as f:
             self.decompressor.get_look_ahead(f)
             self.decompressor.read_one_word(f)
-        self.assertEqual(self.decompressor.get_decompressed_data(), "test2")
+        self.assertEqual(self.decompressor.get_decompressed_data(), "testtest")
     
     def test_read_two_words(self):
         filename = "text_generic.lor"
@@ -57,14 +57,7 @@ class Test_Decompressor(unittest.TestCase):
             self.decompressor.get_look_ahead(f)
             self.decompressor.read_one_word(f)
             self.decompressor.read_one_word(f)
-        self.assertEqual(self.decompressor.get_decompressed_data(), "test2 n1")
-
-    def test_reading_a_word_from_an_empty_file(self):
-        filename = "text_empty.lor"
-        with open(f"{REF_FOLDER}/{filename}", "r") as f:
-            self.decompressor.get_look_ahead(f)
-            self.decompressor.read_one_word(f)
-        self.assertEqual(self.decompressor.get_decompressed_data(), "")
+        self.assertEqual(self.decompressor.get_decompressed_data(), "testtest n1")
     
     def test_build_up_decompressed_data_list(self):
         filename = "text_generic.lor"
@@ -72,7 +65,7 @@ class Test_Decompressor(unittest.TestCase):
             self.decompressor.get_look_ahead(f)
             self.decompressor.look_ahead = 3  # This is so it won't read a reference yet.
             self.decompressor.fill_decompressed_data(f)
-        self.assertEqual(self.decompressor.get_decompressed_data(), "test2 n1 n2")
+        self.assertEqual(self.decompressor.get_decompressed_data(), "testtest n1 n2")
 
     # TODO Write a test to test decompressing a reference when it is read in.
 

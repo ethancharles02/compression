@@ -7,7 +7,7 @@ class Test_TextDecompressor(unittest.TestCase):
     def setUp(self):
         self.decompressor = Text_Decompressor()
 
-    def test_decompress_empyt_string(self):
+    def test_decompress_empty_string(self):
         self.decompressor.decompress("")
         self.assertEqual(self.decompressor.get_decompressed_data(), "")
 
@@ -61,13 +61,13 @@ class Test_TextDecompressor(unittest.TestCase):
         self.assertEqual(self.decompressor.get_decompressed_data(), decompressed)
 
     def test_decompress_reference_with_endline_at_the_end(self):
-        compressed = "text <1 \n "
+        compressed = "text <1\n"
         decompressed = "text text\n"
         self.decompressor.decompress(compressed)
         self.assertEqual(self.decompressor.get_decompressed_data(), decompressed)
 
     def test_decompress_reference_with_endline_at_the_front(self):
-        compressed = "text  \n <1"
+        compressed = "text \n<3"
         decompressed = "text \ntext"
         self.decompressor.decompress(compressed)
         self.assertEqual(self.decompressor.get_decompressed_data(), decompressed)
