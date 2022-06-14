@@ -64,7 +64,7 @@ class TestCompressor(unittest.TestCase):
         self.compressor.run(filename)
         output_file = filename.replace(".txt", ".lor")
         self.assert_files_in_test_folders_are_equal(output_file)
-    
+
     def test_compress_with_newlines(self):
         # AssertionError: Lists differ: ['test2 n1 n2\n', 'test2 n1 test n3\n', 'n4 n5 <3'] != ['test2 n1 n2\n', '<3 <3 test n3\n', 'n4 n5 <4']
         # First differing element 1:
@@ -94,7 +94,7 @@ class TestCompressor_folder_functionality(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         generic_text = "test2 n1 n2 test2"
-        generic_compressed_text = "test2 n1 n2 <3"
+        generic_compressed_text = "[5]test2 n1 n2 <3"
         cls.in_file = "__test_folder_functionality.txt"
         cls.ref_file = "__ref_test_folder_functionality.lor"
         with open(cls.in_file, "w") as f:
