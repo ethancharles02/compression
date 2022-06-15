@@ -1,3 +1,6 @@
+# TODO
+# Add docstrings
+
 from constants import PATTERN_BIT_OFFSET
 
 class Pattern_Decompressor(object):
@@ -53,7 +56,7 @@ class Pattern_Decompressor(object):
             else:
                 binary_num_patterns = self._get_num_patterns(data[2]) + 1
                 data[0] = data[0] + data[1] * binary_num_patterns
-                
+
             data.pop(1)
             data.pop(1)
         else:
