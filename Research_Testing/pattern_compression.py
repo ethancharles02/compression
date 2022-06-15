@@ -1,6 +1,5 @@
 # TODO
 # Finish docstrings, add types as necessary to methods
-# Reduce look ahead in the main loop if it is near the end of the string
 
 from math import log2, floor
 
@@ -79,7 +78,7 @@ class Pattern_Compressor(object):
         _get_raw_delimiter() -> str: Getter for the attribute
 
     """
-    def __init__(self, max_look_ahead:int, raw_delimiter:str = "11111", pattern_count_num_bits:int = None, pattern_bit_offset:int = None):
+    def __init__(self, max_look_ahead:int, raw_delimiter:str = "1111", pattern_count_num_bits:int = None, pattern_bit_offset:int = None):
         """
         Constructor Args:
             max_look_ahead (int): How far ahead the compressor will look for patterns
@@ -115,11 +114,13 @@ class Pattern_Compressor(object):
             self._pattern_bit_offset = pattern_bit_offset
 
         self._is_pattern_count_limited = False
+        self._max_pattern_count = None
         self._delimiter_cost = self._delimiter_length * 3
 
         if self._pattern_count_num_bits is not None:
             self._is_pattern_count_limited = True
             self._delimiter_cost = self._delimiter_length * 2
+            self._max_pattern_count = 2 ** self._pattern_count_num_bits
             
 
     def compress(self, string:str):
@@ -135,8 +136,11 @@ class Pattern_Compressor(object):
                 string_slice = self._working_string[string_position : string_position + look_ahead]
                 number_of_patterns = self._get_num_patterns(string_position, string_slice)
                 if number_of_patterns >= 1:
+                    if self._is_pattern_count_limited:
+                        if number_of_patterns > self._max_pattern_count:
+                            number_of_patterns = self._max_pattern_count
                     if self._will_compression_compress(string_slice, number_of_patterns):
-                        self._compress_string_patterns(string_position, string_slice, number_of_patterns)
+                        string_position = self._compress_string_patterns(string_position, string_slice, number_of_patterns)
                         # Add position to skip to the end of the compressed portion of the string
                         # Have compress string patterns method return end position of the string?
                         break
@@ -147,9 +151,9 @@ class Pattern_Compressor(object):
         self._data.append(self._working_string)
 
     def get_compressed_data(self):
-        self.output = " ".join(self._data)
+        output = "".join(self._data)
         self._data.clear()
-        return self.output
+        return output
     
     def _get_compression_cost(self, num_patterns):
         if self._is_pattern_count_limited:
@@ -186,14 +190,29 @@ class Pattern_Compressor(object):
             binary_string = self._convert_to_binary(num_patterns)
             return "0" * (self._pattern_count_num_bits - len(binary_string)) + binary_string
         else:
-            return self._convert_to_binary(num_patterns) + self._delimiter
+            return self._convert_to_binary(num_patterns).replace(self._raw_delimiter, self._delimiter_replace_string) + self._delimiter
 
     def _compress_string_patterns(self, position, pattern_string, num_patterns):
         pattern_string_length = len(pattern_string)
-        self._working_string =   self._working_string[:position] +\
-                                self._delimiter + pattern_string + self._delimiter + self._get_pattern_binary_string(num_patterns)+\
-                                self._working_string[position + pattern_string_length * (num_patterns + 1):]
-        self._working_string_length = len(self._working_string)
+
+        binary_pattern_string = self._get_pattern_binary_string(num_patterns)
+        binary_pattern_string_length = len(binary_pattern_string)
+
+        new_string_length = self._delimiter_cost + pattern_string_length + binary_pattern_string_length
+        if new_string_length < pattern_string_length * (num_patterns + 1):
+
+            string_end_pos = position + pattern_string_length * (num_patterns + 1)
+
+            self._working_string =   self._working_string[:position] +\
+                                    self._delimiter + pattern_string + self._delimiter + binary_pattern_string +\
+                                    self._working_string[string_end_pos:]
+
+            self._working_string_length = len(self._working_string)
+
+            string_final_end_pos = position + new_string_length - 1
+            return string_final_end_pos
+        else:
+            return position
 
     def _update_delimiter_cost(self):
         if self._is_pattern_count_limited:
@@ -206,8 +225,10 @@ class Pattern_Compressor(object):
         self._pattern_count_num_bits = value
         if value is not None:
             self._is_pattern_count_limited = True
+            self._max_pattern_count = 2 ** self._pattern_count_num_bits
         else:
             self._is_pattern_count_limited = False
+            self._max_pattern_count = None
         self._update_delimiter_cost()
 
     def _get_pattern_count_num_bits(self):
