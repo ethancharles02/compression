@@ -158,3 +158,9 @@ class TestPatternCompression(unittest.TestCase):
     def test_multiple_different_patterns_bits_separated(self):
         self.compressor.compress("000100001001 000100001001 000100001001 0000 010001001001 010001001001 010001001001".replace(" ", ""))
         self.assertEqual(self.compressor.get_compressed_data(), "0111 000100001001 0111 001 0000 0111 010001001001 0111 001".replace(" ", ""))
+    
+    # When put together, these two strings create a delimiter in the middle that needs to be fixed
+    def test_multiple_compressions_delimiter_inbetween(self):
+        self.compressor.compress("000100001001".replace(" ", ""))
+        self.compressor.compress("100100001001".replace(" ", ""))
+        self.assertEqual(self.compressor.get_compressed_data(), "0001000010 0110 00100001001".replace(" ", ""))
