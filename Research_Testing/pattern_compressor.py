@@ -1,8 +1,6 @@
 # TODO
 # Add docstrings
-# Rename compressions to algorithm, create specific compressors for each algorithm
-# Create decompressors for each algorithm
-# Move/create constants for compressors
+# Finish compressor
 from os import path, listdir, fstat, remove as os_remove
 from pattern_algorithm_c import Pattern_Algorithm_C
 from time import monotonic
