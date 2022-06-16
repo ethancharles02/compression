@@ -46,6 +46,11 @@ class TestCompressor(unittest.TestCase):
         output_file = filename.replace(".txt", ".lor")
         self.assert_file_not_in_output_folder(output_file)
 
+    def test_error_is_raised_if_output_is_to_wrong_file_type(self):
+        filename = "text_generic.txt"
+        output_file = filename.replace(".txt", ".fake")
+        self.assertRaises(TypeError, self.compressor.run, args=(filename, output_file))
+
     def test_generic_file_compresses(self):
         filename = "text_generic.txt"
         result = self.compressor.run(filename)
