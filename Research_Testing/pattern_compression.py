@@ -100,8 +100,13 @@ class Pattern_Compressor(object):
 
         # Store the raw delimiter along with the version for normal delimiting and for replacing existing raw delimiters
         self._raw_delimiter = raw_delimiter
-        self._delimiter = self._raw_delimiter + "1"
-        self._delimiter_replace_string = self._raw_delimiter + "0"
+        self._raw_delimiter_length = len(self._raw_delimiter)
+
+        self._delimiter_character = "1"
+        self._replace_delimiter_character = "0"
+
+        self._delimiter = self._raw_delimiter + self._delimiter_character
+        self._delimiter_replace_string = self._raw_delimiter + self._replace_delimiter_character
         self._delimiter_length = len(self._delimiter)
 
         # If a count for patterns is set, there will only need to be two delimiters instead of three for each pattern
@@ -114,13 +119,17 @@ class Pattern_Compressor(object):
             self._pattern_bit_offset = pattern_bit_offset
 
         self._is_pattern_count_limited = False
-        self._max_pattern_count = None
-        self._delimiter_cost = self._delimiter_length * 3
+
 
         if self._pattern_count_num_bits is not None:
             self._is_pattern_count_limited = True
-            self._delimiter_cost = self._delimiter_length * 2
-            self._max_pattern_count = 2 ** self._pattern_count_num_bits
+            # self._delimiter_cost = self._delimiter_length * 2
+            # self._max_pattern_count = 2 ** (self._pattern_count_num_bits - 1) + self._pattern_bit_offset
+
+        self._max_pattern_count = None
+        self._delimiter_cost = None
+        self._update_max_pattern_count()
+        self._update_delimiter_cost()
             
 
     def compress(self, string:str):
@@ -148,6 +157,8 @@ class Pattern_Compressor(object):
             string_position += 1
             look_ahead = self._max_look_ahead
 
+        self._patch_intersection_with_data()
+
         self._data.append(self._working_string)
 
     def get_compressed_data(self):
@@ -155,6 +166,14 @@ class Pattern_Compressor(object):
         self._data.clear()
         return output
     
+    def _patch_intersection_with_data(self):
+        if self._data:
+            split_length = self._raw_delimiter_length - 1
+            mid_string = self._data[-1][-(split_length):] + self._working_string[:split_length]
+            if self._raw_delimiter in mid_string:
+                insert_index = mid_string.index(self._raw_delimiter) + self._raw_delimiter_length - split_length
+                self._working_string = self._working_string[:insert_index] + self._replace_delimiter_character + self._working_string[insert_index:]
+
     def _get_compression_cost(self, num_patterns):
         if self._is_pattern_count_limited:
             return self._delimiter_cost + self.pattern_count_num_bits
@@ -220,15 +239,21 @@ class Pattern_Compressor(object):
         else:
             self._delimiter_cost = self._delimiter_length * 3
 
+    def _update_max_pattern_count(self):
+        if self._is_pattern_count_limited:
+            self._max_pattern_count = (2 ** self._pattern_count_num_bits - 1) + self._pattern_bit_offset
+        else:
+            self._max_pattern_count = None
+
     # Pattern Count Bits property setters and getters
     def _set_pattern_count_num_bits(self, value):
         self._pattern_count_num_bits = value
         if value is not None:
             self._is_pattern_count_limited = True
-            self._max_pattern_count = 2 ** self._pattern_count_num_bits
         else:
             self._is_pattern_count_limited = False
-            self._max_pattern_count = None
+
+        self._update_max_pattern_count()
         self._update_delimiter_cost()
 
     def _get_pattern_count_num_bits(self):
@@ -243,8 +268,9 @@ class Pattern_Compressor(object):
     # Delimiter property setters and getters
     def _set_raw_delimiter(self, value):
         self._raw_delimiter = value
-        self._delimiter = value + "1"
-        self._delimiter_replace_string = value + "0"
+        self._raw_delimiter_length = len(self._raw_delimiter)
+        self._delimiter = value + self._delimiter_character
+        self._delimiter_replace_string = value + self._replace_delimiter_character
         self._delimiter_length = len(self._delimiter)
         self._update_delimiter_cost()
 
@@ -258,10 +284,5 @@ class Pattern_Compressor(object):
     )
 
 if __name__ == "__main__":
-    compressor = Pattern_Compressor(max_look_ahead = 15, raw_delimiter = "111", pattern_count_num_bits = 3)
-    # compressor.working_string = "00011111000"
-    # compressor.compress("100110001001100110001001")
-    # print(compressor.get_compressed_data())
-    # print(compressor.get_compressed_data())
-    # compressor._replace_string_patterns(3, "1", 4)
-    # print(compressor.working_string)
+    compressor = Pattern_Compressor(max_look_ahead = 15, raw_delimiter = "011", pattern_count_num_bits = 3, pattern_bit_offset = 1)
+    print(compressor._get_pattern_binary_string(6))

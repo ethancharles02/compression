@@ -2,7 +2,8 @@
 # Test compressor to make sure it adds a bit to the front to indicate if it is unlimited pattern count or not (ie. is the pattern count limited to a bit length)
 
 # NOTE
-# Chosen delimiter is necessary for compression to work properly. If not this, make sure the starting bit is opposite of the ending bit
+# Chosen delimiter is necessary for compression to work properly. If not this, make sure the starting bit is 0 (or the opposite of whatever the additional
+# character added to the delimiter is)
 
 import unittest
 from sys import path
@@ -160,7 +161,12 @@ class TestPatternCompression(unittest.TestCase):
         self.assertEqual(self.compressor.get_compressed_data(), "0111 000100001001 0111 001 0000 0111 010001001001 0111 001".replace(" ", ""))
     
     # When put together, these two strings create a delimiter in the middle that needs to be fixed
-    def test_multiple_compressions_delimiter_inbetween(self):
+    def test_delimiter_inbetween(self):
         self.compressor.compress("000100001001".replace(" ", ""))
         self.compressor.compress("100100001001".replace(" ", ""))
         self.assertEqual(self.compressor.get_compressed_data(), "0001000010 0110 00100001001".replace(" ", ""))
+    
+    def test_delimiter_inbetween_with_compression(self):
+        self.compressor.compress("000100001001"*7)
+        self.compressor.compress("110100001001")
+        self.assertEqual(self.compressor.get_compressed_data(), "0111 000100001001 0111 101 1010100001001".replace(" ", ""))

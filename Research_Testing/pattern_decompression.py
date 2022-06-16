@@ -25,13 +25,13 @@ class Pattern_Decompressor(object):
             self._pattern_bit_offset = pattern_bit_offset
 
         self._is_pattern_count_limited = False
-        self._max_pattern_count = None
+        # self._max_pattern_count = None
         # self._delimiter_cost = self._delimiter_length * 3
 
         if self._pattern_count_num_bits is not None:
             self._is_pattern_count_limited = True
             # self._delimiter_cost = self._delimiter_length * 2
-            self._max_pattern_count = 2 ** self._pattern_count_num_bits
+            # self._max_pattern_count = 2 ** (self._pattern_count_num_bits - 1) + self._pattern_bit_offset
 
     def decompress(self, compressed_data):
         data = compressed_data.replace(self._delimiter, "a").replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
@@ -70,10 +70,10 @@ class Pattern_Decompressor(object):
         self._pattern_count_num_bits = value
         if value is not None:
             self._is_pattern_count_limited = True
-            self._max_pattern_count = 2 ** self._pattern_count_num_bits
+            # self._max_pattern_count = 2 ** (self._pattern_count_num_bits - 1) + self._pattern_bit_offset
         else:
             self._is_pattern_count_limited = False
-            self._max_pattern_count = None
+            # self._max_pattern_count = None
         # self._update_delimiter_cost()
 
     def _get_pattern_count_num_bits(self):
