@@ -9,7 +9,7 @@ from sys import path
 path.append("..")
 from os import getcwd, listdir, remove as os_remove, path as os_path
 
-from compressor import compressor
+from text_compressor import Text_Compressor
 
 TXT_FOLDER = "Research_Testing/tests/compressor_text_files"
 INPUT_FOLDER = f"{TXT_FOLDER}/test_files"
@@ -18,7 +18,7 @@ OUTPUT_FOLDER = f"{TXT_FOLDER}/dump_files"
 
 class TestCompressor(unittest.TestCase):
     def setUp(self):
-        self.compressor = compressor(24, 5)
+        self.compressor = Text_Compressor(24, 5)
         self.compressor.input_folder = INPUT_FOLDER
         self.compressor.output_folder = OUTPUT_FOLDER
     
@@ -124,7 +124,7 @@ class TestCompressor_folder_functionality(unittest.TestCase):
         os_remove(cls.ref_file)
 
     def setUp(self):
-        self.compressor = compressor(24, 5)
+        self.compressor = Text_Compressor(24, 5)
         self.result_file = "__test_folder_functionality.lor"
 
     def tearDown(self):

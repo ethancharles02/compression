@@ -1,7 +1,7 @@
 # TODO
 # Add docstrings
 
-class Text_Compressor(object):
+class Text_Compression_Algorithm(object):
     def __init__(self, look_ahead:int):
         self._look_ahead = look_ahead
         self._update_min_ref_length()

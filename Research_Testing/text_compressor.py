@@ -4,16 +4,17 @@
 # Create decompressors for each algorithm
 # Move/create constants for compressors
 from os import path, listdir, fstat, remove as os_remove
-from text_compression import Text_Compressor
+from Research_Testing.text_compression_algorithm import Text_Compression_Algorithm
+from text_compression_algorithm import Text_Compression_Algorithm
 from time import monotonic
 
 COMPRESSION_FOLDER = "Research_Testing/random_textstring_files"
 
-class compressor(object):
+class Text_Compressor(object):
     def __init__(self, chunk_size=1024, look_ahead=5):
         self.chunk_size = chunk_size
         self.look_ahead = look_ahead
-        self.text_compressor = Text_Compressor(self.look_ahead)
+        self.text_compr_alg = Text_Compression_Algorithm(self.look_ahead)
         self.input_folder = None
         self.output_folder = None
 
@@ -48,10 +49,10 @@ class compressor(object):
                 self._update_chunk_data_to_end_of_word(f)
 
                 # Compress the chunk 
-                self.text_compressor.compress(self._chunk_data)
+                self.text_compr_alg.compress(self._chunk_data)
                 # write the chunk to the output file
                 with open(out_filepath, 'a') as new_f:
-                    new_f.write(self.text_compressor.get_compressed_data())
+                    new_f.write(self.text_compr_alg.get_compressed_data())
                 
                 # Get new chunk data
                 # self.chunk_data = f.read(self.chunk_size)
