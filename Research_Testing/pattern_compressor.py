@@ -1,6 +1,7 @@
 # TODO
 # Add docstrings
 # Finish compressor
+# Add in a delimiter and the number of 0s at the end to get it into byte format
 from os import path, listdir, fstat, remove as os_remove
 from pattern_algorithm_c import Pattern_Algorithm_C
 from time import monotonic
