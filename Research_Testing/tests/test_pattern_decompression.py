@@ -1,12 +1,12 @@
 import unittest
 from sys import path
 path.append("..")
-from pattern_decompression import Pattern_Decompressor
+from pattern_algorithm_d import Pattern_Algorithm_D
 
 
 class TestPatternCompression(unittest.TestCase):
     def setUp(self):
-        self.decompressor = Pattern_Decompressor(raw_delimiter = "011", pattern_count_num_bits = 3, pattern_bit_offset = 1)
+        self.decompressor = Pattern_Algorithm_D(raw_delimiter = "011", pattern_count_num_bits = 3, pattern_bit_offset = 1)
     
     def test_decompress_empty(self):
         self.decompressor.decompress("")
@@ -28,33 +28,36 @@ class TestPatternCompression(unittest.TestCase):
         self.assertEqual(self.decompressor.get_decompressed_data(), "0")
 
     def test_decompressor_pattern_count_bits_setter_getter(self):
-        self.assertEqual(self.decompressor._is_pattern_count_limited, True)
+        self.assertEqual(self.decompressor.is_pattern_count_limited, True)
         self.assertEqual(self.decompressor.pattern_count_num_bits, 3)
 
         self.decompressor.pattern_count_num_bits = None
 
-        self.assertEqual(self.decompressor._is_pattern_count_limited, False)
+        self.assertEqual(self.decompressor.is_pattern_count_limited, False)
         self.assertIsNone(self.decompressor.pattern_count_num_bits)
 
         self.decompressor.pattern_count_num_bits = 10
 
-        self.assertEqual(self.decompressor._is_pattern_count_limited, True)
+        self.assertEqual(self.decompressor.is_pattern_count_limited, True)
         self.assertEqual(self.decompressor.pattern_count_num_bits, 10)
     
     def test_decompressor_delimiter_setter_getter(self):
         self.assertEqual(self.decompressor.raw_delimiter, "011")
         self.assertEqual(self.decompressor._raw_delimiter, "011")
         self.assertEqual(self.decompressor._delimiter, "0111")
+        self.assertEqual(self.decompressor._delimiter_replace_string, "0110")
 
         self.decompressor.raw_delimiter = "11"
         self.assertEqual(self.decompressor.raw_delimiter, "11")
         self.assertEqual(self.decompressor._raw_delimiter, "11")
-        self.assertEqual(self.decompressor._delimiter, "111")
+        self.assertEqual(self.decompressor._delimiter, "110")
+        self.assertEqual(self.decompressor._delimiter_replace_string, "111")
 
         self.decompressor.raw_delimiter = "1100"
         self.assertEqual(self.decompressor.raw_delimiter, "1100")
         self.assertEqual(self.decompressor._raw_delimiter, "1100")
-        self.assertEqual(self.decompressor._delimiter, "11001")
+        self.assertEqual(self.decompressor._delimiter, "11000")
+        self.assertEqual(self.decompressor._delimiter_replace_string, "11001")
 
     def test_decompress_one_pattern(self):
         self.decompressor.decompress("0111 100100001000 0111 000".replace(" ", ""))

@@ -8,12 +8,12 @@
 import unittest
 from sys import path
 path.append("..")
-from pattern_compression import Pattern_Compressor
+from pattern_algorithm_c import Pattern_Algorithm_C
 
 
 class TestPatternCompression(unittest.TestCase):
     def setUp(self):
-        self.compressor = Pattern_Compressor(max_look_ahead = 15, raw_delimiter = "011", pattern_count_num_bits = 3, pattern_bit_offset = 1)
+        self.compressor = Pattern_Algorithm_C(max_look_ahead = 15, raw_delimiter = "011", pattern_count_num_bits = 3, pattern_bit_offset = 1)
     
     def test_compress_empty_string(self):
         self.compressor.compress("")
@@ -27,17 +27,17 @@ class TestPatternCompression(unittest.TestCase):
         self.assertEqual(self.compressor.get_compressed_data(), "0")
 
     def test_compressor_pattern_count_bits_setter_getter(self):
-        self.assertEqual(self.compressor._is_pattern_count_limited, True)
+        self.assertEqual(self.compressor.is_pattern_count_limited, True)
         self.assertEqual(self.compressor.pattern_count_num_bits, 3)
 
         self.compressor.pattern_count_num_bits = None
 
-        self.assertEqual(self.compressor._is_pattern_count_limited, False)
+        self.assertEqual(self.compressor.is_pattern_count_limited, False)
         self.assertIsNone(self.compressor.pattern_count_num_bits)
 
         self.compressor.pattern_count_num_bits = 10
 
-        self.assertEqual(self.compressor._is_pattern_count_limited, True)
+        self.assertEqual(self.compressor.is_pattern_count_limited, True)
         self.assertEqual(self.compressor.pattern_count_num_bits, 10)
     
     def test_compress_adds_bits_to_one_existing_delimiter_strings(self):
@@ -52,18 +52,21 @@ class TestPatternCompression(unittest.TestCase):
         self.assertEqual(self.compressor.raw_delimiter, "011")
         self.assertEqual(self.compressor._raw_delimiter, "011")
         self.assertEqual(self.compressor._delimiter, "0111")
+        self.assertEqual(self.compressor._delimiter_replace_string, "0110")
         self.assertEqual(self.compressor._delimiter_length, 4)
 
         self.compressor.raw_delimiter = "11"
         self.assertEqual(self.compressor.raw_delimiter, "11")
         self.assertEqual(self.compressor._raw_delimiter, "11")
-        self.assertEqual(self.compressor._delimiter, "111")
+        self.assertEqual(self.compressor._delimiter, "110")
+        self.assertEqual(self.compressor._delimiter_replace_string, "111")
         self.assertEqual(self.compressor._delimiter_length, 3)
 
         self.compressor.raw_delimiter = "1100"
         self.assertEqual(self.compressor.raw_delimiter, "1100")
         self.assertEqual(self.compressor._raw_delimiter, "1100")
-        self.assertEqual(self.compressor._delimiter, "11001")
+        self.assertEqual(self.compressor._delimiter, "11000")
+        self.assertEqual(self.compressor._delimiter_replace_string, "11001")
         self.assertEqual(self.compressor._delimiter_length, 5)
 
     def test_compressor_delimiter_costs_change_as_necessary(self):
