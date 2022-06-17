@@ -3,7 +3,7 @@ from sys import path
 path.append("..")
 from os import getcwd, listdir, remove as os_remove, path as os_path
 
-from decompressor import Decompressor, WrongFileFormatError
+from text_decompressor import Text_Decompressor, WrongFileFormatError
 
 
 TXT_FOLDER = "Research_Testing/tests/compressor_text_files"
@@ -13,7 +13,7 @@ OUTPUT_FOLDER = f"{TXT_FOLDER}/dump_files"
 
 class Test_Decompressor(unittest.TestCase):
     def setUp(self):
-        self.decompressor = Decompressor()
+        self.decompressor = Text_Decompressor()
         self.decompressor.input_folder = INPUT_FOLDER
         self.decompressor.output_folder = OUTPUT_FOLDER
 
@@ -44,54 +44,39 @@ class Test_Decompressor(unittest.TestCase):
         self.decompressor.run(filename)
         self.assertEqual(self.decompressor.look_ahead, 10)
 
-    def test_read_one_word(self):
+    def test_read_one_word_to_data(self):
         filename = "text_generic.lor"
         with open(f"{INPUT_FOLDER}/{filename}", "r") as f:
-            self.decompressor._get_look_ahead(f)
-            self.assertTrue(self.decompressor.read_one_word(f))
+            self.decompressor._update_look_ahead_from_file(f)
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
         self.assertEqual(self.decompressor.get_decompressed_data(), "testtest")
     
     def test_read_two_words(self):
         filename = "text_generic.lor"
         with open(f"{INPUT_FOLDER}/{filename}", "r") as f:
-            self.decompressor._get_look_ahead(f)
-            self.assertTrue(self.decompressor.read_one_word(f))
-            self.assertTrue(self.decompressor.read_one_word(f))
+            self.decompressor._update_look_ahead_from_file(f)
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
         self.assertEqual(self.decompressor.get_decompressed_data(), "testtest n1")
 
     def test_read_word_before_newline_char(self):
         filename = "text_with_newlines.lor"
         with open(f"{INPUT_FOLDER}/{filename}", "r") as f:
-            self.decompressor._get_look_ahead(f)
-            self.assertTrue(self.decompressor.read_one_word(f))
-            self.assertTrue(self.decompressor.read_one_word(f))
-            self.assertTrue(self.decompressor.read_one_word(f))
+            self.decompressor._update_look_ahead_from_file(f)
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
         self.assertEqual(self.decompressor._decompressed_data[-1], "\n")
     
     def test_read_word_after_newline_char(self):
         filename = "text_with_newlines.lor"
         with open(f"{INPUT_FOLDER}/{filename}", "r") as f:
-            self.decompressor._get_look_ahead(f)
-            self.assertTrue(self.decompressor.read_one_word(f))
-            self.assertTrue(self.decompressor.read_one_word(f))
-            self.assertTrue(self.decompressor.read_one_word(f))
-            self.assertTrue(self.decompressor.read_one_word(f))
+            self.decompressor._update_look_ahead_from_file(f)
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
         self.assertEqual(self.decompressor._decompressed_data[-1], "test2")
-    
-    def test_decompress_nothing(self):
-        self.assertEqual(self.decompressor._decompress(""), "")
-
-    def test_decompress_reference_with_nothing_to_reference(self):
-        self.decompressor._decompressed_data = []
-        self.assertEqual(self.decompressor._decompress("<1"), "<1")
-
-    def test_decompress_word_with_escape_char(self):
-        self.decompressor._decompressed_data = ["hello", "to", "this", "World"]
-        self.assertEqual(self.decompressor._decompress("~<1"), "~<1")
-
-    def test_decompress_reference_with_newline_in_front(self):
-        self.decompressor._decompressed_data = ["hello", "to", "this", "World"]
-        self.assertEqual(self.decompressor._decompress("\n<1"), "\nWorld")
 
     def test_decompress_reference_one_word_away(self):
         self.decompressor._decompressed_data = ["hello", "to", "this", "World"]
@@ -104,27 +89,27 @@ class Test_Decompressor(unittest.TestCase):
     def test_read_and_decompress_one_word(self):
         filename = "text_generic.lor"
         with open(f"{INPUT_FOLDER}/{filename}", "r") as f:
-            self.decompressor._get_look_ahead(f)
-            self.assertTrue(self.decompressor.read_one_word(f))
-            self.assertTrue(self.decompressor.read_one_word(f))
-            self.assertTrue(self.decompressor.read_one_word(f))
-            self.assertTrue(self.decompressor.read_one_word(f)) # reference
+            self.decompressor._update_look_ahead_from_file(f)
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
+            self.assertTrue(self.decompressor.read_one_word_to_data(f))
+            self.assertTrue(self.decompressor.read_one_word_to_data(f)) # reference
         self.assertEqual(self.decompressor._decompressed_data[-1], "testtest")
     
     def test_build_up_decompressed_data_list(self):
         filename = "text_generic.lor"
         with open(f"{INPUT_FOLDER}/{filename}", "r") as f:
-            self.decompressor._get_look_ahead(f)
+            self.decompressor._update_look_ahead_from_file(f)
             self.decompressor.look_ahead = 3  # This is so it won't read a reference yet.
             self.decompressor.fill_decompressed_data(f)
         self.assertEqual(self.decompressor.get_decompressed_data(), "testtest n1 n2")
 
     def test_default_input_folder(self):
-        x = Decompressor()
+        x = Text_Decompressor()
         self.assertEqual(x.input_folder, getcwd())
 
     def test_default_output_folder(self):
-        x = Decompressor()
+        x = Text_Decompressor()
         self.assertEqual(x.output_folder, getcwd())
 
     def test_generic_file_decompresses(self):

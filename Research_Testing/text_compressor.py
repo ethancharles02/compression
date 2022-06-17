@@ -1,21 +1,20 @@
 # TODO
 # Add docstrings
-# Rename compressions to algorithm, create specific compressors for each algorithm
 # Create decompressors for each algorithm
 # Move/create constants for compressors
-from os import path, listdir, fstat, remove as os_remove
-from text_compression import Text_Compressor
+from os import path, fstat, remove as os_remove
+from text_compression_algorithm import Text_Compression_Algorithm
+from basic_compressor import Basic_Compressor
 from time import monotonic
 
 COMPRESSION_FOLDER = "Research_Testing/random_textstring_files"
 
-class compressor(object):
+class Text_Compressor(Basic_Compressor):
     def __init__(self, chunk_size=1024, look_ahead=5):
+        super().__init__(".lor",".txt")
         self.chunk_size = chunk_size
         self.look_ahead = look_ahead
-        self.text_compressor = Text_Compressor(self.look_ahead)
-        self.input_folder = None
-        self.output_folder = None
+        self.text_compr_alg = Text_Compression_Algorithm(self.look_ahead)
 
         self._chunk_data = None
         self._bits_read = 0
@@ -48,10 +47,10 @@ class compressor(object):
                 self._update_chunk_data_to_end_of_word(f)
 
                 # Compress the chunk 
-                self.text_compressor.compress(self._chunk_data)
+                self.text_compr_alg.compress(self._chunk_data)
                 # write the chunk to the output file
                 with open(out_filepath, 'a') as new_f:
-                    new_f.write(self.text_compressor.get_compressed_data())
+                    new_f.write(self.text_compr_alg.get_compressed_data())
                 
                 # Get new chunk data
                 # self.chunk_data = f.read(self.chunk_size)
@@ -101,7 +100,10 @@ class compressor(object):
     def _check_and_update_io_files(self, in_file, out_file):
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
-            out_file = in_file.replace(".txt", ".lor")
+            out_file = in_file.replace(self.org_file_extension,
+                                       self.compressed_file_extension)
+        if self.compressed_file_extension not in out_file:
+            raise TypeError("ERROR! Output file is the wrong type")
 
         # If the input folder or output folders are specified, it updates the corresponding file with a path
         if self.input_folder is not None:
@@ -115,8 +117,8 @@ class compressor(object):
 
         return in_file, out_file
 
-if __name__ == "__main__":
-    file_compressor = compressor(15, 5)
+# if __name__ == "__main__":
+#     file_compressor = Text_Compressor(15, 5)
     
-    file_compressor.input_folder = COMPRESSION_FOLDER
-    file_compressor.run("textstring_5words_10lines.txt")
+#     file_compressor.input_folder = COMPRESSION_FOLDER
+#     file_compressor.run("textstring_5words_10lines.txt")

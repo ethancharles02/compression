@@ -1,12 +1,12 @@
 import unittest
 from sys import path
 path.append("..")
-from text_compression import Text_Compressor
+from text_compression_algorithm import Text_Compression_Algorithm
 
 
 class TestTextCompression(unittest.TestCase):
     def setUp(self):
-        self.compressor = Text_Compressor(5)
+        self.compressor = Text_Compression_Algorithm(5)
 
     def test_compress_empty_string(self):
         self.compressor.compress("")
