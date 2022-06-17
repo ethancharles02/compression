@@ -8,6 +8,7 @@ from sys import path
 path.append("Research_Testing")
 from pattern_constants import PATTERN_BIT_OFFSET
 
+# Even though there is functionality for dynamic bits within the compression algorithm, it doesn't work with actual bits yet
 class Pattern_Algorithm_C(object):
     """
     The pattern compressor is used to facilitate compressing of binary strings.

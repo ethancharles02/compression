@@ -18,7 +18,7 @@ OUTPUT_FOLDER = f"{BIN_FOLDER}/dump_files"
 
 class TestCompressor(unittest.TestCase):
     def setUp(self):
-        self.compressor = Pattern_Compressor(24)
+        self.compressor = Pattern_Compressor(8, pattern_bit_offset=1, max_look_ahead=15, raw_delimiter="01011", pattern_count_num_bits=4)
         self.compressor.input_folder = INPUT_FOLDER
         self.compressor.output_folder = OUTPUT_FOLDER
     
@@ -39,113 +39,75 @@ class TestCompressor(unittest.TestCase):
         file_exists = os_path.exists(f"{OUTPUT_FOLDER}/{filename}")
         self.assertFalse(file_exists)
 
-    def test_empty_file_compresses(self):
-        filename = "text_empty.txt"
+    # Since an empty file won't compress, it shouldn't even output
+    def test_empty_file_does_not_compress(self):
+        filename = "empty.bin"
         result = self.compressor.run(filename)
-        self.assertEquals(result, False)
-        output_file = filename.replace(".txt", ".lor")
+        self.assertFalse(result)
+        output_file = filename.replace(".bin", ".lor")
         self.assert_file_not_in_output_folder(output_file)
 
-    def test_generic_file_compresses(self):
-        filename = "text_generic.txt"
+    def test_8_bits_file_does_not_compress(self):
+        filename = "8_bits.bin"
+        result = self.compressor.run(filename)
+        self.assertFalse(result)
+        output_file = filename.replace(".bin", ".lor")
+        self.assert_file_not_in_output_folder(output_file)
+
+    def test_32_bits_compress(self):
+        filename = "32_bits.bin"
         result = self.compressor.run(filename)
         self.assertTrue(result)
-        output_file = filename.replace(".txt", ".lor")
+        output_file = filename.replace(".bin", ".lor")
         self.assert_files_in_test_folders_are_equal(output_file)
 
-    def test_wont_compress_single_word_out_of_chunk_range(self):
-        filename = "text_out_of_chunk_range.txt"
-        result = self.compressor.run(filename)
-        self.assertTrue(result)
-        output_file = filename.replace(".txt", ".lor")
-        self.assert_files_in_test_folders_are_equal(output_file)
+# class TestCompressor_folder_functionality(unittest.TestCase):
+#     def assert_files_are_equal(self, tst_filename, ref_filename):
+#         with open(tst_filename) as f:
+#             test_list = list(f)
+#         with open(ref_filename) as f:
+#             ref_list = list(f)
+#         self.assertListEqual(test_list, ref_list)
 
-    def test_compress_single_word_when_on_the_chunk_border(self):
-        filename = "text_on_chunk_border.txt"
-        result = self.compressor.run(filename)
-        self.assertTrue(result)
-        output_file = filename.replace(".txt", ".lor")
-        self.assert_files_in_test_folders_are_equal(output_file)
+#     @classmethod
+#     def setUpClass(cls):
+#         generic_text = "testtest n1 n2 testtest"
+#         generic_compressed_text = "[5]testtest n1 n2 <3"
+#         cls.in_file = "__test_folder_functionality.txt"
+#         cls.ref_file = "__ref_test_folder_functionality.lor"
+#         with open(cls.in_file, "w") as f:
+#             f.write(generic_text)
+#         with open(cls.ref_file, "w") as f:
+#             f.write(generic_compressed_text)
 
-    def test_compress_three_chunks(self):
-        filename = "text_three_chunks.txt"
-        result = self.compressor.run(filename)
-        self.assertTrue(result)
-        output_file = filename.replace(".txt", ".lor")
-        self.assert_files_in_test_folders_are_equal(output_file)
+#     @classmethod
+#     def tearDownClass(cls):
+#         os_remove(cls.in_file)
+#         os_remove(cls.ref_file)
 
-    def test_does_not_compress_file_that_would_not_save_space_when_compressed(self):
-        filename = "text_does_not_compress1.txt"
-        result = self.compressor.run(filename)
-        self.assertEquals(result, False)
-        self.assert_file_not_in_output_folder(filename.replace(".txt", ".lor"))
-        
-    def test_does_not_compress_file_that_only_has_unique_words(self):
-        filename = "text_does_not_compress2.txt"
-        result = self.compressor.run(filename)
-        self.assertEquals(result, False)
-        self.assert_file_not_in_output_folder(filename.replace(".txt", ".lor"))
+#     def setUp(self):
+#         self.compressor = compressor(24, 5)
+#         self.result_file = "__test_folder_functionality.lor"
 
-    def test_compress_with_newlines(self):
-#         '<4 n1 testtest n3\n'
-# '<4 <4 testtest n3\n'
-# - ['[5]test2 n1 n2\n', '<4 n1 testtest n3\n', 'n4 n5 <5']
-# ?                          ^^
-# + ['[5]test2 n1 n2\n', '<4 <4 testtest n3\n', 'n4 n5 <5']
-# ?                          ^^
-        self.compressor.chunk_size = 200
-        filename = "text_with_newlines.txt"
-        self.compressor.run(filename)
-        output_file = filename.replace(".txt", ".lor")
-        self.assert_files_in_test_folders_are_equal(output_file)
+#     def tearDown(self):
+#         if os_path.exists(self.result_file):
+#             os_remove(self.result_file)
 
-class TestCompressor_folder_functionality(unittest.TestCase):
-    def assert_files_are_equal(self, tst_filename, ref_filename):
-        with open(tst_filename) as f:
-            test_list = list(f)
-        with open(ref_filename) as f:
-            ref_list = list(f)
-        self.assertListEqual(test_list, ref_list)
+#     def test_compress_no_input_folder(self):
+#         # FileNotFoundError: [Errno 2] No such file or directory: 'Research_Testing/tests/compressor_text_files/dump_files/__test_folder_functionality.lor'
+#         self.compressor.output_folder = OUTPUT_FOLDER
 
-    @classmethod
-    def setUpClass(cls):
-        generic_text = "testtest n1 n2 testtest"
-        generic_compressed_text = "[5]testtest n1 n2 <3"
-        cls.in_file = "__test_folder_functionality.txt"
-        cls.ref_file = "__ref_test_folder_functionality.lor"
-        with open(cls.in_file, "w") as f:
-            f.write(generic_text)
-        with open(cls.ref_file, "w") as f:
-            f.write(generic_compressed_text)
+#         self.compressor.run(self.in_file, self.result_file)
+#         self.assert_files_are_equal(f"{OUTPUT_FOLDER}/{self.result_file}", self.ref_file)
+#         os_remove(f"{OUTPUT_FOLDER}/{self.result_file}")
 
-    @classmethod
-    def tearDownClass(cls):
-        os_remove(cls.in_file)
-        os_remove(cls.ref_file)
+#     def test_compress_no_output_folder(self):
+#         self.compressor.input_folder = INPUT_FOLDER
+#         filename = "text_generic.txt"
 
-    def setUp(self):
-        self.compressor = compressor(24, 5)
-        self.result_file = "__test_folder_functionality.lor"
+#         self.compressor.run(filename, self.result_file)
+#         self.assert_files_are_equal(self.result_file, self.ref_file)
 
-    def tearDown(self):
-        if os_path.exists(self.result_file):
-            os_remove(self.result_file)
-
-    def test_compress_no_input_folder(self):
-        # FileNotFoundError: [Errno 2] No such file or directory: 'Research_Testing/tests/compressor_text_files/dump_files/__test_folder_functionality.lor'
-        self.compressor.output_folder = OUTPUT_FOLDER
-
-        self.compressor.run(self.in_file, self.result_file)
-        self.assert_files_are_equal(f"{OUTPUT_FOLDER}/{self.result_file}", self.ref_file)
-        os_remove(f"{OUTPUT_FOLDER}/{self.result_file}")
-
-    def test_compress_no_output_folder(self):
-        self.compressor.input_folder = INPUT_FOLDER
-        filename = "text_generic.txt"
-
-        self.compressor.run(filename, self.result_file)
-        self.assert_files_are_equal(self.result_file, self.ref_file)
-
-    def test_compress_no_io_folders(self):
-        self.compressor.run(self.in_file, self.result_file)
-        self.assert_files_are_equal(self.result_file, self.ref_file)
+#     def test_compress_no_io_folders(self):
+#         self.compressor.run(self.in_file, self.result_file)
+#         self.assert_files_are_equal(self.result_file, self.ref_file)
