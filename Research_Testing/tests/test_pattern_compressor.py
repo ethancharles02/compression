@@ -1,6 +1,4 @@
 # TODO
-# Finish setting up tests between files
-# Add comments to add any necessary context to tests (especially the folder one)
 # Maybe make a custom function for replacing the file extension
 
 import unittest
@@ -93,56 +91,3 @@ class TestCompressor(unittest.TestCase):
         self.assertTrue(result)
         output_file = filename.replace(".bin", ".lor")
         self.assert_files_in_test_folders_are_equal(output_file)
-
-    # test full length output correctly pulling in new bits to reach byte level
-
-# class TestCompressor_folder_functionality(unittest.TestCase):
-#     def assert_files_are_equal(self, tst_filename, ref_filename):
-#         with open(tst_filename) as f:
-#             test_list = list(f)
-#         with open(ref_filename) as f:
-#             ref_list = list(f)
-#         self.assertListEqual(test_list, ref_list)
-
-#     @classmethod
-#     def setUpClass(cls):
-#         generic_text = "testtest n1 n2 testtest"
-#         generic_compressed_text = "[5]testtest n1 n2 <3"
-#         cls.in_file = "__test_folder_functionality.txt"
-#         cls.ref_file = "__ref_test_folder_functionality.lor"
-#         with open(cls.in_file, "w") as f:
-#             f.write(generic_text)
-#         with open(cls.ref_file, "w") as f:
-#             f.write(generic_compressed_text)
-
-#     @classmethod
-#     def tearDownClass(cls):
-#         os_remove(cls.in_file)
-#         os_remove(cls.ref_file)
-
-#     def setUp(self):
-#         self.compressor = compressor(24, 5)
-#         self.result_file = "__test_folder_functionality.lor"
-
-#     def tearDown(self):
-#         if os_path.exists(self.result_file):
-#             os_remove(self.result_file)
-
-#     def test_compress_no_input_folder(self):
-#         # FileNotFoundError: [Errno 2] No such file or directory: 'Research_Testing/tests/compressor_text_files/dump_files/__test_folder_functionality.lor'
-#         self.compressor.output_folder = OUTPUT_FOLDER
-
-#         self.compressor.run(self.in_file, self.result_file)
-#         self.assert_files_are_equal(f"{OUTPUT_FOLDER}/{self.result_file}", self.ref_file)
-#         os_remove(f"{OUTPUT_FOLDER}/{self.result_file}")
-
-#     def test_compress_no_output_folder(self):
-#         self.compressor.input_folder = INPUT_FOLDER
-#         filename = "text_generic.txt"
-
-#         self.compressor.run(filename, self.result_file)
-#         self.assert_files_are_equal(self.result_file, self.ref_file)
-
-#     def test_compress_no_io_folders(self):
-#         self.compressor.run(self.in_file, self.result_file)
-#         self.assert_files_are_equal(self.result_file, self.ref_file)

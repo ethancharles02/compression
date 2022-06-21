@@ -1,7 +1,5 @@
 # TODO
 # Add docstrings
-# Finish compressor
-# Add in a delimiter and the number of 0s at the end to get it into byte format
 # Remove a compressed file if it already exists before compression
 # Add in a 1 or a 0 at the beginning of the output file only if dynamic bit storing is fixed
 from os import path, listdir, fstat, remove as os_remove
@@ -42,14 +40,12 @@ class Pattern_Compressor(object):
         # Create initial compressed file
         in_filepath, out_filepath = self._check_and_update_io_files(in_file, out_file)
 
-        # with open(in_filepath, 'rb') as f:
         f = open(out_filepath, 'wb+')
         f.close()
         
         with open(in_filepath, 'rb') as f:
             self._file_size = fstat(f.fileno()).st_size
             # Get chunk data
-            # self.chunk_data = f.read(self.chunk_size)
             self._chunk_data = self._read_chunk_data(f, self.chunk_size)
 
             self._print_cur_time = monotonic()
@@ -60,14 +56,8 @@ class Pattern_Compressor(object):
                     self._print_percentage_completion(2)
                     self._print_cur_time = monotonic()
 
-                # Append additional chunk data till it has a full word at the end
-                # self._update_chunk_data_to_end_of_delimiter(f)
-
                 # Compress the chunk
                 self.pattern_compressor.compress(self._chunk_data)
-                # write the chunk to the output file
-                # with open(out_filepath, 'a') as new_f:
-                #     new_f.write(self.pattern_compressor.get_compressed_data())
 
                 self._append_binary_string_to_file(out_filepath, f, self.pattern_compressor.get_compressed_data())
                 
@@ -75,9 +65,6 @@ class Pattern_Compressor(object):
                 # self.chunk_data = f.read(self.chunk_size)
                 self._chunk_data = self._leftover_bits + self._read_chunk_data(f, self.chunk_size)
             self._print_percentage_completion(2)
-
-            # In the event that compression resulted in bits at the end that don't add up to a multiple of 8, this will add in bits with a delimiter
-            # self._correct_output_string_bits(out_filepath)
         
         if self._compressed_successfully(in_filepath, out_filepath):
             return True
@@ -108,7 +95,6 @@ class Pattern_Compressor(object):
         bitarr = bitarray(list(map(int,string)))
 
         with open(filepath,"ab+") as new_f:
-            # bitarr.tofile(new_f)
             new_f.write(bitarr)
 
     def _compressed_successfully(self, input_filepath, output_filepath):
@@ -156,10 +142,6 @@ class Pattern_Compressor(object):
             else:
                 return False
 
-    # Not used
-    # def _read_bytes_from_file_to_string(self, file, num_bytes):
-    #     return bin(int(file.read(num_bytes).hex(), base=16))[2:]
-
     def _convert_hex_bytes_to_bits(self, hex_bytes):
         binary_string = bin(int(hex_bytes.hex(), base=16))[2:]
         num_leading_zeroes = (8 - len(bin(int(hex_bytes.hex(), base=16))[2:])) % 8
@@ -168,18 +150,6 @@ class Pattern_Compressor(object):
     def _is_chunk_data_on_delimiter(self):
         if self._chunk_data:
             pass
-
-    # def _update_chunk_data_to_end_of_delimiter(self, f):
-    #     if self.pattern_compressor.is_pattern_count_limited:
-    #         pass
-    #     # Keeps reading in chunk data till the last character is a space
-    #     while self._chunk_data[-1] != " ":
-    #         new_character = self._read_chunk_data(f, 1)
-    #         # Updates the chunk data unless it hits the end of the file
-    #         if new_character:
-    #             self._chunk_data = self._chunk_data + new_character
-    #         else:
-    #             break
 
     def _check_and_update_io_files(self, in_file, out_file):
         # If an output file isn't specified, use the input with a replaced file extension
