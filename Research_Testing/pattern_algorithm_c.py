@@ -138,6 +138,11 @@ class Pattern_Algorithm_C(object):
         string_position = 0
         look_ahead = self._max_look_ahead
         while string_position < self._working_string_length:
+            # Checks how much string is left over, if there isn't enough, for the look ahead value, it gets cut down
+            max_pattern_length = (self._working_string_length - string_position) // 2
+            if max_pattern_length < look_ahead:
+                look_ahead = max_pattern_length
+
             while look_ahead > 0:
                 string_slice = self._working_string[string_position : string_position + look_ahead]
                 number_of_patterns = self._get_num_patterns(string_position, string_slice)

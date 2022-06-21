@@ -9,6 +9,7 @@ from pattern_algorithm_c import Pattern_Algorithm_C
 from time import monotonic
 from pattern_constants import *
 from bitarray import bitarray
+from math import ceil
 
 COMPRESSION_FOLDER = "Research_Testing/random_bitstring_files"
 
@@ -30,7 +31,9 @@ class Pattern_Compressor(object):
         self.output_folder = None
 
         self._chunk_data = None
-        self._bits_read = 0
+        self._leftover_bits = ""
+        self._bytes_read = 0
+        self._num_bits_output = 0
         self._file_size = 0
         self._print_time = 5
         self._print_cur_time = 0
@@ -65,12 +68,16 @@ class Pattern_Compressor(object):
                 # write the chunk to the output file
                 # with open(out_filepath, 'a') as new_f:
                 #     new_f.write(self.pattern_compressor.get_compressed_data())
-                self._append_binary_string_to_file(out_filepath, self.pattern_compressor.get_compressed_data())
+
+                self._append_binary_string_to_file(out_filepath, f, self.pattern_compressor.get_compressed_data())
                 
                 # Get new chunk data
                 # self.chunk_data = f.read(self.chunk_size)
-                self._chunk_data = self._read_chunk_data(f, self.chunk_size)
+                self._chunk_data = self._leftover_bits + self._read_chunk_data(f, self.chunk_size)
             self._print_percentage_completion(2)
+
+            # In the event that compression resulted in bits at the end that don't add up to a multiple of 8, this will add in bits with a delimiter
+            # self._correct_output_string_bits(out_filepath)
         
         if self._compressed_successfully(in_filepath, out_filepath):
             return True
@@ -78,7 +85,26 @@ class Pattern_Compressor(object):
             os_remove(out_filepath)
             return False
 
-    def _append_binary_string_to_file(self,filepath, string:str):
+    def _get_final_output_string(self, num_bits):
+        if num_bits != 0:
+            num_zeroes_needed = (num_bits - self.pattern_compressor._delimiter_length) % 8
+            return self.pattern_compressor._delimiter + "0" * num_zeroes_needed
+        else:
+            return ""
+
+    def _append_binary_string_to_file(self, filepath, file, string:str):
+        string_length = len(string)
+
+        needed_bits = (8 - string_length) % 8
+        if needed_bits != 0:
+            new_bits = self._read_bits(file, needed_bits)
+            if new_bits:
+                string = string + new_bits
+            else:
+                string = string + self._get_final_output_string(needed_bits)
+
+        self._num_bits_output += string_length
+
         bitarr = bitarray(list(map(int,string)))
 
         with open(filepath,"ab+") as new_f:
@@ -99,25 +125,45 @@ class Pattern_Compressor(object):
 
     def _get_percentage_completion(self):
         if self._file_size > 0:
-            percent = self._bits_read / self._file_size
+            percent = self._bytes_read / self._file_size
             return percent if percent < 1 else 1
         else:
             return 1
 
     def _read_chunk_data(self, file, chunk_size = 1):
-        self._bits_read += chunk_size
+        self._bytes_read += chunk_size
         data = file.read(chunk_size)
         if data:
             return self._convert_hex_bytes_to_bits(data)
         else:
-            return data
+            return ""
+    
+    def _read_bits(self, file, num_bits):
+        num_leftover_bits = len(self._leftover_bits)
+        additional_needed_bits = num_bits - num_leftover_bits
+        if additional_needed_bits <= 0:
+            output = self._leftover_bits[:num_bits]
+            self._leftover_bits = self._leftover_bits[num_bits:]
+            return output
+        else:
+            bytes_to_read = ceil(additional_needed_bits / 8)
+            new_bits = self._read_chunk_data(file, bytes_to_read)
+            if new_bits:
+                output = self._leftover_bits + new_bits[:additional_needed_bits - num_leftover_bits]
+
+                self._leftover_bits = new_bits[additional_needed_bits - num_leftover_bits:]
+                return output
+            else:
+                return False
 
     # Not used
     # def _read_bytes_from_file_to_string(self, file, num_bytes):
     #     return bin(int(file.read(num_bytes).hex(), base=16))[2:]
 
     def _convert_hex_bytes_to_bits(self, hex_bytes):
-        return bin(int(hex_bytes.hex(), base=16))[2:]
+        binary_string = bin(int(hex_bytes.hex(), base=16))[2:]
+        num_leading_zeroes = (8 - len(bin(int(hex_bytes.hex(), base=16))[2:])) % 8
+        return "0" * num_leading_zeroes + binary_string
 
     def _is_chunk_data_on_delimiter(self):
         if self._chunk_data:
