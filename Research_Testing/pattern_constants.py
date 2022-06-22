@@ -5,3 +5,4 @@ MAX_LOOK_AHEAD = 15
 # The basic delimiter, the actual delimiter has a bit added to the end
 RAW_DELIMITER = "01011"
 PATTERN_COUNT_NUM_BITS = 4
+OUT_FILE_EXTENSION = ".lor"

@@ -18,7 +18,7 @@ class Pattern_Algorithm_D(object):
 
         self._delimiter = self._raw_delimiter + self._delimiter_character
         self._delimiter_replace_string = self._raw_delimiter + self._replace_delimiter_character
-        # self._delimiter_length = len(self._delimiter)
+        self._delimiter_length = len(self._delimiter)
 
         # If a count for patterns is set, there will only need to be two delimiters instead of three for each pattern
         self._pattern_count_num_bits = pattern_count_num_bits
@@ -33,13 +33,13 @@ class Pattern_Algorithm_D(object):
         self._update_pattern_count_limited()
 
     def decompress(self, compressed_data):
-        data = compressed_data.replace(self._delimiter, "a").replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
+        data = compressed_data.replace(self._delimiter, "a").split("a")
 
         while len(data) > 1:
             self._update_data(data)
         
         if data:
-            self._data.append(data[0])
+            self._data.append(data[0].replace(self._delimiter_replace_string, self._raw_delimiter))
 
 
     def get_decompressed_data(self):
@@ -100,7 +100,7 @@ class Pattern_Algorithm_D(object):
 
         self._delimiter = value + self._delimiter_character
         self._delimiter_replace_string = value + self._replace_delimiter_character
-        # self._delimiter_length = len(self._delimiter)
+        self._delimiter_length = len(self._delimiter)
         # self._update_delimiter_cost()
 
     def _get_raw_delimiter(self):

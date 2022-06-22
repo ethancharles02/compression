@@ -198,6 +198,8 @@ class Pattern_Algorithm_C(object):
     def _get_num_patterns(self, position, pattern_string):
         count = 0
         pattern_string_length = len(pattern_string)
+        test1 = self._working_string[position + pattern_string_length : position + pattern_string_length*2]
+        test2 = 1
         while self._working_string[position + pattern_string_length : position + pattern_string_length*2] == pattern_string:
             count += 1
             position += pattern_string_length

@@ -78,33 +78,24 @@ def convert_txt_files_to_bin(input_folder, output_folder, clean_output=True, new
         write_binary_string_to_file(os_path.join(output_folder, file.replace(".txt", new_file_extension)), string)
         
 if __name__ == "__main__":
-    # old_time = monotonic()
 
-    # with open("Research_Testing/random_bitstring_files/random_bit_strings_10000.txt", "r") as f:
-    #     binary_string_list = f.read().splitlines()
-
-    # binary_string = "".join(binary_string_list)
-
-
-    # binary_string = "00000000 11111111".replace(" ", "")
-
-    # path = "Research_Testing/tests/compressor_binary_files"
-    # file = "bin1.bin"
+    # path = "Research_Testing/"
+    # file = "test.txt"
     # filepath = path + file
-    # write_binary_string_to_file(filepath, binary_string)
     # new_string = read_binary_file_to_string(filepath)
-    # print(len(binary_string), len(new_string))
-    # print(new_string == binary_string)
 
-    # print(monotonic() - old_time)
+    # print(new_string)
 
+    # path = "Research_Testing/"
+    # file = "test1.txt"
+    # filepath = path + file
+    # new_string = read_binary_file_to_string(filepath)
+
+    # print(new_string)
     # create_random_bit_string_file()
 
     convert_txt_files_to_bin(TEST_TEXT_FILEPATH, TEST_FILEPATH)
-    convert_txt_files_to_bin(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH, new_file_extension=".lor")
+    convert_txt_files_to_bin(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH, new_file_extension=".bin.lor")
 
     print(is_txt_folder_equal_to_bin_folder(TEST_TEXT_FILEPATH, TEST_FILEPATH))
     print(is_txt_folder_equal_to_bin_folder(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH))
-
-    # with open(os_path.join(TEST_FILEPATH, "8_bits.bin"), "rb") as f:
-    #     print(read_bytes_from_file_to_string(f, 1))

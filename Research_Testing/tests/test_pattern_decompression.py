@@ -93,20 +93,20 @@ class TestPatternCompression(unittest.TestCase):
         self.decompressor.decompress("0111 100100001000 0111 000".replace(" ", ""))
         self.assertEqual(self.decompressor.get_decompressed_data(), "100100001000 100100001000 100100001000 100100001000".replace(" ", ""))
 
-    def test_decompress_dynamic_pattern_bit_allocation(self):
-        self.decompressor.pattern_count_num_bits = None
+    # def test_decompress_dynamic_pattern_bit_allocation(self):
+    #     self.decompressor.pattern_count_num_bits = None
 
-        self.decompressor.decompress("0111 100100001000 0111 1 0111".replace(" ", ""))
-        self.assertEqual(self.decompressor.get_decompressed_data(), "100100001000 100100001000 100100001000".replace(" ", ""))
+    #     self.decompressor.decompress("0111 100100001000 0111 1 0111".replace(" ", ""))
+    #     self.assertEqual(self.decompressor.get_decompressed_data(), "100100001000 100100001000 100100001000".replace(" ", ""))
 
-    def test_decompress_dynamic_pattern_bit_allocation_patterns_interfere_delimiter(self):
-        self.decompressor.pattern_count_num_bits = None
+    # def test_decompress_dynamic_pattern_bit_allocation_patterns_interfere_delimiter(self):
+    #     self.decompressor.pattern_count_num_bits = None
 
-        self.decompressor.decompress("0111 100100001000 0111 10110 0111".replace(" ", ""))
-        self.assertEqual(self.decompressor.get_decompressed_data(), "100100001000"*(12 + 1))
+    #     self.decompressor.decompress("0111 100100001000 0111 10110 0111".replace(" ", ""))
+    #     self.assertEqual(self.decompressor.get_decompressed_data(), "100100001000"*(12 + 1))
 
-        self.decompressor.decompress("0111 100100001000 0111 101101 0111".replace(" ", ""))
-        self.assertEqual(self.decompressor.get_decompressed_data(), "100100001000"*(24 + 1))
+    #     self.decompressor.decompress("0111 100100001000 0111 101101 0111".replace(" ", ""))
+    #     self.assertEqual(self.decompressor.get_decompressed_data(), "100100001000"*(24 + 1))
 
     def test_decompress_string_inside_larger_decompressible_string(self):
         self.decompressor.decompress("0111 100100001000100100001000 0111 000".replace(" ", ""))

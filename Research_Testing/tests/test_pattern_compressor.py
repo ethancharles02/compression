@@ -5,7 +5,7 @@ import unittest
 
 from sys import path
 path.append("..")
-from os import getcwd, listdir, remove as os_remove, path as os_path
+from os import listdir, remove as os_remove, path as os_path
 
 from pattern_compressor import Pattern_Compressor
 
@@ -14,7 +14,7 @@ INPUT_FOLDER = f"{BIN_FOLDER}/test_files"
 REF_FOLDER = f"{BIN_FOLDER}/reference_files"
 OUTPUT_FOLDER = f"{BIN_FOLDER}/dump_files"
 
-class TestCompressor(unittest.TestCase):
+class Test_Pattern_Compressor(unittest.TestCase):
     def setUp(self):
         self.compressor = Pattern_Compressor(chunk_size=10, pattern_bit_offset=1, max_look_ahead=15, raw_delimiter="01011", pattern_count_num_bits=4)
         self.compressor.input_folder = INPUT_FOLDER
@@ -56,14 +56,14 @@ class TestCompressor(unittest.TestCase):
         filename = "32_bits.bin"
         result = self.compressor.run(filename)
         self.assertTrue(result)
-        output_file = filename.replace(".bin", ".lor")
+        output_file = filename + ".lor"
         self.assert_files_in_test_folders_are_equal(output_file)
 
     def test_partial_bytes_add_bits_to_end(self):
         filename = "partial_bytes.bin"
         result = self.compressor.run(filename)
         self.assertTrue(result)
-        output_file = filename.replace(".bin", ".lor")
+        output_file = filename + ".lor"
         self.assert_files_in_test_folders_are_equal(output_file)
 
     # In the event that compression results in bytes that aren't finished, a delimiter should be added to the end that finishes off the bytes
@@ -73,7 +73,7 @@ class TestCompressor(unittest.TestCase):
         filename = "partial_bytes_dont_compress.bin"
         result = self.compressor.run(filename)
         self.assertFalse(result)
-        output_file = filename.replace(".bin", ".lor")
+        output_file = filename + ".lor"
         self.assert_file_not_in_output_folder(output_file)
 
     def test_2_chunks_of_4_bytes(self):
@@ -81,7 +81,7 @@ class TestCompressor(unittest.TestCase):
         filename = "2_chunks_of_4.bin"
         result = self.compressor.run(filename)
         self.assertTrue(result)
-        output_file = filename.replace(".bin", ".lor")
+        output_file = filename + ".lor"
         self.assert_files_in_test_folders_are_equal(output_file)
 
     def test_3_chunks_of_4_bytes(self):
@@ -89,5 +89,5 @@ class TestCompressor(unittest.TestCase):
         filename = "3_chunks_of_4.bin"
         result = self.compressor.run(filename)
         self.assertTrue(result)
-        output_file = filename.replace(".bin", ".lor")
+        output_file = filename + ".lor"
         self.assert_files_in_test_folders_are_equal(output_file)
