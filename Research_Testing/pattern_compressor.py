@@ -9,7 +9,7 @@ from bitarray import bitarray
 from math import ceil
 
 class Pattern_Compressor(object):
-    def __init__(self, chunk_size=1024, pattern_bit_offset=None, max_look_ahead=None, raw_delimiter=None, pattern_count_num_bits=None, out_file_extension=None):
+    def __init__(self, chunk_size=1024, pattern_bit_offset=None, max_look_ahead=None, raw_delimiter=None, pattern_count_num_bits=None, out_file_extension=None, override_compression_check=False):
         self.chunk_size = chunk_size
 
         if pattern_bit_offset is None:
@@ -34,6 +34,8 @@ class Pattern_Compressor(object):
         self._file_size = 0
         self._print_time = 5
         self._print_cur_time = 0
+
+        self.override_compression_check = override_compression_check
         
     def run(self, in_file:str, out_file=None):
         # Create initial compressed file
@@ -48,7 +50,7 @@ class Pattern_Compressor(object):
             self.chunk_size = self._file_size
             
             # Get chunk data
-            self._chunk_data = self._read_chunk_data(f, self.chunk_size)
+            self._chunk_data = self._get_new_data(f, self.chunk_size)
 
             self._print_cur_time = monotonic()
 
@@ -68,6 +70,8 @@ class Pattern_Compressor(object):
                 self._chunk_data = self._get_new_data(f, self.chunk_size)
             self._print_percentage_completion(2)
         
+        if self.override_compression_check:
+            return True
         if self._compressed_successfully(in_filepath, out_filepath):
             return True
         else:

@@ -80,17 +80,18 @@ def convert_txt_files_to_bin(input_folder, output_folder, clean_output=True, new
 if __name__ == "__main__":
 
     # path = "Research_Testing/"
-    # file = "test.txt"
+    # file = "compressor.py"
     # filepath = path + file
     # new_string = read_binary_file_to_string(filepath)
 
-    # print(new_string)
+    # # print(new_string)
 
     # path = "Research_Testing/"
-    # file = "test1.txt"
+    # file = "compressor.py.lor"
     # filepath = path + file
     # new_string = read_binary_file_to_string(filepath)
 
+    # print("test")
     # print(new_string)
     # create_random_bit_string_file()
 

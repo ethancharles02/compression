@@ -1,4 +1,6 @@
 # TODO
+# Create a custom replace function for the delimiters that will ignore characters after each second delimiter (the num patterns) since we know how many of those there are
+# Test using images
 # Add docstrings
 
 from pattern_constants import PATTERN_BIT_OFFSET
@@ -33,13 +35,13 @@ class Pattern_Algorithm_D(object):
         self._update_pattern_count_limited()
 
     def decompress(self, compressed_data):
-        data = compressed_data.replace(self._delimiter, "a").split("a")
+        data = compressed_data.replace(self._delimiter, "a").replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
 
         while len(data) > 1:
             self._update_data(data)
         
         if data:
-            self._data.append(data[0].replace(self._delimiter_replace_string, self._raw_delimiter))
+            self._data.append(data[0])
 
 
     def get_decompressed_data(self):
@@ -66,11 +68,11 @@ class Pattern_Algorithm_D(object):
 
     def _update_delimiter_characters(self):
         if self._raw_delimiter[0] == "0":
-            self._delimiter_character = "1"
-            self._replace_delimiter_character = "0"
-        elif self._raw_delimiter[0] == "1":
             self._delimiter_character = "0"
             self._replace_delimiter_character = "1"
+        elif self._raw_delimiter[0] == "1":
+            self._delimiter_character = "1"
+            self._replace_delimiter_character = "0"
 
     def _update_pattern_count_limited(self):
         if self._pattern_count_num_bits is not None:

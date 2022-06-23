@@ -1,5 +1,5 @@
 # from io import FileIO
-from os import getcwd, fstat
+from os import getcwd, fstat, path, remove as os_remove
 from pattern_constants import *
 from pattern_algorithm_d import Pattern_Algorithm_D
 from bitarray import bitarray
@@ -36,10 +36,13 @@ class Pattern_Decompressor(object):
         # self._has_written_from_overflow = False
 
     def run(self, input_file:str, output_file=None):
-        if output_file is None:
-            output_file = self._remove_file_extension(input_file)
-        with open(f"{self.input_folder}/{input_file}", "rb") as in_f:
-            with open(f"{self.output_folder}/{output_file}", "ab+") as out_f:
+        input_file, output_file = self._check_and_update_io_files(input_file, output_file)
+        # if output_file is None:
+        #     output_file = self._remove_file_extension(input_file)
+        # if path.exists(output_file):
+        #     os_remove(output_file)
+        with open(input_file, "rb") as in_f:
+            with open(output_file, "ab+") as out_f:
                 self.chunk_size = fstat(in_f.fileno()).st_size
 
                 self._chunk_data = self._read_chunk_data_to_delimiter(in_f, self.chunk_size)
@@ -58,6 +61,25 @@ class Pattern_Decompressor(object):
                     self._output_data = ""
         
         return True
+
+    def _check_and_update_io_files(self, in_file, out_file):
+        # If an output file isn't specified, use the input with a replaced file extension
+        if out_file is None:
+            out_file = self._remove_file_extension(in_file)
+
+        # If the input folder or output folders are specified, it updates the corresponding file with a path
+        if self.input_folder is not None:
+            in_file = f"{self.input_folder}/{in_file}"
+        if self.output_folder is not None:
+            out_file = f"{self.output_folder}/{out_file}"
+        
+        # If the input file doesn't exist, an error will be raised
+        if not path.exists(in_file):
+            raise(FileNotFoundError())
+        if path.exists(out_file):
+            os_remove(out_file)
+
+        return in_file, out_file
 
     def _remove_file_extension(self, string:str):
         index = string.rfind(self.input_file_extension)
@@ -136,10 +158,23 @@ class Pattern_Decompressor(object):
         if self._leftover_bits:
             raise Exception(f"There are leftover bits that shouldn't exist: {self._leftover_bits}")
 
-        string = data[-(self.pattern_decompressor._delimiter_length - 1):]
-        relative_index = self._get_safe_cutoff_index(string)
+        cutoff_index_needed = True
 
-        index = -(len(string) - relative_index)
+        test_string = data[-((self.pattern_decompressor._delimiter_length - 1) * 2):]
+        if self.pattern_decompressor.raw_delimiter in test_string:
+            relative_index = test_string.rfind(self.pattern_decompressor.raw_delimiter)
+
+            if relative_index <= len(test_string) - self.pattern_decompressor._delimiter_length:
+                index = -(len(test_string) - (relative_index + self.pattern_decompressor._delimiter_length))
+                cutoff_index_needed = False
+            else:
+                cutoff_index_needed = True
+
+        if cutoff_index_needed:
+            string = data[-(self.pattern_decompressor._delimiter_length - 1):]
+            relative_index = self._get_safe_cutoff_index(string)
+
+            index = -(len(string) - relative_index)
 
         if index < 0:
             self._leftover_bits = data[index:]
@@ -176,68 +211,8 @@ class Pattern_Decompressor(object):
         num_leading_zeroes = (8 - len(bin(int(hex_bytes.hex(), base=16))[2:])) % 8
         return "0" * num_leading_zeroes + binary_string
 
-    # def _get_look_ahead(self, f):
-    #     char = f.read(1)
-    #     if char != "[":
-    #         raise(WrongFileFormatError("File does not contain look ahead!"))
-    #     look_ahead = ""
-    #     char = f.read(1)
-    #     while char != "]":
-    #         look_ahead += char
-    #         char = f.read(1)
-    #     self.look_ahead = int(look_ahead)
-
-    # def fill_decompressed_data(self, f):
-    #     while len(self._decompressed_data) < self.look_ahead:
-    #         self.read_one_word(f)
-
-    # def read_one_word(self, f):
-    #     char = f.read(1)
-    #     if char:
-    #         word = ""
-    #         while(char != ' ' and char != '' and char != '\n'):
-    #             word += char
-    #             char = f.read(1)
-    #         self._decompressed_data.append(self._decompress(word))
-    #         if char == '\n':
-    #             self._decompressed_data.append('\n')
-    #         return True
-    #     else:
-    #         return False
-
-    # def get_decompressed_data(self):
-    #     return " ".join(self._decompressed_data)
-
-    # def _decompress(self, reference):
-    #     if "<" in reference and "~" not in reference:
-    #         words_away = int(reference.split('<')[-1])
-    #         if words_away <= len(self._decompressed_data):
-    #             result = self._decompressed_data[-1 * words_away]
-    #             if reference[0] == '\n':
-    #                 result = '\n' + result
-    #             if reference[-1] == '\n':
-    #                 result = result + '\n'
-    #             return result
-    #     return reference
-
-    # def _write_overflow_to_output_file(self, f:FileIO):
-    #     if len(self._decompressed_data) > self.look_ahead:
-    #         word = self._decompressed_data.pop(0)
-    #         if self._last_word_written is not None:
-    #             if word != '\n' and self._last_word_written != '\n':
-    #                 word = ' ' + word
-    #             self._last_word_written = word
-    #         else:
-    #             self._last_word_written = word
-    #         f.write(word)
-    #         self._has_written_from_overflow = True
-
-    # def _write_data_to_output_file(self, f:FileIO):
-    #     f.write(self.get_decompressed_data().replace(" \n ", "\n"))  
-
 if __name__ == "__main__":
     decompressor = Pattern_Decompressor()
 
-    data = "010111".replace(" ", "")
-
-    print(decompressor.pattern_decompressor.pattern_count_num_bits, decompressor._get_num_bits_needed_for_pattern_count(len(data), data.rfind(decompressor.pattern_decompressor._delimiter)))
+    data = "0000000000 010110 1111011".replace(" ", "")
+    print(decompressor._cutoff_data(data), decompressor._leftover_bits)

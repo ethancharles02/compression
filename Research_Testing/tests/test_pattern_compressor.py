@@ -1,4 +1,5 @@
 # TODO
+# Add restrictions for the compressor and decompressor such that a raw delimiter can't be longer than 7 characters
 # Maybe make a custom function for replacing the file extension
 
 import unittest
@@ -87,6 +88,15 @@ class Test_Pattern_Compressor(unittest.TestCase):
     def test_3_chunks_of_4_bytes(self):
         self.compressor.chunk_size = 4
         filename = "3_chunks_of_4.bin"
+        result = self.compressor.run(filename)
+        self.assertTrue(result)
+        output_file = filename + ".lor"
+        self.assert_files_in_test_folders_are_equal(output_file)
+    
+    def test_raw_delimiter_between_chunks_compresses_correctly(self):
+        self.compressor.chunk_size = 4
+        self.compressor.pattern_compressor._max_look_ahead = 8
+        filename = "raw_delimiter_between_chunks.bin"
         result = self.compressor.run(filename)
         self.assertTrue(result)
         output_file = filename + ".lor"

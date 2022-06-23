@@ -109,6 +109,9 @@ class Pattern_Algorithm_C(object):
 
         self._update_delimiter_characters()
 
+        self._delimiter_non_bin_char = "a"
+        self._delimiter_non_bin_char_length = len(self._delimiter_non_bin_char)
+
         self._delimiter = self._raw_delimiter + self._delimiter_character
         self._delimiter_replace_string = self._raw_delimiter + self._replace_delimiter_character
         self._delimiter_length = len(self._delimiter)
@@ -127,11 +130,14 @@ class Pattern_Algorithm_C(object):
 
         self._max_pattern_count = None
         self._delimiter_cost = None
+        self._delimiter_char_cost = None
         self._update_max_pattern_count()
         self._update_delimiter_cost()
+        self._update_delimiter_char_cost()
 
     def compress(self, string:str):
-        self._working_string = string.replace(self._raw_delimiter, self._delimiter_replace_string)
+        
+        self._working_string = string
 
         # Update string length as necessary whenever it gets changed
         self._working_string_length = len(self._working_string)
@@ -158,6 +164,9 @@ class Pattern_Algorithm_C(object):
             look_ahead = self._max_look_ahead
 
         self._patch_intersection_with_data()
+
+        self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string)
+        self._working_string = self._working_string.replace(self._delimiter_non_bin_char, self._delimiter)
 
         self._data.append(self._working_string)
 
@@ -198,8 +207,6 @@ class Pattern_Algorithm_C(object):
     def _get_num_patterns(self, position, pattern_string):
         count = 0
         pattern_string_length = len(pattern_string)
-        test1 = self._working_string[position + pattern_string_length : position + pattern_string_length*2]
-        test2 = 1
         while self._working_string[position + pattern_string_length : position + pattern_string_length*2] == pattern_string:
             count += 1
             position += pattern_string_length
@@ -211,7 +218,7 @@ class Pattern_Algorithm_C(object):
             binary_string = self._convert_to_binary(num_patterns)
             return "0" * (self._pattern_count_num_bits - len(binary_string)) + binary_string
         else:
-            return self._convert_to_binary(num_patterns).replace(self._raw_delimiter, self._delimiter_replace_string) + self._delimiter
+            return self._convert_to_binary(num_patterns).replace(self._raw_delimiter, self._delimiter_replace_string) + self._delimiter_non_bin_char
 
     def _compress_string_patterns(self, position, pattern_string, num_patterns):
         pattern_string_length = len(pattern_string)
@@ -219,13 +226,13 @@ class Pattern_Algorithm_C(object):
         binary_pattern_string = self._get_pattern_binary_string(num_patterns)
         binary_pattern_string_length = len(binary_pattern_string)
 
-        new_string_length = self._delimiter_cost + pattern_string_length + binary_pattern_string_length
+        new_string_length = self._delimiter_char_cost + pattern_string_length + binary_pattern_string_length
         if new_string_length < pattern_string_length * (num_patterns + 1):
 
             string_end_pos = position + pattern_string_length * (num_patterns + 1)
-
+            
             self._working_string =   self._working_string[:position] +\
-                                    self._delimiter + pattern_string + self._delimiter + binary_pattern_string +\
+                                    self._delimiter_non_bin_char + pattern_string + self._delimiter_non_bin_char + binary_pattern_string +\
                                     self._working_string[string_end_pos:]
 
             self._working_string_length = len(self._working_string)
@@ -241,6 +248,12 @@ class Pattern_Algorithm_C(object):
         else:
             self._delimiter_cost = self._delimiter_length * 3
 
+    def _update_delimiter_char_cost(self):
+        if self.is_pattern_count_limited:
+            self._delimiter_char_cost = self._delimiter_non_bin_char_length * 2
+        else:
+            self._delimiter_char_cost = self._delimiter_non_bin_char_length * 3
+
     def _update_max_pattern_count(self):
         if self.is_pattern_count_limited:
             self._max_pattern_count = (2 ** self._pattern_count_num_bits - 1) + self._pattern_bit_offset
@@ -249,11 +262,11 @@ class Pattern_Algorithm_C(object):
 
     def _update_delimiter_characters(self):
         if self._raw_delimiter[0] == "0":
-            self._delimiter_character = "1"
-            self._replace_delimiter_character = "0"
-        elif self._raw_delimiter[0] == "1":
             self._delimiter_character = "0"
             self._replace_delimiter_character = "1"
+        elif self._raw_delimiter[0] == "1":
+            self._delimiter_character = "1"
+            self._replace_delimiter_character = "0"
 
     def _update_pattern_count_limited(self):
         if self._pattern_count_num_bits is not None:
