@@ -165,8 +165,9 @@ class Pattern_Algorithm_C(object):
 
         self._patch_intersection_with_data()
 
-        self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string)
-        self._working_string = self._working_string.replace(self._delimiter_non_bin_char, self._delimiter)
+        # self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string)
+        # self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
+        self._working_string = self._working_string.replace(self._delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
 
         self._data.append(self._working_string)
 
@@ -262,11 +263,11 @@ class Pattern_Algorithm_C(object):
 
     def _update_delimiter_characters(self):
         if self._raw_delimiter[0] == "0":
-            self._delimiter_character = "0"
-            self._replace_delimiter_character = "1"
-        elif self._raw_delimiter[0] == "1":
             self._delimiter_character = "1"
             self._replace_delimiter_character = "0"
+        elif self._raw_delimiter[0] == "1":
+            self._delimiter_character = "0"
+            self._replace_delimiter_character = "1"
 
     def _update_pattern_count_limited(self):
         if self._pattern_count_num_bits is not None:

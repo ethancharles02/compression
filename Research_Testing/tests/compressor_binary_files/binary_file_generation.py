@@ -74,29 +74,43 @@ def convert_txt_files_to_bin(input_folder, output_folder, clean_output=True, new
         new_file_extension = ".bin"
 
     for file in listdir(input_folder):
-        string = read_text_file_to_binary_string(os_path.join(input_folder, file))
-        write_binary_string_to_file(os_path.join(output_folder, file.replace(".txt", new_file_extension)), string)
-        
+        if os_path.isfile(os_path.join(input_folder, file)):
+            string = read_text_file_to_binary_string(os_path.join(input_folder, file))
+            write_binary_string_to_file(os_path.join(output_folder, file.replace(".txt", new_file_extension)), string)
+
+def output_bytes_to_file(input_filepath, output_filepath, start_bytes, end_bytes):
+    string = read_binary_file_to_string(input_filepath)
+    write_binary_string_to_file(output_filepath, string[start_bytes * 8 : end_bytes * 8])
+
 if __name__ == "__main__":
 
-    # path = "Research_Testing/"
-    # file = "compressor.py"
-    # filepath = path + file
+    path = "Research_Testing/random_bitstring_files/bin_bitstring_files/"
+    file = "random_bit_strings_10000.bin"
+    filepath = path + file
+    path = "Research_Testing/random_bitstring_files/bin_bitstring_files/"
+    file = "test1.bin.lor"
+    out_filepath = path + file
+
+    # output_bytes_to_file(filepath, out_filepath, 209163, 209166)
+    # output_bytes_to_file(filepath, out_filepath, 209165, 209171)
+    new_string = read_binary_file_to_string(out_filepath)
     # new_string = read_binary_file_to_string(filepath)
 
-    # # print(new_string)
+    print(new_string)
 
-    # path = "Research_Testing/"
-    # file = "compressor.py.lor"
-    # filepath = path + file
-    # new_string = read_binary_file_to_string(filepath)
+    path = "Research_Testing/"
+    file = "test1.bin"
+    filepath = path + file
+    new_string = read_binary_file_to_string(filepath)
 
-    # print("test")
-    # print(new_string)
+    print(new_string)
+    # print(new_string[209163 * 8:209166 * 8])
     # create_random_bit_string_file()
 
-    convert_txt_files_to_bin(TEST_TEXT_FILEPATH, TEST_FILEPATH)
-    convert_txt_files_to_bin(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH, new_file_extension=".bin.lor")
 
-    print(is_txt_folder_equal_to_bin_folder(TEST_TEXT_FILEPATH, TEST_FILEPATH))
-    print(is_txt_folder_equal_to_bin_folder(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH))
+    # convert_txt_files_to_bin("Research_Testing/random_bitstring_files", "Research_Testing\\random_bitstring_files\\bin_bitstring_files")
+    # convert_txt_files_to_bin(TEST_TEXT_FILEPATH, TEST_FILEPATH)
+    # convert_txt_files_to_bin(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH, new_file_extension=".bin.lor")
+
+    # print(is_txt_folder_equal_to_bin_folder(TEST_TEXT_FILEPATH, TEST_FILEPATH))
+    # print(is_txt_folder_equal_to_bin_folder(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH))

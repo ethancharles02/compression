@@ -1,4 +1,3 @@
-# from io import FileIO
 from os import getcwd, fstat, path, remove as os_remove
 from pattern_constants import *
 from pattern_algorithm_d import Pattern_Algorithm_D

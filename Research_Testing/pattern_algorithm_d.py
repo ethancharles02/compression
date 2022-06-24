@@ -1,14 +1,13 @@
 # TODO
-# Create a custom replace function for the delimiters that will ignore characters after each second delimiter (the num patterns) since we know how many of those there are
 # Test using images
 # Add docstrings
 
 from pattern_constants import PATTERN_BIT_OFFSET
+from helper_functions.helper_functions import special_replace
 
 class Pattern_Algorithm_D(object):
     def __init__(self, raw_delimiter:str = "1111", pattern_count_num_bits:int = None, pattern_bit_offset:int = None):
         self._data = []
-        self._working_string = ""
         # self._working_string_length = 0
 
         # Store the raw delimiter along with the version for normal delimiting and for replacing existing raw delimiters
@@ -35,7 +34,9 @@ class Pattern_Algorithm_D(object):
         self._update_pattern_count_limited()
 
     def decompress(self, compressed_data):
-        data = compressed_data.replace(self._delimiter, "a").replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
+        # data = compressed_data.replace(self._delimiter, "a").replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
+        # data = special_replace(compressed_data, self._delimiter, "a", 2, self.pattern_count_num_bits).replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
+        data = special_replace(compressed_data, self._delimiter, "a", 2, self.pattern_count_num_bits).replace(self._delimiter_replace_string, self._delimiter).split("a")
 
         while len(data) > 1:
             self._update_data(data)
@@ -52,6 +53,8 @@ class Pattern_Algorithm_D(object):
     def _update_data(self, data:list):
         if data[1]:
             if self.is_pattern_count_limited:
+                if not data[2][:self.pattern_count_num_bits]:
+                    print(True)
                 binary_num_patterns = self._get_num_patterns(data[2][:self.pattern_count_num_bits]) + 1
                 data[0] = data[0] + data[1] * binary_num_patterns + data[2][self.pattern_count_num_bits:]
             else:
@@ -68,11 +71,11 @@ class Pattern_Algorithm_D(object):
 
     def _update_delimiter_characters(self):
         if self._raw_delimiter[0] == "0":
-            self._delimiter_character = "0"
-            self._replace_delimiter_character = "1"
-        elif self._raw_delimiter[0] == "1":
             self._delimiter_character = "1"
             self._replace_delimiter_character = "0"
+        elif self._raw_delimiter[0] == "1":
+            self._delimiter_character = "0"
+            self._replace_delimiter_character = "1"
 
     def _update_pattern_count_limited(self):
         if self._pattern_count_num_bits is not None:
