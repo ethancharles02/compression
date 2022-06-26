@@ -24,6 +24,22 @@ class TestTextCompression(unittest.TestCase):
         self.compressor.compress("word")
         self.assertEqual(self.compressor.get_compressed_data(), "word")
 
+    def test_compress_single_word_with_extra_space_behind(self):
+        self.compressor.compress("word ")
+        self.assertEqual(self.compressor.get_compressed_data(), "word ")
+
+    def test_compress_single_word_with_extra_space_in_front(self):
+        self.compressor.compress(" word")
+        self.assertEqual(self.compressor.get_compressed_data(), " word")
+
+    def test_compress_single_word_with_newline_behind(self):
+        self.compressor.compress("word\n")
+        self.assertEqual(self.compressor.get_compressed_data(), "word\n")
+
+    def test_compress_single_word_with_newline_in_front(self):
+        self.compressor.compress("\nword")
+        self.assertEqual(self.compressor.get_compressed_data(), "\nword")
+
     def test_compress_text_has_one_reference(self):
         self.compressor.compress("word word")
         self.assertEqual(self.compressor.get_compressed_data(), "word <1")

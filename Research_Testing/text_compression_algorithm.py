@@ -26,7 +26,7 @@ class Text_Compression_Algorithm(object):
             self.compress_word(self.num_old_data + new_data_index)
             self._clean_potential_refs(data_index)
             data_index -= 1
-        if self.data[-1] == '' and self.data[0] != '':
+        if len(self.data) > 1 and self.data[-1] == '' and self.data[-2] == '\n':
             self.data.pop()
 
     def compress_word(self, data_index):
