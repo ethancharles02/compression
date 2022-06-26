@@ -6,7 +6,7 @@ from os import getcwd, listdir, remove as os_remove, path as os_path
 from text_decompressor import Text_Decompressor, WrongFileFormatError
 
 
-TXT_FOLDER = "Research_Testing/tests/compressor_text_files"
+TXT_FOLDER = "compressor_text_files"
 TST_FOLDER = f"{TXT_FOLDER}/test_files"
 INPUT_FOLDER = f"{TXT_FOLDER}/reference_files"
 OUTPUT_FOLDER = f"{TXT_FOLDER}/dump_files"
