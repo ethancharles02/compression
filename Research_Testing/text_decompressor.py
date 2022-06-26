@@ -18,6 +18,8 @@ class Text_Decompressor(object):
                 while self.read_one_word_to_data(in_f):
                     if len(self._decompressed_data) > self.look_ahead:
                         self._write_word_to(out_f)
+                if self._decompressed_data and self._decompressed_data[-1] == '\n':
+                    self._decompressed_data.append('') 
                 self._write_data_to_output_file(out_f)
 
     def _update_look_ahead_from_file(self, f:FileIO):
@@ -72,11 +74,6 @@ class Text_Decompressor(object):
         words_away = int(reference.split('<')[-1])
         if words_away <= len(self._decompressed_data):
             result = self._decompressed_data[-1 * words_away]
-            # with open("decompress.log", "a") as f:
-            #     f.write(result)
-            #     f.write(",: ")
-            #     f.write(",".join(self._decompressed_data))
-            #     f.write('\n')
             assert result is not None
             return result
 

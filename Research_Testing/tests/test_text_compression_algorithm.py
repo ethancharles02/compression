@@ -20,6 +20,18 @@ class TestTextCompression(unittest.TestCase):
         self.compressor.compress("  ")
         self.assertEqual(self.compressor.get_compressed_data(), "  ")
 
+    def test_compress_newline(self):
+        self.compressor.compress("\n")
+        self.assertEqual(self.compressor.get_compressed_data(), "\n")
+    
+    def test_compress_two_newline(self):
+        self.compressor.compress("\n\n")
+        self.assertEqual(self.compressor.get_compressed_data(), "\n\n")
+
+    def test_compress_period_with_four_newline(self):
+        self.compressor.compress(".\n\n\n\n")
+        self.assertEqual(self.compressor.get_compressed_data(), ".\n\n\n\n")
+
     def test_compress_single_word(self):
         self.compressor.compress("word")
         self.assertEqual(self.compressor.get_compressed_data(), "word")

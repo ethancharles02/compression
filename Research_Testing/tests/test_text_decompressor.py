@@ -128,4 +128,10 @@ class Test_Decompressor(unittest.TestCase):
         self.decompressor.run(filename)
         output_file = filename.replace(".lor", ".txt")
         self.assert_files_in_test_folders_are_equal(output_file)
+
+    def test_decompress_file_with_period_and_four_newlines(self):
+        filename = "period_with_four_newlines.lor"
+        self.decompressor.run(filename)
+        output_file = filename.replace(".lor", ".txt")
+        self.assert_files_in_test_folders_are_equal(output_file)
     

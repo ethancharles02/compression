@@ -1,7 +1,7 @@
 # Text Compression Algorithm
-from sys import path
-path.append("..")
-from text_compression_algorithm import Text_Compression_Algorithm
+# from sys import path
+# path.append("..")
+# from text_compression_algorithm import Text_Compression_Algorithm
 
 # compressor = Text_Compression_Algorithm(5)
 # compressor.compress("\nword")
@@ -46,3 +46,37 @@ from text_compression_algorithm import Text_Compression_Algorithm
 # # teardown
 # for f in listdir(OUTPUT_FOLDER):
 #             os_remove(os_path.join(OUTPUT_FOLDER, f))
+
+# Text Decompression
+from sys import path
+path.append("..")
+from os import getcwd, listdir, remove as os_remove, path as os_path
+
+from text_decompressor import Text_Decompressor, WrongFileFormatError
+
+TXT_FOLDER = "compressor_text_files"
+TST_FOLDER = f"{TXT_FOLDER}/test_files"
+INPUT_FOLDER = f"{TXT_FOLDER}/reference_files"
+OUTPUT_FOLDER = f"{TXT_FOLDER}/dump_files"
+
+
+# setUp
+decompressor = Text_Decompressor()
+decompressor.input_folder = INPUT_FOLDER
+decompressor.output_folder = OUTPUT_FOLDER
+# Test
+filename = "period_with_four_newlines.lor"
+decompressor.run(filename)
+output_file = filename.replace(".lor", ".txt")
+
+# # prints
+# print("Result:")
+# with open(OUTPUT_FOLDER + '/' + output_file, "r") as f:
+#     print(f.readlines())
+# print("Expected:")
+# with open(REF_FOLDER + '/' + output_file, "r") as f:
+#     print(f.readlines())
+
+# tearDown
+# for f in listdir(OUTPUT_FOLDER):
+#     os_remove(os_path.join(OUTPUT_FOLDER, f))
