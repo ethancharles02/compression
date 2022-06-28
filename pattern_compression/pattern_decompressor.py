@@ -10,8 +10,9 @@ class WrongFileFormatError(Exception):
 
 class Pattern_Decompressor(object):
     def __init__(self, chunk_size=1024, raw_delimiter=None, pattern_count_num_bits=None, pattern_bit_offset=None, input_file_extension=None) -> None:
-        self.input_folder = getcwd()
-        self.output_folder = self.input_folder
+        # self.input_folder = getcwd()
+        # self.output_folder = self.input_folder
+        self.output_folder = None
 
         self.chunk_size = chunk_size
 
@@ -64,11 +65,11 @@ class Pattern_Decompressor(object):
     def _check_and_update_io_files(self, in_file, out_file):
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
-            out_file = self._remove_file_extension(in_file)
+            out_file = path.basename(self._remove_file_extension(in_file))
 
         # If the input folder or output folders are specified, it updates the corresponding file with a path
-        if self.input_folder is not None:
-            in_file = f"{self.input_folder}/{in_file}"
+        # if self.input_folder is not None:
+        #     in_file = f"{self.input_folder}/{in_file}"
         if self.output_folder is not None:
             out_file = f"{self.output_folder}/{out_file}"
         

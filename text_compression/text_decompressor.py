@@ -1,5 +1,5 @@
 from io import FileIO
-from os import getcwd
+from os import path
 
 class WrongFileFormatError(Exception):
     def __init__(self, *args: object) -> None:
@@ -7,14 +7,18 @@ class WrongFileFormatError(Exception):
 
 class Text_Decompressor(object):
     def __init__(self) -> None:
-        self.input_folder = getcwd()
-        self.output_folder = self.input_folder
+        self.output_folder = None
         self._decompressed_data = []
 
-    def run(self, input_file:str):
-        with open(f"{self.input_folder}/{input_file}", "r") as in_f:
+    def run(self, input_filepath:str, out_file=None):
+        input_file = path.basename(input_filepath)
+        if self.output_folder is None:
+            self.output_folder = path.dirname(input_filepath)
+        if out_file is None:
+            out_file = f"{self.output_folder}\\{input_file.replace('.lor', '.txt')}"
+        with open(input_filepath, "r") as in_f:
             self._update_look_ahead_from_file(in_f)
-            with open(f"{self.output_folder}\\{input_file.replace('.lor', '.txt')}", "w") as out_f:
+            with open(out_file, "w") as out_f:
                 while self.read_one_word_to_data(in_f):
                     if len(self._decompressed_data) > self.look_ahead:
                         self._write_word_to(out_f)

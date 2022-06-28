@@ -24,7 +24,7 @@ class Pattern_Compressor(object):
             self.out_file_extension = OUT_FILE_EXTENSION
 
         self.pattern_compressor = Pattern_Algorithm_C(max_look_ahead = max_look_ahead, raw_delimiter = raw_delimiter, pattern_count_num_bits = pattern_count_num_bits, pattern_bit_offset = pattern_bit_offset)
-        self.input_folder = None
+        # self.input_folder = None
         self.output_folder = None
 
         self._chunk_data = None
@@ -180,11 +180,11 @@ class Pattern_Compressor(object):
     def _check_and_update_io_files(self, in_file, out_file):
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
-            out_file = in_file + self.out_file_extension
-
+            out_file = path.basename(in_file) + self.out_file_extension
+            
         # If the input folder or output folders are specified, it updates the corresponding file with a path
-        if self.input_folder is not None:
-            in_file = f"{self.input_folder}/{in_file}"
+        # if self.input_folder is not None:
+        #     in_file = f"{self.input_folder}/{in_file}"
         if self.output_folder is not None:
             out_file = f"{self.output_folder}/{out_file}"
         

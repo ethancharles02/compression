@@ -4,12 +4,13 @@ from text_compression.text_decompressor import Text_Decompressor
 from pattern_compression.pattern_compressor import Pattern_Compressor
 from pattern_compression.pattern_decompressor import Pattern_Decompressor
 
+from os import path
+
 class WrongFileType(Exception):
     pass
 
 class Master_Compressor(object):
     def __init__(self) -> None:
-        self.in_folder = None
         self.out_folder = None
         self.text_compr = Text_Compressor()
         self.text_decompr = Text_Decompressor()
@@ -22,11 +23,10 @@ class Master_Compressor(object):
         if choice == 1:
             if ".txt" not in in_file:
                 raise WrongFileType()
-            self.text_compr.input_folder = self.in_folder
-            self.text_decompr.output_folder = self.out_folder
+            if out_file is None:
+                out_file = self.out_folder + '/' + path.basename(in_file.replace(".txt", ".lor"))
             compress_success = self.text_compr.run(in_file, out_file)
         elif choice == 2:
-            self.patter_compr.input_folder = self.in_folder
             self.patter_decompr.output_folder = self.out_folder
             compress_success = self.patter_compr.run(in_file, out_file)
         else:
@@ -36,11 +36,13 @@ class Master_Compressor(object):
     def decompress(self, in_file:str, out_file=None):
         choice = self.some_decision_logic()
         if choice == 1:
-            self.text_compr.input_folder = self.in_folder
+            if ".lor" not in in_file:
+                raise WrongFileType()
+            if out_file is None:
+                out_file = in_file.replace(".lor", ".txt")
             self.text_decompr.output_folder = self.out_folder
             compress_success = self.text_decompr.run(in_file, out_file)
         elif choice == 2:
-            self.patter_compr.input_folder = self.in_folder
             self.patter_decompr.output_folder = self.out_folder
             compress_success = self.patter_decompr.run(in_file, out_file)
         else:

@@ -24,11 +24,11 @@ class Text_Compressor(Basic_Compressor):
         
     def run(self, in_file:str, out_file=None):
         # Create initial compressed file
-        in_filepath, out_filepath = self._check_and_update_io_files(in_file, out_file)
-        with open(out_filepath, 'w') as f:
+        # in_filepath, out_filepath = self._check_and_update_io_files(in_file, out_file)
+        with open(out_file, 'w') as f:
             f.write(f"[{self.look_ahead}]")
 
-        with open(in_filepath, 'r') as f:
+        with open(in_file, 'r') as f:
             self._file_size = fstat(f.fileno()).st_size
             # Get chunk data
             # self.chunk_data = f.read(self.chunk_size)
@@ -49,7 +49,7 @@ class Text_Compressor(Basic_Compressor):
                 # Compress the chunk 
                 self.text_compr_alg.compress(self._chunk_data)
                 # write the chunk to the output file
-                with open(out_filepath, 'a') as new_f:
+                with open(out_file, 'a') as new_f:
                     new_f.write(self.text_compr_alg.get_compressed_data())
                 
                 # Get new chunk data
@@ -57,10 +57,10 @@ class Text_Compressor(Basic_Compressor):
                 self._chunk_data = self._read_chunk_data(f, self.chunk_size)
             self._print_percentage_completion(2)
         
-        if self._compressed_successfully(in_filepath, out_filepath):
+        if self._compressed_successfully(in_file, out_file):
             return True
         else:
-            os_remove(out_filepath)
+            os_remove(out_file)
             return False
 
     def _compressed_successfully(self, input_filepath, output_filepath):
@@ -106,9 +106,8 @@ class Text_Compressor(Basic_Compressor):
             raise TypeError("ERROR! Output file is the wrong type")
 
         # If the input folder or output folders are specified, it updates the corresponding file with a path
-        if self.input_folder is not None:
-            in_file = f"{self.input_folder}/{in_file}"
         if self.output_folder is not None:
+            self.output_folder = path.dirname(in_file)
             out_file = f"{self.output_folder}/{out_file}"
         
         # If the input file doesn't exist, an error will be raised

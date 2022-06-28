@@ -15,7 +15,7 @@ THIS_FILE = path.basename(__file__)
 
 class Compression_GUI():
     def __init__(self) -> None:
-        self.compresser = Master_Compressor
+        self.compresser = Master_Compressor()
         self.root = self.create_root()
         self.frm = self.create_frame()
         self.in_file_entry = self.create_infile_entry_and_label()
@@ -80,19 +80,31 @@ class Compression_GUI():
         choice = self.run_type.get()
         in_file = self.in_file_entry.get()
         out_folder = self.out_file_entry.get()
+        if len(out_folder) == 0:
+            out_folder = path.dirname(in_file)
+        self.compresser.out_folder = out_folder
         if choice == COMPRESS:
             try:
                 self.compresser.compress(in_file)
-                self.NewWindow(in_file + "\ncompressed successfully to\n" + out_folder)
+                self.NewWindow(in_file + "\ncompressed successfully to\n" + self.compresser.out_folder)
             except WrongFileType:
                 self.NewWindow("ERROR! Wrong file type!")
+            except FileNotFoundError:
+                self.NewWindow("ERROR! file not found!")
             except Exception:
                 self.NewWindow("There was an error!")
         elif choice == DECOMPRESS:
-            self.compresser.decompress(in_file)
-            self.NewWindow(in_file + "\ndecompressed successfully to\n" + out_folder)
+            try:
+                self.compresser.decompress(in_file)
+                self.NewWindow(in_file + "\ndecompressed successfully to\n" + self.compresser.out_folder)
+            except WrongFileType:
+                self.NewWindow("ERROR! Wrong file type!")
+            except FileNotFoundError:
+                self.NewWindow("ERROR! file not found!")
+            except Exception:
+                self.NewWindow("There was an error!")
         else:
-            self.NewWindow("ERROR: Compress/Decompress not seleceted!")
+            self.NewWindow("ERROR: Compress/Decompress not selected!")
 
     def NewWindow(self, text):
         window = tk.Toplevel()
