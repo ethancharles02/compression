@@ -4,9 +4,14 @@ from tkinter import ttk
 from tkinter import filedialog
 from functools import partial
 from os import path
+
+from master_compressor import Master_Compressor
+
+
 COMPRESS = "compress"
 DECOMPRESS = "decompress"
 THIS_FILE = path.basename(__file__)
+
 
 class Compression_GUI():
     def __init__(self) -> None:
@@ -75,7 +80,6 @@ class Compression_GUI():
         in_file = "in: " + self.in_file_entry.get() + "\n"
         out_folder = "out: " + self.out_file_entry.get() + "\n"
         if choice == COMPRESS:
-
             self.NewWindow(in_file + out_folder + "File Compressed Successfully")  # add the master compressor here
         elif choice == DECOMPRESS:
             self.NewWindow(in_file + out_folder + "File Decompressed Successfully")  # add the master decompressor here
@@ -85,14 +89,13 @@ class Compression_GUI():
     def NewWindow(self, text):
         window = tk.Toplevel()
         window.geometry('300x150')
-        newlabel = tk.Label(window, text = text)
+        newlabel = tk.Label(window, text=text)
         newlabel.pack()
 
     def start(self):
         self.root.mainloop()
 
     
-
 if __name__ == "__main__":
     gui = Compression_GUI()
     gui.start()

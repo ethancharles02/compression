@@ -4,7 +4,7 @@
 import unittest
 
 from sys import path
-from Research_Testing.bit_grid_compressor import bit_grid_compressor
+from archive.bit_grid_compressor import bit_grid_compressor
 path.append("../..")
 
 from os import getcwd
