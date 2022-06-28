@@ -3,7 +3,7 @@
 # Create decompressors for each algorithm
 # Move/create constants for compressors
 from os import path, fstat, remove as os_remove
-from text_compression_algorithm import Text_Compression_Algorithm
+from text_compression.text_compression_algorithm import Text_Compression_Algorithm
 from basic_compressor import Basic_Compressor
 from time import monotonic
 

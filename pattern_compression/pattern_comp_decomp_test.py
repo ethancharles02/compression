@@ -1,11 +1,11 @@
-from pattern_compressor import Pattern_Compressor
-from pattern_decompressor import Pattern_Decompressor
+from pattern_compression.pattern_compressor import Pattern_Compressor
+from pattern_compression.pattern_decompressor import Pattern_Decompressor
 from time import monotonic
 
-# INPUT_FOLDER = "Research_Testing/random_bitstring_files/bin_bitstring_files/"
-# OUTPUT_FOLDER = "Research_Testing"
-INPUT_FOLDER = "Research_Testing"
-OUTPUT_FOLDER = "Research_Testing"
+# INPUT_FOLDER = "pattern_compression/tests/random_bitstring_files/bin_bitstring_files/"
+# OUTPUT_FOLDER = "pattern_compression"
+INPUT_FOLDER = "pattern_compression"
+OUTPUT_FOLDER = "pattern_compression"
 
 def are_files_in_test_folders_equal(filepath1, filepath2):
     with open(filepath1, "rb") as f:

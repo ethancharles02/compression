@@ -1,7 +1,7 @@
 import unittest
 from sys import path
 path.append("..")
-from pattern_algorithm_d import Pattern_Algorithm_D
+from pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D
 
 
 class TestPatternCompression(unittest.TestCase):

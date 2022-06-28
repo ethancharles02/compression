@@ -8,7 +8,7 @@
 import unittest
 from sys import path
 path.append("..")
-from pattern_algorithm_c import Pattern_Algorithm_C
+from pattern_compression.pattern_algorithm_c import Pattern_Algorithm_C
 
 
 class TestPatternCompression(unittest.TestCase):

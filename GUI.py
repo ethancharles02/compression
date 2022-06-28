@@ -15,6 +15,7 @@ THIS_FILE = path.basename(__file__)
 
 class Compression_GUI():
     def __init__(self) -> None:
+        self.compresser = Master_Compressor
         self.root = self.create_root()
         self.frm = self.create_frame()
         self.in_file_entry = self.create_infile_entry_and_label()
@@ -77,14 +78,16 @@ class Compression_GUI():
 
     def run(self):
         choice = self.run_type.get()
-        in_file = "in: " + self.in_file_entry.get() + "\n"
-        out_folder = "out: " + self.out_file_entry.get() + "\n"
+        in_file = self.in_file_entry.get()
+        out_folder = self.out_file_entry.get()
         if choice == COMPRESS:
-            self.NewWindow(in_file + out_folder + "File Compressed Successfully")  # add the master compressor here
+            self.compresser.compress(in_file)
+            self.NewWindow(in_file + "\ncompressed successfully to\n" + out_folder)
         elif choice == DECOMPRESS:
-            self.NewWindow(in_file + out_folder + "File Decompressed Successfully")  # add the master decompressor here
+            self.compresser.decompress(in_file)
+            self.NewWindow(in_file + "\ndecompressed successfully to\n" + out_folder)
         else:
-            self.NewWindow("ERROR: Compress/Decompress not set!")
+            self.NewWindow("ERROR: Compress/Decompress not seleceted!")
 
     def NewWindow(self, text):
         window = tk.Toplevel()
