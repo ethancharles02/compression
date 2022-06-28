@@ -13,23 +13,36 @@ class Text_Compression_Algorithm(object):
         # Add escape characters
         string = string.replace("<","~<").replace("\n", " \n ")
         # Split the string into a list
-        new_data = string.split(" ")
+        self.new_data = string.split(" ")
+        self.num_old_data = len(self.data)
         # Prepend the new list of strings onto the old list
-        self.data = new_data + self.data
+        self.data += self.new_data
         # Update the reference dictionary indexes to account for the length of the new list
-        self._update_dict_ref_indexes(len(new_data))
+        # self._update_dict_ref_indexes(len(self.new_data))
         
         # Set the index for moving backwards through the new data
-        i = len(new_data) - 1
-        for item in reversed(new_data):
-            if self._item_should_be_referenced(item):
+        data_index = len(self.data) - 1
+        for new_data_index in range(len(self.new_data)):
+            self.compress_word(self.num_old_data + new_data_index)
+            self._clean_potential_refs(data_index)
+            data_index -= 1
+        if len(self.data) > 1 and self.data[-1] == '' and self.data[-2] == '\n':
+            self.data.pop()
+
+    def compress_word(self, data_index):
+        if self._item_is_big_enough_to_be_referenced(self.data[data_index]):
                 # If there is a current word in the dictionary, replace old word with a reference
-                if item in self.potential_ref_dict:
-                    ref_loc = self.potential_ref_dict[item]
-                    self._update_data_at(ref_loc, ref_loc - i)
-                self._add_item_to_potential_refs(i, item)
-            self._clean_potential_refs(i)
-            i -= 1
+            if self.data[data_index] in self.potential_ref_dict.keys():
+                (ref_loc, org_value) = self.potential_ref_dict[self.data[data_index]]
+                ref_dist = data_index - ref_loc
+                if ref_dist <= self._look_ahead:
+                    self._update_data_piece_to_reference_at(data_index, ref_dist)
+                self._add_item_to_potential_refs(data_index, org_value)
+            else:
+                self._add_item_to_potential_refs(data_index, self.data[data_index])
+
+    def _item_is_reference(self, item):
+        return "<" in item and "~" not in item
 
     def _update_min_ref_length(self):
         self._min_reference_length = len(str(self._look_ahead)) + 1
@@ -43,14 +56,14 @@ class Text_Compression_Algorithm(object):
                 self.potential_ref_list.pop(0)
 
     def _add_item_to_potential_refs(self, index, value):
-        self.potential_ref_dict[value] = index
+        self.potential_ref_dict[value] = (index, value)
         self.potential_ref_list.append((index, value))
 
-    def _item_should_be_referenced(self, item):
+    def _item_is_big_enough_to_be_referenced(self, item):
         return len(item) > self._min_reference_length
 
-    def _update_data_at(self, index:int, ref_dist):
-        self.data[index] = f"<{ref_dist}"
+    def _update_data_piece_to_reference_at(self, index:int, ref_dist):
+        self.data[index] = f"<{ref_dist}" 
 
     def _update_dict_ref_indexes(self, num:int):
         for item in self.potential_ref_dict.keys():
@@ -70,12 +83,14 @@ class Text_Compression_Algorithm(object):
     )
 
     def get_compressed_data(self):
-        self.output = (" ".join(self.data)).replace(" \n ", "\n")
+        if self.data[-1] == '\n':
+            self.data.append('')
+        output = (" ".join(self.data)).replace(" \n ", "\n")
         self.data.clear()
         self.potential_ref_dict.clear()
-        return self.output
+        return output
         
-if __name__ == "__main__":
-    compressor = Text_Compressor()
-    compressor.compress(" ")
-    print(compressor.get_compressed_data())
+# if __name__ == "__main__":
+#     compressor = Text_Compressor()
+#     compressor.compress(" ")
+#     print(compressor.get_compressed_data())

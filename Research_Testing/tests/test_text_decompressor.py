@@ -6,7 +6,7 @@ from os import getcwd, listdir, remove as os_remove, path as os_path
 from text_decompressor import Text_Decompressor, WrongFileFormatError
 
 
-TXT_FOLDER = "Research_Testing/tests/compressor_text_files"
+TXT_FOLDER = "compressor_text_files"
 TST_FOLDER = f"{TXT_FOLDER}/test_files"
 INPUT_FOLDER = f"{TXT_FOLDER}/reference_files"
 OUTPUT_FOLDER = f"{TXT_FOLDER}/dump_files"
@@ -125,6 +125,12 @@ class Test_Decompressor(unittest.TestCase):
 
     def test_decompress_file_with_newlines(self):
         filename = "text_with_newlines.lor"
+        self.decompressor.run(filename)
+        output_file = filename.replace(".lor", ".txt")
+        self.assert_files_in_test_folders_are_equal(output_file)
+
+    def test_decompress_file_with_period_and_four_newlines(self):
+        filename = "period_with_four_newlines.lor"
         self.decompressor.run(filename)
         output_file = filename.replace(".lor", ".txt")
         self.assert_files_in_test_folders_are_equal(output_file)

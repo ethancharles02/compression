@@ -20,9 +20,37 @@ class TestTextCompression(unittest.TestCase):
         self.compressor.compress("  ")
         self.assertEqual(self.compressor.get_compressed_data(), "  ")
 
+    def test_compress_newline(self):
+        self.compressor.compress("\n")
+        self.assertEqual(self.compressor.get_compressed_data(), "\n")
+    
+    def test_compress_two_newline(self):
+        self.compressor.compress("\n\n")
+        self.assertEqual(self.compressor.get_compressed_data(), "\n\n")
+
+    def test_compress_period_with_four_newline(self):
+        self.compressor.compress(".\n\n\n\n")
+        self.assertEqual(self.compressor.get_compressed_data(), ".\n\n\n\n")
+
     def test_compress_single_word(self):
         self.compressor.compress("word")
         self.assertEqual(self.compressor.get_compressed_data(), "word")
+
+    def test_compress_single_word_with_extra_space_behind(self):
+        self.compressor.compress("word ")
+        self.assertEqual(self.compressor.get_compressed_data(), "word ")
+
+    def test_compress_single_word_with_extra_space_in_front(self):
+        self.compressor.compress(" word")
+        self.assertEqual(self.compressor.get_compressed_data(), " word")
+
+    def test_compress_single_word_with_newline_behind(self):
+        self.compressor.compress("word\n")
+        self.assertEqual(self.compressor.get_compressed_data(), "word\n")
+
+    def test_compress_single_word_with_newline_in_front(self):
+        self.compressor.compress("\nword")
+        self.assertEqual(self.compressor.get_compressed_data(), "\nword")
 
     def test_compress_text_has_one_reference(self):
         self.compressor.compress("word word")
@@ -49,17 +77,17 @@ class TestTextCompression(unittest.TestCase):
         self.assertEqual(self.compressor.get_compressed_data(), expected_string)
 
     def test_compress_two_consecutive_strings(self):
-        string2 = "word n3"
-        string1 = "n2 n1 word"
+        string1 = "word n3"
+        string2 = "n2 n1 word"
         expected_string = "word n3 n2 n1 <4"
         self.compressor.compress(string1)
         self.compressor.compress(string2)
         self.assertEqual(self.compressor.get_compressed_data(), expected_string)
 
     def test_compress_three_consecutive_strings(self):
-        string3 = "word n1 n2 word2"
+        string1 = "word n1 n2 word2"
         string2 = "word n3"
-        string1 = "n4 word2 n5 word"
+        string3 = "n4 word2 n5 word"
         expected_string = "word n1 n2 word2 <4 n3 n4 <4 n5 <5"
         self.compressor.compress(string1)
         self.compressor.compress(string2)
@@ -67,16 +95,16 @@ class TestTextCompression(unittest.TestCase):
         self.assertEqual(self.compressor.get_compressed_data(), expected_string)
 
     def test_compress_two_consecutive_strings_with_line_breaks(self):
-        string2 = "word2 n1\n"
-        string1 = "n2\nword2 n3 word"
-        expected_string = "word2 n1\n n2\n<6 n3 word"
+        string1 = "word2 n1\n"
+        string2 = "n2\nword2 n3 word"
+        expected_string = "word2 n1\nn2\n<5 n3 word"
         self.compressor.compress(string1)
         self.compressor.compress(string2)
         self.assertEqual(self.compressor.get_compressed_data(), expected_string)
 
     def test_compress_two_consecutive_strings_one_string_small(self):
-        string2 = "n1 word"
-        string1 = "word"
+        string1 = "n1 word"
+        string2 = "word"
         expected_string = "n1 word <1"
         self.compressor.compress(string1)
         self.compressor.compress(string2)
@@ -86,6 +114,13 @@ class TestTextCompression(unittest.TestCase):
         string = "word n1 n2 n3 n4 n5 word"
         self.compressor.compress(string)
         self.assertEqual(self.compressor.get_compressed_data(), string)
+
+    def test_look_ahead_length_affects_compress_look_ahead_with_multiple_lines(self):
+        string1 = "word n1 n2 n3 n4 n5\n"
+        string2 = "word n1 n2 n3 n4 n5\nword n1 n2 n3 n4 n5\nword n1 n2 n3 n4 n5\n"
+        for i in range(3):
+            self.compressor.compress(string1)   
+        self.assertEqual(self.compressor.get_compressed_data(), string2)
 
     def test_get_look_ahead_value(self):
         self.assertEqual(self.compressor.look_ahead, self.compressor._look_ahead)
