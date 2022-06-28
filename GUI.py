@@ -5,7 +5,7 @@ from tkinter import filedialog
 from functools import partial
 from os import path
 
-from master_compressor import Master_Compressor
+from master_compressor import Master_Compressor, WrongFileType
 
 
 COMPRESS = "compress"
@@ -81,8 +81,13 @@ class Compression_GUI():
         in_file = self.in_file_entry.get()
         out_folder = self.out_file_entry.get()
         if choice == COMPRESS:
-            self.compresser.compress(in_file)
-            self.NewWindow(in_file + "\ncompressed successfully to\n" + out_folder)
+            try:
+                self.compresser.compress(in_file)
+                self.NewWindow(in_file + "\ncompressed successfully to\n" + out_folder)
+            except WrongFileType:
+                self.NewWindow("ERROR! Wrong file type!")
+            except Exception:
+                self.NewWindow("There was an error!")
         elif choice == DECOMPRESS:
             self.compresser.decompress(in_file)
             self.NewWindow(in_file + "\ndecompressed successfully to\n" + out_folder)

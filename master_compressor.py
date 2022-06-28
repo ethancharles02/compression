@@ -4,6 +4,8 @@ from text_compression.text_decompressor import Text_Decompressor
 from pattern_compression.pattern_compressor import Pattern_Compressor
 from pattern_compression.pattern_decompressor import Pattern_Decompressor
 
+class WrongFileType(Exception):
+    pass
 
 class Master_Compressor(object):
     def __init__(self) -> None:
@@ -18,6 +20,8 @@ class Master_Compressor(object):
     def compress(self, in_file:str, out_file=None):
         choice = self.some_decision_logic()
         if choice == 1:
+            if ".txt" not in in_file:
+                raise WrongFileType()
             self.text_compr.input_folder = self.in_folder
             self.text_decompr.output_folder = self.out_folder
             compress_success = self.text_compr.run(in_file, out_file)
@@ -32,7 +36,6 @@ class Master_Compressor(object):
     def decompress(self, in_file:str, out_file=None):
         choice = self.some_decision_logic()
         if choice == 1:
-            assert ""
             self.text_compr.input_folder = self.in_folder
             self.text_decompr.output_folder = self.out_folder
             compress_success = self.text_decompr.run(in_file, out_file)
