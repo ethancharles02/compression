@@ -96,6 +96,7 @@ class Pattern_Algorithm_C(object):
                 will never happen, it is safe to say that 0 in binary is actually 1 in decimal
         """
         self._data = []
+        self._last_data_end = ""
         self._working_string = ""
         self._working_string_length = 0
         self._max_look_ahead = max_look_ahead
@@ -169,6 +170,8 @@ class Pattern_Algorithm_C(object):
         self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
         # self._working_string = self._working_string.replace(self._delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
 
+        self._last_data_end = self._working_string[-(self._raw_delimiter_length - 1):]
+
         self._data.append(self._working_string)
 
     def get_compressed_data(self):
@@ -179,10 +182,17 @@ class Pattern_Algorithm_C(object):
     def _patch_intersection_with_data(self):
         if self._data:
             split_length = self._raw_delimiter_length - 1
-            mid_string = self._data[-1][-(split_length):] + self._working_string[:split_length]
-            if self._raw_delimiter in mid_string:
-                insert_index = mid_string.index(self._raw_delimiter) + self._raw_delimiter_length - split_length
-                self._working_string = self._working_string[:insert_index] + self._replace_delimiter_character + self._working_string[insert_index:]
+            end_string = self._data[-1][-(split_length):]
+            self._patch_working_string_from_string(end_string, split_length)
+        elif self._last_data_end:
+            split_length = self._raw_delimiter_length - 1
+            self._patch_working_string_from_string(self._last_data_end, split_length)
+    
+    def _patch_working_string_from_string(self, string, split_length):
+        combined_string = string + self._working_string[:split_length]
+        if self._raw_delimiter in combined_string:
+            insert_index = combined_string.index(self._raw_delimiter) + self._raw_delimiter_length - split_length
+            self._working_string = self._working_string[:insert_index] + self._replace_delimiter_character + self._working_string[insert_index:]
 
     def _get_compression_cost(self, num_patterns):
         if self.is_pattern_count_limited:

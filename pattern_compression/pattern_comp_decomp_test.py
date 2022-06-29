@@ -59,7 +59,7 @@ def analyze_lists(list1, list2):
 
 if __name__ == "__main__":
     # compressor = Pattern_Compressor(raw_delimiter="0101101", max_look_ahead=50, override_compression_check=True)
-    compressor = Pattern_Compressor(raw_delimiter="01011", max_look_ahead=50, override_compression_check=True)
+    compressor = Pattern_Compressor(raw_delimiter="01011", max_look_ahead=50, override_compression_check=True, override_chunk_size=True)
     compressor.input_folder = INPUT_FOLDER
     compressor.output_folder = INPUT_FOLDER
 

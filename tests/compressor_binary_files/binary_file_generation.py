@@ -9,10 +9,10 @@ from array import *
 NUM_STRINGS = 10000
 RANDOM_BITS_FILE = "Research_Testing\\random_bitstring_files\\random_bit_strings_" + str(NUM_STRINGS) + ".txt"
 
-TEST_TEXT_FILEPATH = "Research_Testing\\tests\\compressor_binary_files\\test_text_files"
-REFERENCE_TEXT_FILEPATH = "Research_Testing\\tests\\compressor_binary_files\\reference_text_files"
-TEST_FILEPATH = "Research_Testing\\tests\\compressor_binary_files\\test_files"
-REFERENCE_FILEPATH = "Research_Testing\\tests\\compressor_binary_files\\reference_files"
+TEST_TEXT_FILEPATH = "tests\\compressor_binary_files\\test_text_files"
+REFERENCE_TEXT_FILEPATH = "tests\\compressor_binary_files\\reference_text_files"
+TEST_FILEPATH = "tests\\compressor_binary_files\\test_files"
+REFERENCE_FILEPATH = "tests\\compressor_binary_files\\reference_files"
 
 def write_binary_string_to_file(filepath, string:str):
     bitarr = bitarray(list(map(int,string)))
@@ -84,33 +84,33 @@ def output_bytes_to_file(input_filepath, output_filepath, start_bytes, end_bytes
 
 if __name__ == "__main__":
 
-    path = "Research_Testing/random_bitstring_files/bin_bitstring_files/"
-    file = "random_bit_strings_10000.bin"
-    filepath = path + file
-    path = "Research_Testing/random_bitstring_files/bin_bitstring_files/"
-    file = "test1.bin.lor"
-    out_filepath = path + file
+    # path = "Research_Testing/random_bitstring_files/bin_bitstring_files/"
+    # file = "random_bit_strings_10000.bin"
+    # filepath = path + file
+    # path = "Research_Testing/random_bitstring_files/bin_bitstring_files/"
+    # file = "test1.bin.lor"
+    # out_filepath = path + file
 
-    # output_bytes_to_file(filepath, out_filepath, 209163, 209166)
-    # output_bytes_to_file(filepath, out_filepath, 209165, 209171)
-    new_string = read_binary_file_to_string(out_filepath)
+    # # output_bytes_to_file(filepath, out_filepath, 209163, 209166)
+    # # output_bytes_to_file(filepath, out_filepath, 209165, 209171)
+    # new_string = read_binary_file_to_string(out_filepath)
+    # # new_string = read_binary_file_to_string(filepath)
+
+    # print(new_string)
+
+    # path = "Research_Testing/"
+    # file = "test1.bin"
+    # filepath = path + file
     # new_string = read_binary_file_to_string(filepath)
 
-    print(new_string)
-
-    path = "Research_Testing/"
-    file = "test1.bin"
-    filepath = path + file
-    new_string = read_binary_file_to_string(filepath)
-
-    print(new_string)
+    # print(new_string)
     # print(new_string[209163 * 8:209166 * 8])
     # create_random_bit_string_file()
 
 
     # convert_txt_files_to_bin("Research_Testing/random_bitstring_files", "Research_Testing\\random_bitstring_files\\bin_bitstring_files")
-    # convert_txt_files_to_bin(TEST_TEXT_FILEPATH, TEST_FILEPATH)
-    # convert_txt_files_to_bin(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH, new_file_extension=".bin.lor")
+    convert_txt_files_to_bin(TEST_TEXT_FILEPATH, TEST_FILEPATH)
+    convert_txt_files_to_bin(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH, new_file_extension=".bin.lor")
 
-    # print(is_txt_folder_equal_to_bin_folder(TEST_TEXT_FILEPATH, TEST_FILEPATH))
-    # print(is_txt_folder_equal_to_bin_folder(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH))
+    print(is_txt_folder_equal_to_bin_folder(TEST_TEXT_FILEPATH, TEST_FILEPATH))
+    print(is_txt_folder_equal_to_bin_folder(REFERENCE_TEXT_FILEPATH, REFERENCE_FILEPATH))
