@@ -166,8 +166,8 @@ class Pattern_Algorithm_C(object):
         self._patch_intersection_with_data()
 
         # self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string)
-        # self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
-        self._working_string = self._working_string.replace(self._delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
+        self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
+        # self._working_string = self._working_string.replace(self._delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
 
         self._data.append(self._working_string)
 

@@ -24,7 +24,6 @@ class Pattern_Compressor(object):
             self.out_file_extension = OUT_FILE_EXTENSION
 
         self.pattern_compressor = Pattern_Algorithm_C(max_look_ahead = max_look_ahead, raw_delimiter = raw_delimiter, pattern_count_num_bits = pattern_count_num_bits, pattern_bit_offset = pattern_bit_offset)
-        # self.input_folder = None
         self.output_folder = None
 
         self._chunk_data = None

@@ -35,8 +35,8 @@ class Pattern_Algorithm_D(object):
 
     def decompress(self, compressed_data):
         # data = compressed_data.replace(self._delimiter, "a").replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
-        # data = special_replace(compressed_data, self._delimiter, "a", 2, self.pattern_count_num_bits).replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
-        data = special_replace(compressed_data, self._delimiter, "a", 2, self.pattern_count_num_bits).replace(self._delimiter_replace_string, self._delimiter).split("a")
+        data = special_replace(compressed_data, self._delimiter, "a", 2, self.pattern_count_num_bits).replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
+        # data = special_replace(compressed_data, self._delimiter, "a", 2, self.pattern_count_num_bits).replace(self._delimiter_replace_string, self._delimiter).split("a")
 
         while len(data) > 1:
             self._update_data(data)

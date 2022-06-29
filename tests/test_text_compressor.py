@@ -9,9 +9,9 @@ from sys import path
 path.append("..")
 from os import getcwd, listdir, remove as os_remove, path as os_path
 
-from text_compressor import Text_Compressor
+from text_compression.text_compressor import Text_Compressor
 
-TXT_FOLDER = "compressor_text_files"
+TXT_FOLDER = "tests/compressor_text_files"
 INPUT_FOLDER = f"{TXT_FOLDER}/test_files"
 REF_FOLDER = f"{TXT_FOLDER}/reference_files"
 OUTPUT_FOLDER = f"{TXT_FOLDER}/dump_files"

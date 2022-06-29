@@ -10,12 +10,12 @@ from os import listdir, remove as os_remove, path as os_path
 
 from pattern_compression.pattern_compressor import Pattern_Compressor
 
-BIN_FOLDER = "pattern_compression/tests/compressor_binary_files"
+BIN_FOLDER = "tests/compressor_binary_files"
 INPUT_FOLDER = f"{BIN_FOLDER}/test_files"
 REF_FOLDER = f"{BIN_FOLDER}/reference_files"
 OUTPUT_FOLDER = f"{BIN_FOLDER}/dump_files"
 
-class Test_Pattern_Compressor(unittest.TestCase):
+class TestPatternCompressor(unittest.TestCase):
     def setUp(self):
         self.compressor = Pattern_Compressor(chunk_size=10, pattern_bit_offset=1, max_look_ahead=15, raw_delimiter="01011", pattern_count_num_bits=4)
         self.compressor.input_folder = INPUT_FOLDER

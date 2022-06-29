@@ -6,12 +6,12 @@ from os import getcwd, listdir, remove as os_remove, path as os_path
 from pattern_compression.pattern_decompressor import Pattern_Decompressor
 
 
-BIN_FOLDER = "pattern_compression/tests/compressor_binary_files"
+BIN_FOLDER = "tests/compressor_binary_files"
 TST_FOLDER = f"{BIN_FOLDER}/test_files"
 INPUT_FOLDER = f"{BIN_FOLDER}/reference_files"
 OUTPUT_FOLDER = f"{BIN_FOLDER}/dump_files"
 
-class Test_Pattern_Decompressor(unittest.TestCase):
+class TestPatternDecompressor(unittest.TestCase):
     def setUp(self):
         self.decompressor = Pattern_Decompressor(chunk_size=10, raw_delimiter="01011", pattern_count_num_bits=4, pattern_bit_offset=1)
         self.decompressor.input_folder = INPUT_FOLDER

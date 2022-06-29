@@ -1,7 +1,7 @@
 import unittest
 from sys import path
 path.append("..")
-from text_compression_algorithm import Text_Compression_Algorithm
+from text_compression.text_compression_algorithm import Text_Compression_Algorithm
 
 
 class TestTextCompression(unittest.TestCase):
