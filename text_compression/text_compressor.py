@@ -11,7 +11,7 @@ COMPRESSION_FOLDER = "Research_Testing/random_textstring_files"
 
 class Text_Compressor(Basic_Compressor):
     def __init__(self, chunk_size=1024, look_ahead=5):
-        super().__init__(".lor",".txt")
+        super().__init__(".lor")
         self.chunk_size = chunk_size
         self.look_ahead = look_ahead
         self.text_compr_alg = Text_Compression_Algorithm(self.look_ahead)
@@ -24,7 +24,7 @@ class Text_Compressor(Basic_Compressor):
         
     def run(self, in_file:str, out_file=None):
         # Create initial compressed file
-        # in_filepath, out_filepath = self._check_and_update_io_files(in_file, out_file)
+        # out_filepath = self._check_and_update_io_files(in_file, out_file)
         with open(out_file, 'w') as f:
             f.write(f"[{self.look_ahead}]")
 
@@ -100,8 +100,7 @@ class Text_Compressor(Basic_Compressor):
     def _check_and_update_io_files(self, in_file, out_file):
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
-            out_file = in_file.replace(self.org_file_extension,
-                                       self.compressed_file_extension)
+            out_file = self.output_folder + '/' + in_file
         if self.compressed_file_extension not in out_file:
             raise TypeError("ERROR! Output file is the wrong type")
 
@@ -114,7 +113,7 @@ class Text_Compressor(Basic_Compressor):
         if not path.exists(in_file):
             raise(FileNotFoundError())
 
-        return in_file, out_file
+        return out_file
 
 # if __name__ == "__main__":
 #     file_compressor = Text_Compressor(15, 5)
