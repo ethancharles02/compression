@@ -1,4 +1,3 @@
-from dis import COMPILER_FLAG_NAMES
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
