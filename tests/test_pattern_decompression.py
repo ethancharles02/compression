@@ -128,3 +128,8 @@ class TestPatternDecompression(unittest.TestCase):
     def test_decompress_multiple_different_patterns_bits_separated(self):
         self.decompressor.decompress(f"{DELIMITER} 000100001001 {DELIMITER} 001 0000 {DELIMITER} 010001001001 {DELIMITER} 001".replace(" ", ""))
         self.assertEqual(self.decompressor.get_decompressed_data(), "000100001001 000100001001 000100001001 0000 010001001001 010001001001 010001001001".replace(" ", ""))
+    
+    def test_decompress_delimiter_replace_creates_delimiter(self):
+        self.decompressor.raw_delimiter = "01011"
+        self.decompressor.decompress("01110000 11000100 00101011 0 1011 0 1011 0".replace(" ", ""))
+        self.assertEqual(self.decompressor.get_decompressed_data(), "01110000 11000100 00101011 10111011".replace(" ", ""))

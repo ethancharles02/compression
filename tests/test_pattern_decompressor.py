@@ -1,3 +1,5 @@
+# TODO
+# The bit cutoff doesnt account for the special replace 2, it may need to be updated to account for that
 import unittest
 from sys import path
 path.append("..")

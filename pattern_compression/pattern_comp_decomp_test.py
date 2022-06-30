@@ -1,11 +1,13 @@
+from sys import path
+path.append(".")
 from pattern_compression.pattern_compressor import Pattern_Compressor
 from pattern_compression.pattern_decompressor import Pattern_Decompressor
 from time import monotonic
 
-# INPUT_FOLDER = "pattern_compression/tests/random_bitstring_files/bin_bitstring_files/"
-# OUTPUT_FOLDER = "pattern_compression"
-INPUT_FOLDER = "pattern_compression"
-OUTPUT_FOLDER = "pattern_compression"
+INPUT_FOLDER = "pattern_compression/random_bitstring_files/bin_bitstring_files/"
+OUTPUT_FOLDER = "pattern_compression/"
+# INPUT_FOLDER = "pattern_compression/"
+# OUTPUT_FOLDER = "pattern_compression/"
 
 def are_files_in_test_folders_equal(filepath1, filepath2):
     with open(filepath1, "rb") as f:
@@ -15,7 +17,7 @@ def are_files_in_test_folders_equal(filepath1, filepath2):
     
     lists_equal = list1 == list2
     if not lists_equal:
-        print(analyze_lists(list1, list2))
+        print(f"Number of bytes read till unequal bits: {analyze_lists(list1, list2)}")
 
     return lists_equal
 
@@ -60,28 +62,35 @@ def analyze_lists(list1, list2):
 if __name__ == "__main__":
     # compressor = Pattern_Compressor(raw_delimiter="0101101", max_look_ahead=50, override_compression_check=True)
     compressor = Pattern_Compressor(raw_delimiter="01011", max_look_ahead=50, override_compression_check=True, override_chunk_size=True)
-    compressor.input_folder = INPUT_FOLDER
-    compressor.output_folder = INPUT_FOLDER
+    # compressor.input_folder = INPUT_FOLDER
+    # compressor.output_folder = INPUT_FOLDER
 
     decompressor = Pattern_Decompressor(raw_delimiter="01011", chunk_size=1)
-    decompressor.input_folder = INPUT_FOLDER
-    decompressor.output_folder = OUTPUT_FOLDER
+    # decompressor.input_folder = INPUT_FOLDER
+    # decompressor.output_folder = OUTPUT_FOLDER
 
-    # in_file = "test1.bin"
-    # out_file = "test1.bin"
-    in_file = "test.jpg"
-    out_file = "test1.jpg"
+    in_file = "random_bit_strings_10000.bin"
+    out_file = "test1.bin.lor"
+    # in_file = "test2.bin"
+    # out_file = "test3.bin.lor"
+    # in_file = "test.jpg"
+    # out_file = "test1.jpg"
+
+    in_path = INPUT_FOLDER + in_file
+    out_path = OUTPUT_FOLDER + out_file
 
     old_time = monotonic()
-    result = compressor.run(in_file)
+    result = compressor.run(in_path, out_path)
     print(f"Compression took {(monotonic() - old_time):.2f} seconds. Successful: {result}")
     if result:
+        in_path_d = out_path
+        out_path_d = out_path.replace(".lor", "")
         old_time = monotonic()
         # decompressor.run(in_file + ".lor", "test1.txt")
-        result = decompressor.run(in_file + ".lor", out_file)
+        result = decompressor.run(in_path_d, out_path_d)
         print(f"Decompression took {(monotonic() - old_time):.2f} seconds. Successful: {result}")
     
-        files_equal = are_files_in_test_folders_equal(f"{INPUT_FOLDER}/{in_file}", f"{OUTPUT_FOLDER}/{out_file}")
+        files_equal = are_files_in_test_folders_equal(in_path, out_path_d)
         print(f"File was successfully compressed and decompressed: {files_equal}")
-    # result = decompressor.run(in_file + ".lor", out_file)
+
     # print(are_files_in_test_folders_equal(f"{INPUT_FOLDER}/{in_file}", f"{OUTPUT_FOLDER}/{out_file}"))

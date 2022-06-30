@@ -79,8 +79,11 @@ def convert_txt_files_to_bin(input_folder, output_folder, clean_output=True, new
             write_binary_string_to_file(os_path.join(output_folder, file.replace(".txt", new_file_extension)), string)
 
 def output_bytes_to_file(input_filepath, output_filepath, start_bytes, end_bytes):
+    write_binary_string_to_file(output_filepath, read_bytes_to_string(input_filepath, start_bytes, end_bytes))
+
+def read_bytes_to_string(input_filepath, start_bytes, end_bytes):
     string = read_binary_file_to_string(input_filepath)
-    write_binary_string_to_file(output_filepath, string[start_bytes * 8 : end_bytes * 8])
+    return string[start_bytes * 8 : end_bytes * 8]
 
 if __name__ == "__main__":
 

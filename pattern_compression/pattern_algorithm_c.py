@@ -1,4 +1,5 @@
 # TODO
+# Combine all replacement loops with one special replace loop
 # Finish docstrings, add types as necessary to methods
 # Create parent class for compression and decompression since so many of the methods are similar
 
@@ -7,6 +8,7 @@ from math import log2, floor
 # from sys import path
 # path.append("Research_Testing")
 from pattern_compression.pattern_constants import PATTERN_BIT_OFFSET
+from pattern_compression.helper_functions.helper_functions import special_replace2
 
 # Even though there is functionality for dynamic bits within the compression algorithm, it doesn't work with actual bits yet
 class Pattern_Algorithm_C(object):
@@ -167,7 +169,7 @@ class Pattern_Algorithm_C(object):
         self._patch_intersection_with_data()
 
         # self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string)
-        self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
+        self._clean_and_replace_working_string()
         # self._working_string = self._working_string.replace(self._delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
 
         self._last_data_end = self._working_string[-(self._raw_delimiter_length - 1):]
@@ -179,6 +181,14 @@ class Pattern_Algorithm_C(object):
         self._data.clear()
         return output
     
+    def _clean_and_replace_working_string(self):
+        replacement_dict = {
+            self.raw_delimiter : [self._delimiter_replace_string, 1],
+            self._delimiter_non_bin_char : [self._delimiter, 0]
+        }
+        self._working_string = special_replace2(self._working_string, replacement_dict)
+        # self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
+
     def _patch_intersection_with_data(self):
         if self._data:
             split_length = self._raw_delimiter_length - 1
