@@ -22,9 +22,14 @@ class Text_Compressor(Basic_Compressor):
         self._print_time = 5
         self._print_cur_time = 0
         
-    def run(self, in_file:str, out_file=None):
-        # Create initial compressed file
-        # out_filepath = self._check_and_update_io_files(in_file, out_file)
+    def run(self, in_file:str, out_folder=None):
+        if out_folder is not None:
+            self.output_folder = out_folder
+        if not path.exists(in_file):
+            raise(FileNotFoundError())
+        
+        out_file = self._get_out_file(in_file)
+
         with open(out_file, 'w') as f:
             f.write(f"[{self.look_ahead}]")
 
@@ -97,22 +102,14 @@ class Text_Compressor(Basic_Compressor):
             else:
                 break
 
-    def _check_and_update_io_files(self, in_file, out_file):
-        # If an output file isn't specified, use the input with a replaced file extension
-        if out_file is None:
-            out_file = self.output_folder + '/' + in_file
-        if self.compressed_file_extension not in out_file:
-            raise TypeError("ERROR! Output file is the wrong type")
-
-        # If the input folder or output folders are specified, it updates the corresponding file with a path
-        if self.output_folder is not None:
-            self.output_folder = path.dirname(in_file)
-            out_file = f"{self.output_folder}/{out_file}"
-        
-        # If the input file doesn't exist, an error will be raised
-        if not path.exists(in_file):
-            raise(FileNotFoundError())
-
+    def _get_out_file(self, in_file):
+        # If an output folder isn't specified, the out file is 
+        # the same as the in file except with the added file extension
+        if self.output_folder is None:
+            out_file =  in_file + self.compressed_file_extension
+        # Otherwise add the file extension to the infile name and put that in the out folder
+        else:
+            out_file = self.output_folder + '/' + path.basename(in_file) + self.compressed_file_extension
         return out_file
 
 # if __name__ == "__main__":

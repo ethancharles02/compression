@@ -10,12 +10,13 @@ class Text_Decompressor(object):
         self.output_folder = None
         self._decompressed_data = []
 
-    def run(self, input_filepath:str, out_file=None):
+    def run(self, input_filepath:str, out_folder=None):
         input_file = path.basename(input_filepath)
-        if self.output_folder is None:
+        if out_folder is not None:
+            self.output_folder = out_folder
+        elif self.output_folder is None:
             self.output_folder = path.dirname(input_filepath)
-        if out_file is None:
-            out_file = f"{self.output_folder}\\{input_file.replace('.lor', '.txt')}"
+        out_file = self.output_folder + '/' + input_file.replace('.lor', '')
         with open(input_filepath, "r") as in_f:
             self._update_look_ahead_from_file(in_f)
             with open(out_file, "w") as out_f:
