@@ -7,8 +7,9 @@ from time import monotonic
 from pattern_compression.pattern_constants import *
 from bitarray import bitarray
 from math import ceil
+from basic_compressor import Basic_Compressor
 
-class Pattern_Compressor(object):
+class Pattern_Compressor(Basic_Compressor):
     def __init__(self, chunk_size=1024, pattern_bit_offset=None, max_look_ahead=None, raw_delimiter=None, pattern_count_num_bits=None, out_file_extension=None, override_compression_check=False, override_chunk_size=False):
         self._override_chunk_size = override_chunk_size
         self.chunk_size = chunk_size
