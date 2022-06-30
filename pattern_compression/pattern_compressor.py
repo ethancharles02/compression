@@ -7,9 +7,11 @@ from time import monotonic
 from pattern_compression.pattern_constants import *
 from bitarray import bitarray
 from math import ceil
+from basic_compressor import Basic_Compressor
 
-class Pattern_Compressor(object):
-    def __init__(self, chunk_size=1024, pattern_bit_offset=None, max_look_ahead=None, raw_delimiter=None, pattern_count_num_bits=None, out_file_extension=None, override_compression_check=False):
+class Pattern_Compressor(Basic_Compressor):
+    def __init__(self, chunk_size=1024, pattern_bit_offset=None, max_look_ahead=None, raw_delimiter=None, pattern_count_num_bits=None, out_file_extension=None, override_compression_check=False, override_chunk_size=False):
+        self._override_chunk_size = override_chunk_size
         self.chunk_size = chunk_size
 
         if pattern_bit_offset is None:
@@ -24,8 +26,7 @@ class Pattern_Compressor(object):
             self.out_file_extension = OUT_FILE_EXTENSION
 
         self.pattern_compressor = Pattern_Algorithm_C(max_look_ahead = max_look_ahead, raw_delimiter = raw_delimiter, pattern_count_num_bits = pattern_count_num_bits, pattern_bit_offset = pattern_bit_offset)
-        # self.input_folder = None
-        self.output_folder = None
+        # self.output_folder = None
 
         self._chunk_data = None
         self._leftover_bits = ""
@@ -47,7 +48,8 @@ class Pattern_Compressor(object):
         with open(in_filepath, 'rb') as f:
             self._file_size = fstat(f.fileno()).st_size
 
-            self.chunk_size = self._file_size
+            if self._override_chunk_size:
+                self.chunk_size = self._file_size
             
             # Get chunk data
             self._chunk_data = self._get_new_data(f, self.chunk_size)
@@ -185,8 +187,8 @@ class Pattern_Compressor(object):
         # If the input folder or output folders are specified, it updates the corresponding file with a path
         # if self.input_folder is not None:
         #     in_file = f"{self.input_folder}/{in_file}"
-        if self.output_folder is not None:
-            out_file = f"{self.output_folder}/{out_file}"
+        # if self.output_folder is not None:
+        #     out_file = f"{self.output_folder}/{out_file}"
         
         # If the input file doesn't exist, an error will be raised
         if not path.exists(in_file):
