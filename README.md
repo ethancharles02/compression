@@ -19,5 +19,6 @@
 * Finish Compressor and Decompressor for Pattern Compression
 
 #### JOSH
-* Finish SPED Talk
-* Start research on GUI
+* Get tests running
+* Work on cleaning up text compression
+* Don't only compress text files
