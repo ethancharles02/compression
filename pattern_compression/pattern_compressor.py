@@ -10,10 +10,10 @@ from math import ceil
 from basic_compressor import Basic_Compressor
 
 class Pattern_Compressor(Basic_Compressor):
-    def __init__(self, chunk_size=1024, pattern_bit_offset=None, max_look_ahead=None, raw_delimiter=None, pattern_count_num_bits=None, out_file_extension=None, override_compression_check=False, override_chunk_size=False):
+    def __init__(self, chunk_size=1024, pattern_bit_offset=None, max_look_ahead=None, raw_delimiter=None, pattern_count_num_bits=None, compressed_file_extension=None, override_compression_check=False, override_chunk_size=False):
+
         self._override_chunk_size = override_chunk_size
         self.chunk_size = chunk_size
-
         if pattern_bit_offset is None:
             pattern_bit_offset = PATTERN_BIT_OFFSET
         if max_look_ahead is None:
@@ -22,8 +22,10 @@ class Pattern_Compressor(Basic_Compressor):
             raw_delimiter = RAW_DELIMITER
         if pattern_count_num_bits is None:
             pattern_count_num_bits = PATTERN_COUNT_NUM_BITS
-        if out_file_extension is None:
-            self.out_file_extension = OUT_FILE_EXTENSION
+        if compressed_file_extension is None:
+            compressed_file_extension = OUT_FILE_EXTENSION
+        self.compressed_file_extension = compressed_file_extension
+        super().__init__(compressed_file_extension)
 
         self.pattern_compressor = Pattern_Algorithm_C(max_look_ahead = max_look_ahead, raw_delimiter = raw_delimiter, pattern_count_num_bits = pattern_count_num_bits, pattern_bit_offset = pattern_bit_offset)
         # self.output_folder = None
@@ -182,7 +184,7 @@ class Pattern_Compressor(Basic_Compressor):
     def _check_and_update_io_files(self, in_file, out_file):
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
-            out_file = path.basename(in_file) + self.out_file_extension
+            out_file = path.basename(in_file) + self.compressed_file_extension
             
         # If the input folder or output folders are specified, it updates the corresponding file with a path
         # if self.input_folder is not None:

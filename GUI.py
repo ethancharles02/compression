@@ -16,53 +16,88 @@ THIS_FILE = path.basename(__file__)
 class Compression_GUI():
     def __init__(self) -> None:
         self.compresser = Master_Compressor()
+        self.define_grid_locations()
         self.root = self.create_root()
         self.frm = self.create_frame()
         self.in_file_entry = self.create_infile_entry_and_label()
         self.out_file_entry = self.create_outfile_entry_and_label()
+        self.set_up_combo_box()
         self.set_up_run_type_radio_buttons()
         self.create_run_button()
 
-    def create_run_button(self):
-        run_button=ttk.Button(self.frm,text="Run",command=self.run)
-        run_button.grid(row=2,column=1)
+    def define_grid_locations(self):
+        self.in_file_label_loc =            (0,0)
+        self.in_file_entry_loc =            (1,0)
+        self.select_in_file_button_loc =    (2,0)
+        self.out_folder_label_loc =         (0,1)
+        self.out_folder_entry_loc =         (1,1)
+        self.select_out_folder_button_loc = (2,1)
+        self.run_type_radio_loc1 =          (1,2)
+        self.run_type_radio_loc2 =          (1,3)
+        self.algorithm_box_loc =            (1,4)
+        self.combo_box_label_loc =          (0,4)
+        self.run_botton_loc =               (2,4)
 
-    def create_outfile_entry_and_label(self):
-        out_folder_label = ttk.Label(self.frm, text="Out folder:")
-        out_folder_label.grid(row=1, column=0)
-        out_folder_entry=ttk.Entry(self.frm)
-        out_folder_entry.grid(row=1,column=1)
-        select_out_folder_button=ttk.Button(self.frm,text="Browse",command=partial(self.openFolder,out_folder_entry))
-        select_out_folder_button.grid(row=1,column=2)
-        return out_folder_entry
-
-    def create_infile_entry_and_label(self):
-        in_file_label = ttk.Label(self.frm, text="In file:")
-        in_file_label.grid(row=0, column=0)
-        in_file_entry=ttk.Entry(self.frm)
-        in_file_entry.grid(row=0,column=1)
-        select_in_file_button=ttk.Button(self.frm,text="Browse",command=partial(self.openfile,in_file_entry))
-        select_in_file_button.grid(row=0,column=2)
-        return in_file_entry
-
-    def create_frame(self):
-        frm = ttk.Frame(self.root, padding=20)
-        frm.grid()
-        frm.config(height = 600, width = 400)
-        return frm
-
+    
     def create_root(self):
         root = tk.Tk()
         root.title(THIS_FILE)
         return root
 
+    def create_frame(self):
+        frm = ttk.Frame(self.root, padding=20)
+        frm.grid(sticky="we")
+        return frm
+
+    def create_run_button(self):
+        run_button=ttk.Button(self.frm,text="Run",command=self.run)
+        run_button.grid(row=self.run_botton_loc[1], column=self.run_botton_loc[0], sticky="we")
+
+    def create_outfile_entry_and_label(self):
+        out_folder_label = ttk.Label(self.frm, text="Out folder:")
+        out_folder_label.grid(row=self.out_folder_label_loc[1], column=self.out_folder_label_loc[0], sticky="e")
+        out_folder_entry=ttk.Entry(self.frm)
+        out_folder_entry.grid(row=self.out_folder_entry_loc[1], column=self.out_folder_entry_loc[0], sticky="we")
+        select_out_folder_button=ttk.Button(self.frm,text="Browse",command=partial(self.openFolder,out_folder_entry))
+        select_out_folder_button.grid(row=self.select_out_folder_button_loc[1], column=self.select_out_folder_button_loc[0], sticky="we")
+        return out_folder_entry
+
+    def create_infile_entry_and_label(self):
+        in_file_label = ttk.Label(self.frm, text="In file:")
+        in_file_label.grid(row=self.in_file_label_loc[1], column=self.in_file_label_loc[0], sticky="e")
+        in_file_entry = ttk.Entry(self.frm)
+        in_file_entry.grid(row=self.in_file_entry_loc[1], column=self.in_file_entry_loc[0], sticky="we")
+        select_in_file_button = ttk.Button(self.frm, text="Browse", command=partial(self.openfile, in_file_entry))
+        select_in_file_button.grid(row=self.select_in_file_button_loc[1], column=self.select_in_file_button_loc[0], sticky="we")
+        return in_file_entry
+
     def set_up_run_type_radio_buttons(self):
         self.run_type = tk.StringVar()
-        RBttn = tk.Radiobutton(self.frm, text = "Compress   ", variable = self.run_type, value = COMPRESS)
-        RBttn.grid(row=2, column=0)
+        RBttn = tk.Radiobutton(self.frm, text = "Compress   ", variable = self.run_type, value = COMPRESS, command=self.enable_combo_box)
+        RBttn.grid(row=self.run_type_radio_loc1[1], column=self.run_type_radio_loc1[0])
         RBttn.invoke()
-        RBttn2 = tk.Radiobutton(self.frm, text = "Decompress", variable = self.run_type, value = DECOMPRESS)
-        RBttn2.grid(row=3, column=0)
+        RBttn2 = tk.Radiobutton(self.frm, text = "Decompress", variable = self.run_type, value = DECOMPRESS, command=self.disable_combo_box)
+        RBttn2.grid(row=self.run_type_radio_loc2[1], column=self.run_type_radio_loc2[0])
+    
+    def disable_combo_box(self):
+        self.old_algorithm = self.algorithm.get()
+        self.algorithm_box["state"] = "disabled"
+        self.algorithm_box.set("")
+
+    def enable_combo_box(self):
+        self.algorithm_box.set(self.old_algorithm)
+        self.algorithm_box["state"] = "readonly"
+
+    def set_up_combo_box(self):
+        out_folder_label = ttk.Label(self.frm, text="Algorithm:")
+        out_folder_label.grid(row=self.combo_box_label_loc[1], column=self.combo_box_label_loc[0], sticky="e")
+        self.algorithm = tk.StringVar()
+        algorithms = ["Text Compression", "Pattern Compression"]
+        self.old_algorithm = algorithms[0]
+
+        self.algorithm_box = ttk.Combobox(self.frm, textvariable=self.algorithm, values=algorithms)
+        self.algorithm_box["state"] = "readonly"
+        self.algorithm_box.grid(row=self.algorithm_box_loc[1], column=self.algorithm_box_loc[0], sticky="we")
 
     def openfile(self, entryBox:ttk.Entry):
         filename = filedialog.askopenfilename()
@@ -85,7 +120,7 @@ class Compression_GUI():
         self.compresser.out_folder = out_folder
         if choice == COMPRESS:
             try:
-                self.compresser.compress(in_file)
+                self.compresser.compress(in_file, self.algorithm.get())
                 self.NewWindow(in_file + "\ncompressed successfully to\n" + self.compresser.out_folder)
             except WrongFileType:
                 self.NewWindow("ERROR! Wrong file type!")
@@ -107,8 +142,9 @@ class Compression_GUI():
             self.NewWindow("ERROR: Compress/Decompress not selected!")
 
     def NewWindow(self, text):
+        text_len = max([len(line) for line in text.split('\n')])
         window = tk.Toplevel()
-        window.geometry('300x150')
+        window.geometry(f'{text_len*9}x50')
         newlabel = tk.Label(window, text=text)
         newlabel.pack()
 

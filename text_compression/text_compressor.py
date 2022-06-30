@@ -11,7 +11,7 @@ COMPRESSION_FOLDER = "Research_Testing/random_textstring_files"
 
 class Text_Compressor(Basic_Compressor):
     def __init__(self, chunk_size=1024, look_ahead=5):
-        super().__init__(".lor")
+        super().__init__(".lort")
         self.chunk_size = chunk_size
         self.look_ahead = look_ahead
         self.text_compr_alg = Text_Compression_Algorithm(self.look_ahead)

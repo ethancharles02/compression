@@ -17,7 +17,7 @@ OUTPUT_FOLDER = f"{BIN_FOLDER}/dump_files/"
 
 class TestPatternCompressor(unittest.TestCase):
     def setUp(self):
-        self.compressor = Pattern_Compressor(chunk_size=10, pattern_bit_offset=1, max_look_ahead=15, raw_delimiter="01011", pattern_count_num_bits=4)
+        self.compressor = Pattern_Compressor(chunk_size=10, pattern_bit_offset=1, max_look_ahead=15, raw_delimiter="01011", pattern_count_num_bits=4, compressed_file_extension=".lor")
         # self.compressor.input_folder = INPUT_FOLDER
         # self.compressor.output_folder = OUTPUT_FOLDER
     
