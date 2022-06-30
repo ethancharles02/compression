@@ -1,3 +1,0 @@
-test2 n1 n2
-test2 n1 testtest n3
-n4 n5 testtest
