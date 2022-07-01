@@ -8,7 +8,7 @@
 import unittest
 from sys import path
 path.append("..")
-from pattern_compression.pattern_algorithm_c import Pattern_Algorithm_C
+from algorithms.pattern_compression.pattern_algorithm_c import Pattern_Algorithm_C
 
 RAW_DELIMITER = "011"
 DELIMITER_REPLACE_CHAR = "0"

@@ -2,12 +2,12 @@
 # Figure out why decompression of the test1.bin.lor file results in an error
 from sys import path
 path.append(".")
-from pattern_compression.pattern_compressor import Pattern_Compressor
-from pattern_compression.pattern_decompressor import Pattern_Decompressor
+from algorithms.pattern_compression.pattern_compressor import Pattern_Compressor
+from algorithms.pattern_compression.pattern_decompressor import Pattern_Decompressor
 from time import monotonic
 
-INPUT_FOLDER = "pattern_compression/random_bitstring_files/bin_bitstring_files/"
-OUTPUT_FOLDER = "pattern_compression/"
+INPUT_FOLDER = "algorithms/pattern_compression/random_bitstring_files/bin_bitstring_files/"
+OUTPUT_FOLDER = "algorithms/pattern_compression/"
 # INPUT_FOLDER = "pattern_compression/"
 # OUTPUT_FOLDER = "pattern_compression/"
 

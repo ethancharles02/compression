@@ -7,17 +7,17 @@ def get_smallest_string_where_error_occurs():
 
 if __name__ == "__main__":
 
-    path = "pattern_compression/random_bitstring_files/bin_bitstring_files/"
+    path = "algorithms/pattern_compression/random_bitstring_files/bin_bitstring_files/"
     filename = "random_bit_strings_100.bin"
     filepath = path + filename
 
-    second_path = "pattern_compression/"
+    second_path = "algorithms/pattern_compression/"
     second_filename = "test1.bin"
     second_filepath = second_path + second_filename
     print(read_bytes_to_string(filepath, 264, 268))
     print(read_bytes_to_string(second_filepath, 264, 268))
 
-    path = "pattern_compression/"
+    path = "algorithms/pattern_compression/"
     filename = "test2.bin"
     out_filepath = path + filename
 

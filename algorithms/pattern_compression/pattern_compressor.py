@@ -2,9 +2,9 @@
 # Add docstrings
 # Add in a 1 or a 0 at the beginning of the output file only if dynamic bit storing is fixed
 from os import path, listdir, fstat, remove as os_remove
-from pattern_compression.pattern_algorithm_c import Pattern_Algorithm_C
+from algorithms.pattern_compression.pattern_algorithm_c import Pattern_Algorithm_C
 from time import monotonic
-from pattern_compression.pattern_constants import *
+from algorithms.pattern_compression.pattern_constants import *
 from bitarray import bitarray
 from math import ceil
 from basic_compressor import Basic_Compressor

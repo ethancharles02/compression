@@ -1,6 +1,6 @@
 from os import getcwd, fstat, path, remove as os_remove
-from pattern_compression.pattern_constants import *
-from pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D
+from algorithms.pattern_compression.pattern_constants import *
+from algorithms.pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D
 from bitarray import bitarray
 from math import ceil
 

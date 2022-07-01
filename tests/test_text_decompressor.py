@@ -3,7 +3,7 @@ from sys import path
 path.append("..")
 from os import getcwd, listdir, remove as os_remove, path as os_path
 
-from text_compression.text_decompressor import Text_Decompressor, WrongFileFormatError
+from algorithms.text_compression.text_decompressor import Text_Decompressor, WrongFileFormatError
 
 
 TXT_FOLDER = "tests/compressor_text_files"

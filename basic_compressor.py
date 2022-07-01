@@ -1,5 +1,3 @@
-from os import getcwd
-
 class Basic_Compressor(object):
     def __init__(self, file_ext) -> None:
         self.output_folder = None

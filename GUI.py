@@ -5,6 +5,8 @@ from functools import partial
 from os import path
 import json
 
+# eval(f"from algorithms.{'master_compressor'} import Master_Compressor")
+
 from master_compressor import Master_Compressor, WrongFileType
 
 
@@ -15,7 +17,8 @@ THIS_FILE = path.basename(__file__)
 
 class Compression_GUI():
     def __init__(self) -> None:
-        self.compresser = Master_Compressor()
+        self.get_algorithm_data()
+        self.compresser = Master_Compressor(self.algorithms)
         self.define_grid_locations()
         self.root = self.create_root()
         self.frm = self.create_frame()
@@ -39,7 +42,11 @@ class Compression_GUI():
         self.run_botton_loc =               (2,4)
 
     def get_algorithm_data(self):
-        with open("algorithms.json") as f:
+        self.algorithms = {}
+        # self.file_extensions = {}
+        if not path.exists("algorithms/algorithms.json"):
+            raise FileNotFoundError("No algorithms json file found")
+        with open("algorithms/algorithms.json") as f:
             self.algorithms = json.load(f)
 
     def create_root(self):
@@ -83,23 +90,29 @@ class Compression_GUI():
         RBttn2.grid(row=self.run_type_radio_loc2[1], column=self.run_type_radio_loc2[0])
     
     def disable_combo_box(self):
-        self.old_algorithm = self.algorithm.get()
-        self.algorithm_box["state"] = "disabled"
-        self.algorithm_box.set("")
+        if self.is_combo_box_enabled:
+            self.old_algorithm = self.algorithm.get()
+            self.algorithm_box["state"] = "disabled"
+            self.is_combo_box_enabled = False
+            self.algorithm_box.set("")
 
     def enable_combo_box(self):
-        self.algorithm_box.set(self.old_algorithm)
-        self.algorithm_box["state"] = "readonly"
+        if not self.is_combo_box_enabled:
+            self.algorithm_box.set(self.old_algorithm)
+            self.algorithm_box["state"] = "readonly"
+            self.is_combo_box_enabled = True
 
     def set_up_combo_box(self):
         out_folder_label = ttk.Label(self.frm, text="Algorithm:")
         out_folder_label.grid(row=self.combo_box_label_loc[1], column=self.combo_box_label_loc[0], sticky="e")
         self.algorithm = tk.StringVar()
-        algorithms = ["Text Compression", "Pattern Compression"]
+        algorithms = list(self.algorithms.keys())
         self.old_algorithm = algorithms[0]
 
         self.algorithm_box = ttk.Combobox(self.frm, textvariable=self.algorithm, values=algorithms)
         self.algorithm_box["state"] = "readonly"
+        self.is_combo_box_enabled = True
+        self.algorithm_box.set(self.old_algorithm)
         self.algorithm_box.grid(row=self.algorithm_box_loc[1], column=self.algorithm_box_loc[0], sticky="we")
 
     def openfile(self, entryBox:ttk.Entry):
@@ -120,11 +133,10 @@ class Compression_GUI():
         out_folder = self.out_file_entry.get()
         if len(out_folder) == 0:
             out_folder = path.dirname(in_file)
-        self.compresser.out_folder = out_folder
         if choice == COMPRESS:
             try:
-                self.compresser.compress(in_file, self.algorithm.get())
-                self.NewWindow(in_file + "\ncompressed successfully to\n" + self.compresser.out_folder)
+                self.compresser.compress(in_file, out_folder, self.algorithm.get())
+                self.NewWindow(in_file + "\ncompressed successfully to\n" + out_folder)
             except WrongFileType:
                 self.NewWindow("ERROR! Wrong file type!")
             except FileNotFoundError:
@@ -134,7 +146,7 @@ class Compression_GUI():
         elif choice == DECOMPRESS:
             try:
                 self.compresser.decompress(in_file)
-                self.NewWindow(in_file + "\ndecompressed successfully to\n" + self.compresser.out_folder)
+                self.NewWindow(in_file + "\ndecompressed successfully to\n" + out_folder)
             except WrongFileType:
                 self.NewWindow("ERROR! Wrong file type!")
             except FileNotFoundError:
@@ -157,4 +169,6 @@ class Compression_GUI():
     
 if __name__ == "__main__":
     gui = Compression_GUI()
+    # print(gui.file_extensions[".lorp"])
+    # print(gui.algorithms)
     gui.start()
