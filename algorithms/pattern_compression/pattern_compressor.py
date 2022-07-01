@@ -90,13 +90,6 @@ class Pattern_Compressor(Basic_Compressor):
     #             insert_index = mid_string.index(self._raw_delimiter) + self._raw_delimiter_length - split_length
     #             self._working_string = self._working_string[:insert_index] + self._replace_delimiter_character + self._working_string[insert_index:]
 
-    def _get_file_extension(self, string:str):
-        index = string.rfind(".")
-        if index != -1:
-            return string[index:]
-        else:
-            raise ValueError(f"File extension did not exist on the given file: {string}")
-
     def _get_final_output_string(self, num_bits):
         if num_bits != 0:
             num_zeroes_needed = (num_bits - self.pattern_compressor._delimiter_length) % 8

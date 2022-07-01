@@ -1,7 +1,7 @@
 import unittest
 from sys import path
 path.append("..")
-from os import getcwd, listdir, remove as os_remove, path as os_path
+from os import listdir, remove as os_remove, path as os_path
 
 from algorithms.text_compression.text_decompressor import Text_Decompressor, WrongFileFormatError
 
@@ -13,7 +13,7 @@ OUTPUT_FOLDER = f"{TXT_FOLDER}/dump_files"
 
 class Test_Decompressor(unittest.TestCase):
     def setUp(self):
-        self.decompressor = Text_Decompressor()
+        self.decompressor = Text_Decompressor(".lor")
         self.decompressor.output_folder = OUTPUT_FOLDER
 
     def tearDown(self):
@@ -104,7 +104,7 @@ class Test_Decompressor(unittest.TestCase):
         self.assertEqual(self.decompressor.get_decompressed_data(), "testtest n1 n2")
 
     def test_default_output_folder_is_same_as_folder_of_input_file(self):
-        x = Text_Decompressor()
+        x = Text_Decompressor(".lor")
         filename = INPUT_FOLDER + '/' + "different_look_ahead.txt.lor"
         x.run(filename)
         os_remove(filename.replace(".lor", ""))

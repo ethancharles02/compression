@@ -1,13 +1,11 @@
 from io import FileIO
 from os import path
+from basic_compressor import Basic_Compressor, WrongFileFormatError
 
-class WrongFileFormatError(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
 
-class Text_Decompressor(object):
-    def __init__(self) -> None:
-        self.output_folder = None
+class Text_Decompressor(Basic_Compressor):
+    def __init__(self, file_extension=".lort") -> None:
+        super().__init__(file_extension)
         self._decompressed_data = []
 
     def run(self, input_filepath:str, out_folder=None):
@@ -16,7 +14,7 @@ class Text_Decompressor(object):
             self.output_folder = out_folder
         elif self.output_folder is None:
             self.output_folder = path.dirname(input_filepath)
-        out_file = self.output_folder + '/' + input_file.replace('.lor', '')
+        out_file = self.output_folder + '/' + self._remove_file_extension(input_file)
         with open(input_filepath, "r") as in_f:
             self._update_look_ahead_from_file(in_f)
             with open(out_file, "w") as out_f:

@@ -15,13 +15,17 @@
 * BitArray
 
 ### TODO
+### Requirements
+* be a .exe file
+* Folder compression
+
 #### ETHAN
 * Finish Compressor and Decompressor for Pattern Compression
-* have compressor take in output folder, optional.
+* have compressor take in output folder
 * Check if pattern compression works through GUI
 * Make GUI detect what algorithm to decompress with based on file extension
 
 #### JOSH
-* Get tests running
-* rewrite tests to work with adding file extension to the end of file
-* have compressor take in output folder, optional.
+* Bug: Sentence Generated Files sometimes have a extra space when decompressed
+    file - textstring_5words_10lines.txt
+

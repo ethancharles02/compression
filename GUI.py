@@ -135,8 +135,10 @@ class Compression_GUI():
             out_folder = path.dirname(in_file)
         if choice == COMPRESS:
             try:
-                self.compresser.compress(in_file, out_folder, self.algorithm.get())
-                self.NewWindow(in_file + "\ncompressed successfully to\n" + out_folder)
+                if self.compresser.compress(in_file, out_folder, self.algorithm.get()):
+                    self.NewWindow(in_file + "\ncompressed successfully to\n" + out_folder)
+                else:
+                    self.NewWindow("Failed to compress. File is not compressible with this algorithm.")
             except WrongFileType:
                 self.NewWindow("ERROR! Wrong file type!")
             except FileNotFoundError:

@@ -1,14 +1,17 @@
+# TODO
+# Check and test for improperly formatted file extensions when decompressing
 from os import getcwd, fstat, path, remove as os_remove
 from algorithms.pattern_compression.pattern_constants import *
 from algorithms.pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D
 from bitarray import bitarray
 from math import ceil
+from basic_compressor import Basic_Compressor
 
 class WrongFileFormatError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
 
-class Pattern_Decompressor(object):
+class Pattern_Decompressor(Basic_Compressor):
     def __init__(self, chunk_size=1024, raw_delimiter=None, pattern_count_num_bits=None, pattern_bit_offset=None, input_file_extension=None) -> None:
         # self.input_folder = getcwd()
         # self.output_folder = self.input_folder
@@ -80,13 +83,6 @@ class Pattern_Decompressor(object):
             os_remove(out_file)
 
         return in_file, out_file
-
-    def _remove_file_extension(self, string:str):
-        index = string.rfind(self.input_file_extension)
-        if index != -1:
-            return string[:index]
-        else:
-            raise ValueError(f"No file extension of {self.input_file_extension} found for {string}")
 
     def _append_binary_string_to_file(self, file, string:str):
         # string_length = len(string)
