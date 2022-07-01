@@ -1,9 +1,9 @@
-from dis import COMPILER_FLAG_NAMES
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from functools import partial
 from os import path
+import json
 
 from master_compressor import Master_Compressor, WrongFileType
 
@@ -38,7 +38,10 @@ class Compression_GUI():
         self.combo_box_label_loc =          (0,4)
         self.run_botton_loc =               (2,4)
 
-    
+    def get_algorithm_data(self):
+        with open("algorithms.json") as f:
+            self.algorithms = json.load(f)
+
     def create_root(self):
         root = tk.Tk()
         root.title(THIS_FILE)
