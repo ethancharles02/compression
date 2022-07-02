@@ -21,11 +21,11 @@ class Master_Compressor(object):
             self.file_extensions[self.algorithms[key][0]] = key
 
         self.algorithms_list = self.algorithms.keys()
-        self.algorithm_objects = {}
+        self.compressor_objects = {}
         for algorithm in self.algorithms:
             exec(f"from {self.algorithms[algorithm][1][0]} import {self.algorithms[algorithm][1][1]}")
             exec(f"from {self.algorithms[algorithm][2][0]} import {self.algorithms[algorithm][2][1]}")
-            self.algorithm_objects[algorithm] = [eval(f"{self.algorithms[algorithm][1][1]}()"), eval(f"{self.algorithms[algorithm][2][1]}()")]
+            self.compressor_objects[algorithm] = [eval(f"{self.algorithms[algorithm][1][1]}()"), eval(f"{self.algorithms[algorithm][2][1]}()")]
 
         # self.text_compr = Text_Compressor()
         # self.text_decompr = Text_Decompressor()
@@ -42,7 +42,7 @@ class Master_Compressor(object):
     def compress(self, in_file:str, out_folder=None, algorithm=None):
         if algorithm is None:
             algorithm = self.algorithms_list[0]
-        compress_success = self.algorithm_objects[algorithm][0].run(in_file, out_folder)
+        compress_success = self.compressor_objects[algorithm][0].run(in_file, out_folder)
         # choice = self.some_decision_logic()
         # if choice == 1:
         #     if ".txt" not in in_file:
@@ -56,7 +56,7 @@ class Master_Compressor(object):
 
     def decompress(self, in_file:str, out_folder=None):
         algorithm = self._get_algorithm_for_file_extension(self._get_file_extension(in_file))
-        decompress_success = self.algorithm_objects[algorithm][1].run(in_file, out_folder)
+        decompress_success = self.compressor_objects[algorithm][1].run(in_file, out_folder)
         # choice = self.some_decision_logic()
         # if choice == 1:
         #     if ".lor" not in in_file:
