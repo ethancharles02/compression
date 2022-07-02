@@ -107,6 +107,13 @@ class TestCompressor(unittest.TestCase):
         output_file = filename + ".lor"
         self.assert_files_in_test_folders_are_equal(output_file)
 
+    def test_compress_random_word_file_ten_lines(self):
+        in_file = "tests\\random_textstring_files\\textstring_5words_10lines.txt"
+        self.compressor.chunk_size = 512
+        filename = os_path.basename(in_file)
+        self.compressor.run(in_file)
+        self.assert_files_in_test_folders_are_equal(filename+'.lor')
+
 class TestCompressor_folder_functionality(unittest.TestCase):
     def assert_files_are_equal(self, tst_filename, ref_filename):
         with open(tst_filename) as f:

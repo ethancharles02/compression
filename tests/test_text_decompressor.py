@@ -132,4 +132,10 @@ class Test_Decompressor(unittest.TestCase):
         self.decompressor.run(filename, OUTPUT_FOLDER)
         output_file = os_path.basename(filename.replace(".lor", ""))
         self.assert_files_in_test_folders_are_equal(output_file)
+
+    def test_decompress_random_word_file_ten_lines(self):
+        filename = "textstring_5words_10lines.txt"
+        in_file = INPUT_FOLDER + '/' + filename + ".lor"
+        self.decompressor.run(in_file)
+        self.assert_files_in_test_folders_are_equal(filename)
     
