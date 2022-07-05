@@ -146,7 +146,7 @@ class Compression_GUI():
                 self.NewWindow("There was an error!")
         elif choice == DECOMPRESS:
             try:
-                self.compresser.decompress(in_file)
+                self.compresser.decompress(in_file, out_folder)
                 self.NewWindow(in_file + "\ndecompressed successfully to\n" + out_folder)
             except WrongFileType:
                 self.NewWindow("ERROR! Wrong file type!")
