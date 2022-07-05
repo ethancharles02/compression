@@ -22,7 +22,7 @@ This program should work as any other .exe file. On a windows opperating system 
 #### Python
 In order to run this program you will need the src directory from this project, and have the latest version of python installed on your machine. All the scripts use standard python packages, so you shouldn't need to install anything else. Once you have all of that configured, you should be able to call python on the "__main__.py" file, and python should launch the progam.
 
-#### Basic instrucntions
+#### Basic instructions
 Once run, the program should bring up the Graphical User Interface (GUI). 
 
 From the GUI you should be able to use the browse buttons to select an input file/folder and an output folder. If you don't select an output folder, then the result will be placed in the same folder as the input file/folder. There should be a drop down menu to choose which algorithm for compression you would like to run, as well as an option to choose either compression or decompression.
@@ -51,7 +51,7 @@ This project includes several python modules. The following is a list of them.
 * BitArray
 * unittest for testing
 
-### Archetecture
+### Architecture
 
 
 
@@ -78,8 +78,7 @@ System test documents can be found in the test folder. These documents include t
 * Finish Compressor and Decompressor for Pattern Compression
 * have compressor take in output folder
 * Check if pattern compression works through GUI
-* Make GUI detect what algorithm to decompress with based on file extension
 
 #### JOSH
-* 
+* Text Decompress doesn't output to specified output folder 
 

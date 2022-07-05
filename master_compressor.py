@@ -8,7 +8,7 @@ class WrongFileType(Exception):
     pass
 
 class Master_Compressor(object):
-    def __init__(self, algorithms) -> None:
+    def __init__(self, algorithms, algorithms_objects) -> None:
         # from algorithms.text_compression.text_compressor import Text_Compressor
         # from algorithms.text_compression.text_decompressor import Text_Decompressor
 
@@ -21,11 +21,11 @@ class Master_Compressor(object):
             self.file_extensions[self.algorithms[key][0]] = key
 
         self.algorithms_list = self.algorithms.keys()
-        self.compressor_objects = {}
-        for algorithm in self.algorithms:
-            exec(f"from {self.algorithms[algorithm][1][0]} import {self.algorithms[algorithm][1][1]}")
-            exec(f"from {self.algorithms[algorithm][2][0]} import {self.algorithms[algorithm][2][1]}")
-            self.compressor_objects[algorithm] = [eval(f"{self.algorithms[algorithm][1][1]}()"), eval(f"{self.algorithms[algorithm][2][1]}()")]
+        self.compressor_objects = algorithms_objects
+        # for algorithm in self.algorithms:
+        #     exec(f"from {self.algorithms[algorithm][1][0]} import {self.algorithms[algorithm][1][1]}")
+        #     exec(f"from {self.algorithms[algorithm][2][0]} import {self.algorithms[algorithm][2][1]}")
+        #     self.compressor_objects[algorithm] = [eval(f"{self.algorithms[algorithm][1][1]}()"), eval(f"{self.algorithms[algorithm][2][1]}()")]
 
         # self.text_compr = Text_Compressor()
         # self.text_decompr = Text_Decompressor()

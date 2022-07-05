@@ -8,7 +8,7 @@ import json
 # eval(f"from algorithms.{'master_compressor'} import Master_Compressor")
 
 from master_compressor import Master_Compressor, WrongFileType
-
+from algorithms.algorithms import ALGORITHMS, ALGORITHMS_OBJECTS
 
 COMPRESS = "compress"
 DECOMPRESS = "decompress"
@@ -18,7 +18,7 @@ THIS_FILE = path.basename(__file__)
 class Compression_GUI():
     def __init__(self) -> None:
         self.get_algorithm_data()
-        self.compresser = Master_Compressor(self.algorithms)
+        self.compresser = Master_Compressor(self.algorithms, ALGORITHMS_OBJECTS)
         self.define_grid_locations()
         self.root = self.create_root()
         self.frm = self.create_frame()
@@ -42,12 +42,11 @@ class Compression_GUI():
         self.run_botton_loc =               (2,4)
 
     def get_algorithm_data(self):
-        self.algorithms = {}
-        # self.file_extensions = {}
-        if not path.exists("algorithms/algorithms.json"):
-            raise FileNotFoundError("No algorithms json file found")
-        with open("algorithms/algorithms.json") as f:
-            self.algorithms = json.load(f)
+        self.algorithms = ALGORITHMS
+        # if not path.exists("algorithms/algorithms.json"):
+        #     raise FileNotFoundError("No algorithms json file found")
+        # with open("algorithms/algorithms.json") as f:
+        #     self.algorithms = json.load(f)
 
     def create_root(self):
         root = tk.Tk()
