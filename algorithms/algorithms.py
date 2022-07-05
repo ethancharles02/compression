@@ -1,3 +1,8 @@
+# from algorithms.text_compression.text_compressor import Text_Compressor
+# from algorithms.text_compression.text_decompressor import Text_Decompressor
+
+# from algorithms.pattern_compression.pattern_compressor import Pattern_Compressor
+# from algorithms.pattern_compression.pattern_decompressor import Pattern_Decompressor
 from algorithms.text_compression.text_compressor import Text_Compressor
 from algorithms.text_compression.text_decompressor import Text_Decompressor
 

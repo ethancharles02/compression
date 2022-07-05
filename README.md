@@ -3,7 +3,7 @@
 ## Contact
 Ethan Charles:
 GitHub: ethancharles02
-Email: 
+Email: ethan.charles02@gmail.com
 
 Josh Pettingill:
 GitHub: JoshPettingill
@@ -17,6 +17,7 @@ The whole purpose of this project is to develop a new way of compressing files, 
 ### Usage Instructions
 
 #### exe
+Command to create the exe: "pyinstaller "__main__.py" -n Compressor --onefile --noconsole"
 This program should work as any other .exe file. On a windows opperating system you should be able to double click on the file or run it from the command line.
 
 #### Python
@@ -47,7 +48,7 @@ This project includes several python modules. The following is a list of them.
 * random 
 * math
 * tkinter
-* Numpy
+* Numpy (IMPORTANT must be: 1.20.1. The command is "pip install numpy==1.20.1")
 * BitArray
 * unittest for testing
 

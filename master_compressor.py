@@ -22,6 +22,7 @@ class Master_Compressor(object):
 
         self.algorithms_list = self.algorithms.keys()
         self.compressor_objects = algorithms_objects
+
         # for algorithm in self.algorithms:
         #     exec(f"from {self.algorithms[algorithm][1][0]} import {self.algorithms[algorithm][1][1]}")
         #     exec(f"from {self.algorithms[algorithm][2][0]} import {self.algorithms[algorithm][2][1]}")
