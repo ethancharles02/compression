@@ -71,7 +71,7 @@ class Text_Decompressor(Basic_Compressor):
                 bad_values.insert(0,i)
         for bad_value in bad_values:
             self._decompressed_data.pop(bad_value)
-        if self._decompressed_data[0] == '\n':
+        if self._decompressed_data and  self._decompressed_data[0] == '\n':
             self._decompressed_data.insert(0, '')
         return " ".join(self._decompressed_data)
 

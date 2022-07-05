@@ -73,6 +73,7 @@ System test documents can be found in the test folder. These documents include t
 
 #### Both
 * add a src folder?
+* variable to say if algorithm works for folder compression?
 
 #### ETHAN
 * Finish Compressor and Decompressor for Pattern Compression
