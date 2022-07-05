@@ -11,28 +11,12 @@ from algorithms.pattern_compression.pattern_decompressor import Pattern_Decompre
 
 ALGORITHMS = {
     "Text Compression" : [
-        ".lort",
-        ["algorithms.text_compression.text_compressor", "Text_Compressor"],
-        ["algorithms.text_compression.text_decompressor", "Text_Decompressor"]],
+        ".lort",],
     "Pattern Compression" : [
-        ".lorp", 
-        ["algorithms.pattern_compression.pattern_compressor", "Pattern_Compressor"], 
-        ["algorithms.pattern_compression.pattern_decompressor", "Pattern_Decompressor"]
-    ]
+        ".lorp",]
 }
 
 ALGORITHMS_OBJECTS = {
     "Text Compression" : [Text_Compressor(), Text_Decompressor()],
     "Pattern Compression" : [Pattern_Compressor(), Pattern_Decompressor()]
 }
-# ALGORITHMS = {
-#     "Text Compression" : [
-#         ".lort",
-#         ["text_compressor", "Text_Compressor"],
-#         ["text_decompressor", "Text_Decompressor"]],
-#     "Pattern Compression" : [
-#         ".lorp", 
-#         ["pattern_compressor", "Pattern_Compressor"], 
-#         ["pattern_decompressor", "Pattern_Decompressor"]
-#     ]
-# }
