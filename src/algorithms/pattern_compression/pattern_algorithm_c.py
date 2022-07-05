@@ -7,8 +7,8 @@ from math import log2, floor
 
 # from sys import path
 # path.append("Research_Testing")
-from algorithms.pattern_compression.pattern_constants import PATTERN_BIT_OFFSET
-from algorithms.pattern_compression.helper_functions.helper_functions import special_replace2
+from src.algorithms.pattern_compression.pattern_constants import PATTERN_BIT_OFFSET
+from src.algorithms.pattern_compression.helper_functions.helper_functions import special_replace2
 
 # Even though there is functionality for dynamic bits within the compression algorithm, it doesn't work with actual bits yet
 class Pattern_Algorithm_C(object):

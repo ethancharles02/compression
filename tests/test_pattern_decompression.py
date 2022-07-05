@@ -1,7 +1,7 @@
 import unittest
 from sys import path
 path.append("..")
-from algorithms.pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D
+from src.algorithms.pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D
 
 RAW_DELIMITER = "011"
 DELIMITER_REPLACE_CHAR = "0"

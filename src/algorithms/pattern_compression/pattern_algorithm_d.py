@@ -2,8 +2,8 @@
 # Test using images
 # Add docstrings
 
-from algorithms.pattern_compression.pattern_constants import PATTERN_BIT_OFFSET
-from algorithms.pattern_compression.helper_functions.helper_functions import special_replace2
+from src.algorithms.pattern_compression.pattern_constants import PATTERN_BIT_OFFSET
+from src.algorithms.pattern_compression.helper_functions.helper_functions import special_replace2
 
 class Pattern_Algorithm_D(object):
     def __init__(self, raw_delimiter:str = "1111", pattern_count_num_bits:int = None, pattern_bit_offset:int = None):

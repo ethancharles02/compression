@@ -8,7 +8,7 @@ from sys import path
 path.append("..")
 from os import listdir, remove as os_remove, path as os_path
 
-from algorithms.pattern_compression.pattern_compressor import Pattern_Compressor
+from src.algorithms.pattern_compression.pattern_compressor import Pattern_Compressor
 
 BIN_FOLDER = "tests/compressor_binary_files"
 INPUT_FOLDER = f"{BIN_FOLDER}/test_files/"

@@ -1,6 +1,6 @@
 from io import FileIO
 from os import path
-from basic_compressor import Basic_Compressor, WrongFileFormatError
+from src.basic_compressor import Basic_Compressor, WrongFileFormatError
 
 
 class Text_Decompressor(Basic_Compressor):

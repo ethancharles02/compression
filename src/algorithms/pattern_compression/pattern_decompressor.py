@@ -1,11 +1,11 @@
 # TODO
 # Check and test for improperly formatted file extensions when decompressing
 from os import getcwd, fstat, path, remove as os_remove
-from algorithms.pattern_compression.pattern_constants import *
-from algorithms.pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D
+from src.algorithms.pattern_compression.pattern_constants import *
+from src.algorithms.pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D
 from bitarray import bitarray
 from math import ceil
-from basic_compressor import Basic_Compressor
+from src.basic_compressor import Basic_Compressor
 
 class WrongFileFormatError(Exception):
     def __init__(self, *args: object) -> None:

@@ -17,7 +17,10 @@ The whole purpose of this project is to develop a new way of compressing files, 
 ### Usage Instructions
 
 #### exe
-Command to create the exe: "pyinstaller "__main__.py" -n Compressor --onefile --noconsole"
+Command to create the exe: "pyinstaller "src/__main__.py" -n Compressor --onefile --distpath "." --noconsole --clean"
+Or run the compile.py file
+Once it is done, the exe will be in a newly created dist folder
+
 This program should work as any other .exe file. On a windows opperating system you should be able to double click on the file or run it from the command line.
 
 #### Python

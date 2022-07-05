@@ -7,8 +7,8 @@ import json
 
 # eval(f"from algorithms.{'master_compressor'} import Master_Compressor")
 
-from master_compressor import Master_Compressor, WrongFileType
-from algorithms.algorithms import ALGORITHMS, ALGORITHMS_OBJECTS
+from src.master_compressor import Master_Compressor, WrongFileType
+from src.algorithms.algorithms import ALGORITHMS, ALGORITHMS_OBJECTS
 
 COMPRESS = "compress"
 DECOMPRESS = "decompress"

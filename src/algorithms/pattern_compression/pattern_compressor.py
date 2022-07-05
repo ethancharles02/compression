@@ -2,12 +2,12 @@
 # Add docstrings
 # Add in a 1 or a 0 at the beginning of the output file only if dynamic bit storing is fixed
 from os import path, listdir, fstat, remove as os_remove
-from algorithms.pattern_compression.pattern_algorithm_c import Pattern_Algorithm_C
+from src.algorithms.pattern_compression.pattern_algorithm_c import Pattern_Algorithm_C
 from time import monotonic
-from algorithms.pattern_compression.pattern_constants import *
+from src.algorithms.pattern_compression.pattern_constants import *
 from bitarray import bitarray
 from math import ceil
-from basic_compressor import Basic_Compressor
+from src.basic_compressor import Basic_Compressor
 
 class Pattern_Compressor(Basic_Compressor):
     def __init__(self, chunk_size=1024, pattern_bit_offset=None, max_look_ahead=None, raw_delimiter=None, pattern_count_num_bits=None, compressed_file_extension=None, override_compression_check=False, override_chunk_size=False):

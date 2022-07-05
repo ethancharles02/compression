@@ -3,8 +3,8 @@
 # Create decompressors for each algorithm
 # Move/create constants for compressors
 from os import path, fstat, remove as os_remove
-from algorithms.text_compression.text_compression_algorithm import Text_Compression_Algorithm
-from basic_compressor import Basic_Compressor
+from src.algorithms.text_compression.text_compression_algorithm import Text_Compression_Algorithm
+from src.basic_compressor import Basic_Compressor
 from time import monotonic
 
 COMPRESSION_FOLDER = "Research_Testing/random_textstring_files"
