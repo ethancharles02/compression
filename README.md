@@ -83,6 +83,7 @@ System test documents can be found in the test folder. These documents include t
 * Finish Compressor and Decompressor for Pattern Compression
 * have compressor take in output folder
 * Check if pattern compression works through GUI
+* Add comments and documentation
 
 #### JOSH
 * Text Decompress doesn't output to specified output folder 
