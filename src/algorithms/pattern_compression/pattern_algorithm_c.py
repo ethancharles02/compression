@@ -182,12 +182,12 @@ class Pattern_Algorithm_C(object):
         return output
     
     def _clean_and_replace_working_string(self):
-        replacement_dict = {
-            self.raw_delimiter : [self._delimiter_replace_string, 1],
-            self._delimiter_non_bin_char : [self._delimiter, 0]
-        }
-        self._working_string = special_replace2(self._working_string, replacement_dict)
-        # self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
+        # replacement_dict = {
+        #     self.raw_delimiter : [self._delimiter_replace_string, 1],
+        #     self._delimiter_non_bin_char : [self._delimiter, 0]
+        # }
+        # self._working_string = special_replace2(self._working_string, replacement_dict)
+        self._working_string = self._working_string.replace(self._raw_delimiter, self._delimiter_replace_string).replace(self._delimiter_non_bin_char, self._delimiter)
 
     def _patch_intersection_with_data(self):
         if self._data:

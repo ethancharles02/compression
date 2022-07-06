@@ -34,12 +34,12 @@ class Pattern_Algorithm_D(object):
         self._update_pattern_count_limited()
 
     def decompress(self, compressed_data):
-        # data = compressed_data.replace(self._delimiter, "a").replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
-        replace_dict = {
-            self._delimiter : ["a", 0],
-            self._delimiter_replace_string : [self._raw_delimiter, 1]
-        }
-        data = special_replace2(compressed_data, replace_dict).split("a")
+        data = compressed_data.replace(self._delimiter_replace_string, "b").replace(self._delimiter, "a").replace("b", self._raw_delimiter).split("a")
+        # replace_dict = {
+        #     self._delimiter : ["a", 0],
+        #     self._delimiter_replace_string : [self._raw_delimiter, 1]
+        # }
+        # data = special_replace2(compressed_data, replace_dict).split("a")
         # data = special_replace(compressed_data, self._delimiter, "a", 2, self.pattern_count_num_bits).replace(self._delimiter_replace_string, self._raw_delimiter).split("a")
         # data = special_replace(compressed_data, self._delimiter, "a", 2, self.pattern_count_num_bits).replace(self._delimiter_replace_string, self._delimiter).split("a")
 

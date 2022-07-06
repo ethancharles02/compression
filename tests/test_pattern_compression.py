@@ -188,10 +188,10 @@ class TestPatternCompression(unittest.TestCase):
         self.compressor.compress("000100001010"*7 + "0110")
         self.assertEqual(self.compressor.get_compressed_data(), f"{self.compressor._delimiter} 000100001010 {self.compressor._delimiter} 1 {self.compressor._delimiter_replace_string} 0".replace(" ", ""))
     
-    def test_delimiter_replace_creates_delimiter(self):
-        self.compressor.raw_delimiter = "01011"
-        self.compressor.compress("01110000 11000100 00101011 10111011".replace(" ", ""))
-        self.assertEqual(self.compressor.get_compressed_data(), "01110000 11000100 00101011 0 1011 0 1011 0".replace(" ", ""))
+    # def test_delimiter_replace_creates_delimiter(self):
+    #     self.compressor.raw_delimiter = "01011"
+    #     self.compressor.compress("01110000 11000100 00101011 10111011".replace(" ", ""))
+    #     self.assertEqual(self.compressor.get_compressed_data(), "01110000 11000100 00101011 0 1011 0 1011 0".replace(" ", ""))
     
     # Add test for a pattern getting compressed immediately after one before it when the combination of the last one and the pattern created a delimiter
     # def test_

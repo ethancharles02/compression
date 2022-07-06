@@ -6,10 +6,10 @@ from src.algorithms.pattern_compression.pattern_compressor import Pattern_Compre
 from src.algorithms.pattern_compression.pattern_decompressor import Pattern_Decompressor
 from time import monotonic
 
-INPUT_FOLDER = "algorithms/pattern_compression/random_bitstring_files/bin_bitstring_files/"
-OUTPUT_FOLDER = "algorithms/pattern_compression/"
-# INPUT_FOLDER = "pattern_compression/"
-# OUTPUT_FOLDER = "pattern_compression/"
+# INPUT_FOLDER = "src/algorithms/pattern_compression/random_bitstring_files/bin_bitstring_files/"
+# OUTPUT_FOLDER = "src/algorithms/pattern_compression/"
+INPUT_FOLDER = "src/algorithms/pattern_compression/"
+OUTPUT_FOLDER = "src/algorithms/pattern_compression/"
 
 def are_files_in_test_folders_equal(filepath1, filepath2):
     with open(filepath1, "rb") as f:
@@ -71,12 +71,12 @@ if __name__ == "__main__":
     # decompressor.input_folder = INPUT_FOLDER
     # decompressor.output_folder = OUTPUT_FOLDER
 
-    in_file = "random_bit_strings_10000.bin"
-    out_file = "test1.bin.lor"
+    # in_file = "random_bit_strings_10000.bin"
+    # out_file = "test1.bin.lor"
     # in_file = "test2.bin"
     # out_file = "test3.bin.lor"
-    # in_file = "test.jpg"
-    # out_file = "test1.jpg"
+    in_file = "test.jpg"
+    out_file = "test1.jpg.lor"
 
     in_path = INPUT_FOLDER + in_file
     out_path = OUTPUT_FOLDER + out_file

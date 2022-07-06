@@ -2,9 +2,9 @@
 # Add docstrings
 # Try converting all delimiter replace strings with a different character in decompression before converting delimiters instead of doing a special replace
 # Add in a 1 or a 0 at the beginning of the output file only if dynamic bit storing is fixed
-from os import path, listdir, fstat, remove as os_remove
+from os import path, fstat, remove as os_remove
 from src.algorithms.pattern_compression.pattern_algorithm_c import Pattern_Algorithm_C
-from time import monotonic
+# from time import monotonic
 from src.algorithms.pattern_compression.pattern_constants import *
 from bitarray import bitarray
 from math import ceil
@@ -37,7 +37,7 @@ class Pattern_Compressor(Basic_Compressor):
         self._num_bits_output = 0
         self._file_size = 0
         self._print_time = 5
-        self._print_cur_time = 0
+        # self._print_cur_time = 0
 
         self.override_compression_check = override_compression_check
         
@@ -57,13 +57,13 @@ class Pattern_Compressor(Basic_Compressor):
             # Get chunk data
             self._chunk_data = self._get_new_data(f, self.chunk_size)
 
-            self._print_cur_time = monotonic()
+            # self._print_cur_time = monotonic()
 
             # As long as there is more data to read:
             while self._chunk_data:
-                if monotonic() - self._print_cur_time >= self._print_time:
-                    self._print_percentage_completion(2)
-                    self._print_cur_time = monotonic()
+                # if monotonic() - self._print_cur_time >= self._print_time:
+                #     self._print_percentage_completion(2)
+                #     self._print_cur_time = monotonic()
 
                 # Compress the chunk
                 self.pattern_compressor.compress(self._chunk_data)
