@@ -15,7 +15,7 @@ OUTPUT_FOLDER = f"{BIN_FOLDER}/dump_files/"
 
 class TestPatternDecompressor(unittest.TestCase):
     def setUp(self):
-        self.decompressor = Pattern_Decompressor(chunk_size=10, raw_delimiter="01011", pattern_count_num_bits=4, pattern_bit_offset=1)
+        self.decompressor = Pattern_Decompressor(chunk_size=10, raw_delimiter="01011", pattern_count_num_bits=4, pattern_bit_offset=1, compressed_file_extension=".lor")
         # self.decompressor.input_folder = INPUT_FOLDER
         # self.decompressor.output_folder = OUTPUT_FOLDER
 
@@ -67,7 +67,7 @@ class TestPatternDecompressor(unittest.TestCase):
 
     def test_compress_to_same_output_folder(self):
         filename_out = "32_bits.bin"
-        filename = "32_bits.lor"
+        filename = "32_bits.bin.lor"
         input_file = INPUT_FOLDER + filename
         output_file = OUTPUT_FOLDER
 
@@ -79,38 +79,41 @@ class TestPatternDecompressor(unittest.TestCase):
             os_remove(output_file + filename)
 
     def test_compress_to_different_output_folder(self):
-        filename = "32_bits.bin"
+        filename_out = "32_bits.bin"
+        filename = "32_bits.bin.lor"
         input_file = INPUT_FOLDER + filename
         output_file = "tests/compressor_binary_files/"
 
-        result = self.compressor.run(input_file, output_file)
+        result = self.decompressor.run(input_file, output_file)
         self.assertTrue(result)
 
-        self.assert_files_are_equal(TST_FOLDER + filename + ".lor", output_file + filename + ".lor")
-        if os_path.exists(output_file + filename + ".lor"):
-            os_remove(output_file + filename + ".lor")
+        self.assert_files_are_equal(TST_FOLDER + filename_out, output_file + filename_out)
+        if os_path.exists(output_file + filename_out):
+            os_remove(output_file + filename_out)
 
     def test_compress_to_output_file(self):
-        filename = "32_bits.bin"
+        filename_out = "32_bits.bin"
+        filename = "32_bits.bin.lor"
         input_file = INPUT_FOLDER + filename
-        output_file = "tests/compressor_binary_files/test1.lor"
+        output_file = "tests/compressor_binary_files/test1.bin"
 
-        result = self.compressor.run(input_file, output_file)
+        result = self.decompressor.run(input_file, output_file)
         self.assertTrue(result)
 
-        self.assert_files_are_equal(TST_FOLDER + filename + ".lor", output_file)
+        self.assert_files_are_equal(TST_FOLDER + filename_out, output_file)
         if os_path.exists(output_file):
             os_remove(output_file)
 
     def test_compress_no_output_file(self):
-        filename = "32_bits.bin"
+        filename_out = "32_bits.bin"
+        filename = "32_bits.bin.lor"
         input_file = INPUT_FOLDER + filename
-        output_file = INPUT_FOLDER + filename + ".lor"
+        output_file = INPUT_FOLDER + filename_out
 
-        result = self.compressor.run(input_file)
+        result = self.decompressor.run(input_file)
         self.assertTrue(result)
 
-        self.assert_files_are_equal(TST_FOLDER + filename + ".lor", output_file)
+        self.assert_files_are_equal(TST_FOLDER + filename_out, output_file)
         if os_path.exists(output_file):
             os_remove(output_file)
 
