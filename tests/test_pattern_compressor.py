@@ -28,12 +28,15 @@ class TestPatternCompressor(unittest.TestCase):
     def assert_files_in_test_folders_are_equal(self, tst_filename, ref_filename = None):
         if ref_filename == None:
             ref_filename = tst_filename
-        with open(OUTPUT_FOLDER + tst_filename) as f:
-            test_list = list(f)
-        with open(REF_FOLDER + ref_filename) as f:
-            ref_list = list(f)
-        self.assertListEqual(test_list, ref_list)
+        self.assert_files_are_equal(OUTPUT_FOLDER + tst_filename, REF_FOLDER + ref_filename)
     
+    def assert_files_are_equal(self, file1, file2):
+        with open(file1) as f:
+            file1_list = list(f)
+        with open(file2) as f:
+            file2_list = list(f)
+        self.assertListEqual(file1_list, file2_list)
+
     def assert_file_not_in_output_folder(self, filename):
         file_exists = os_path.exists(OUTPUT_FOLDER + filename)
         self.assertFalse(file_exists)
@@ -47,12 +50,12 @@ class TestPatternCompressor(unittest.TestCase):
         self.assertFalse(result)
         self.assert_file_not_in_output_folder(filename)
 
-    def assert_file_compresses_correctly(self, filename):
-        input_file = INPUT_FOLDER + filename
-        output_file = OUTPUT_FOLDER + filename + ".lor"
+    def assert_file_compresses_correctly(self, input_filename):
+        input_file = INPUT_FOLDER + input_filename
+        output_file = OUTPUT_FOLDER + input_filename + ".lor"
         result = self.compressor.run(input_file, output_file)
         self.assertTrue(result)
-        self.assert_files_in_test_folders_are_equal(filename + ".lor")
+        self.assert_files_in_test_folders_are_equal(input_filename + ".lor")
 
     # Since an empty file won't compress, it shouldn't even output
     def test_empty_file_does_not_compress(self):
@@ -93,3 +96,51 @@ class TestPatternCompressor(unittest.TestCase):
         self.compressor.pattern_compressor._max_look_ahead = 8
         filename = "raw_delimiter_between_chunks.bin"
         self.assert_file_compresses_correctly(filename)
+
+    def test_compress_to_same_output_folder(self):
+        filename = "32_bits.bin"
+        input_file = INPUT_FOLDER + filename
+        output_file = OUTPUT_FOLDER
+
+        result = self.compressor.run(input_file, output_file)
+        self.assertTrue(result)
+
+        self.assert_files_are_equal(REF_FOLDER + filename + ".lor", output_file + filename + ".lor")
+        if os_path.exists(output_file + filename + ".lor"):
+            os_remove(output_file + filename + ".lor")
+
+    def test_compress_to_different_output_folder(self):
+        filename = "32_bits.bin"
+        input_file = INPUT_FOLDER + filename
+        output_file = "tests/compressor_binary_files"
+
+        result = self.compressor.run(input_file, output_file)
+        self.assertTrue(result)
+
+        self.assert_files_are_equal(REF_FOLDER + filename + ".lor", output_file + filename + ".lor")
+        if os_path.exists(output_file + filename + ".lor"):
+            os_remove(output_file + filename + ".lor")
+
+    def test_compress_to_output_file(self):
+        filename = "32_bits.bin"
+        input_file = INPUT_FOLDER + filename
+        output_file = "tests/compressor_binary_files/test1.lor"
+
+        result = self.compressor.run(input_file, output_file)
+        self.assertTrue(result)
+
+        self.assert_files_are_equal(REF_FOLDER + filename + ".lor", output_file)
+        if os_path.exists(output_file):
+            os_remove(output_file)
+
+    def test_compress_no_output_file(self):
+        filename = "32_bits.bin"
+        input_file = INPUT_FOLDER + filename
+        output_file = INPUT_FOLDER + filename + ".lor"
+
+        result = self.compressor.run(input_file)
+        self.assertTrue(result)
+
+        self.assert_files_are_equal(REF_FOLDER + filename + ".lor", output_file)
+        if os_path.exists(output_file):
+            os_remove(output_file)

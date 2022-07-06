@@ -178,8 +178,10 @@ class Pattern_Compressor(Basic_Compressor):
     def _check_and_update_io_files(self, in_file, out_file):
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
-            out_file = path.basename(in_file) + self.compressed_file_extension
-            
+            # out_file = path.basename(in_file) + self.compressed_file_extension
+            out_file = in_file + self.compressed_file_extension
+        elif path.isdir(out_file):
+            out_file = out_file + path.basename(in_file) + self.compressed_file_extension
         # If the input folder or output folders are specified, it updates the corresponding file with a path
         # if self.input_folder is not None:
         #     in_file = f"{self.input_folder}/{in_file}"
@@ -191,6 +193,8 @@ class Pattern_Compressor(Basic_Compressor):
             raise(FileNotFoundError())
         if path.exists(out_file):
             os_remove(out_file)
+        if not path.exists(path.dirname(out_file)):
+            raise(Exception(f"No path found to the directory: {path.dirname(out_file)}"))
 
         return in_file, out_file
 
