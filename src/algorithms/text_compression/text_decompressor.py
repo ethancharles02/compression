@@ -9,6 +9,15 @@ class Text_Decompressor(Basic_Compressor):
         self._decompressed_data = []
 
     def run(self, input_filepath:str, out_folder=None):
+        """
+        Input:  path to file that will be decompressed:string,
+                destination of decompressed file:string
+        Output: None
+        Description:
+        Opens the input file and output file. Reads in words from
+        the input file, and writes the decompressed versions to the 
+        output file.
+        """
         input_file = path.basename(input_filepath)
         if out_folder is not None:
             self.output_folder = out_folder
@@ -26,6 +35,10 @@ class Text_Decompressor(Basic_Compressor):
                 self._write_data_to_output_file(out_f)
 
     def _update_look_ahead_from_file(self, f:FileIO):
+        """
+        Gets the look ahead value from a properly formated lort file by
+        reading in the look ahead value from the file.
+        """
         char = f.read(1)
         if char != "[":
             raise(WrongFileFormatError("File does not contain look ahead!"))
@@ -37,10 +50,23 @@ class Text_Decompressor(Basic_Compressor):
         self.look_ahead = int(look_ahead)
 
     def fill_decompressed_data(self, f:FileIO):
+        """
+        Reads one word from the file until the decompressed
+        data is the same length as the look_ahead. This ensures
+        that any reference read in will be able to be referenced.
+        """
         while len(self._decompressed_data) < self.look_ahead:
             self.read_one_word_to_data(f)
 
     def read_one_word_to_data(self, f:FileIO):
+        """
+        Input:  open input file
+        Output: Success:Boolean
+        Reads one character from the input file until 
+        a space or newline is reached, adding the character
+        to a word variable. updates the decompressed data 
+        with the word variable.
+        """
         char = f.read(1)
         if char:
             word = ""
@@ -55,16 +81,29 @@ class Text_Decompressor(Basic_Compressor):
             return False
 
     def _update_decompressed_data(self, word):
-        assert word is not None
-        if self.is_reference(word):
-            self._decompressed_data.append(self._decompress(word))
-        else:
+        """
+        If the word is a reference, decompresses the word.
+        Adds the word to decompressed data.
+        """
+        if word is not None:
+            if self.is_reference(word):
+                word = self._decompress(word)
             self._decompressed_data.append(word)
 
     def is_reference(self, word):
+        """
+        Checks to make sure that the reference character '<' is in
+        the word and that the escape character '~' is not in the word,
+        Meaning the word is a reference.
+        """
         return "<" in word and "~" not in word
 
     def get_decompressed_data(self):
+        """
+        Checks for bad values in the decompressed data and removes them.
+        Combines the rest of the decompressed data into a single string.
+        Returns the string.
+        """
         bad_values = []
         for i in range(len(self._decompressed_data)):
             if not isinstance(self._decompressed_data[i], str):
@@ -76,13 +115,22 @@ class Text_Decompressor(Basic_Compressor):
         return " ".join(self._decompressed_data)
 
     def _decompress(self, reference:str):
+        """
+        Gets the reference distance from the reference passed in.
+        If the reference distance is less than the length of the 
+        decompressed data, returns the word that was referenced.
+        """
         words_away = int(reference.split('<')[-1])
         if words_away <= len(self._decompressed_data):
             result = self._decompressed_data[-1 * words_away]
-            assert result is not None
             return result
 
     def _write_word_to(self, f:FileIO):
+        """
+        Get one word from the decompressed data. Add a space at the end
+        of it, if it is not a newline, and the next word isn't a newline.
+        Write the word to the file passed in.
+        """
         word = self._decompressed_data.pop(0)
         if isinstance(word, str):
             if self._decompressed_data[0] != '\n' and word != '\n':
@@ -90,4 +138,8 @@ class Text_Decompressor(Basic_Compressor):
             f.write(word)
 
     def _write_data_to_output_file(self, f:FileIO):
+        """
+        Formats the decompressed data, then writes it to the
+        file that is passed in. 
+        """
         f.write(self.get_decompressed_data().replace(" \n ", "\n"))  
