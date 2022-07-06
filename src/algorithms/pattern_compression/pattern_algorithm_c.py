@@ -1,5 +1,4 @@
 # TODO
-# Combine all replacement loops with one special replace loop
 # Finish docstrings, add types as necessary to methods
 # Create parent class for compression and decompression since so many of the methods are similar
 

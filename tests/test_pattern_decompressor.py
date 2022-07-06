@@ -1,9 +1,7 @@
-# TODO
-# The bit cutoff doesnt account for the special replace 2, it may need to be updated to account for that
 import unittest
 from sys import path
 path.append("..")
-from os import getcwd, listdir, remove as os_remove, path as os_path
+from os import listdir, remove as os_remove, path as os_path
 
 from src.algorithms.pattern_compression.pattern_decompressor import Pattern_Decompressor
 

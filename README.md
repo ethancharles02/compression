@@ -73,6 +73,7 @@ System test documents can be found in the test folder. These documents include t
 ### TODO
 ### Requirements
 * be a .exe file
+* Create progress bar for compression and decompression
 * Folder compression
 
 #### Both

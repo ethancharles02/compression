@@ -1,7 +1,5 @@
 # TODO
-# Finish setting up tests between files
 # Add comments to add any necessary context to tests (especially the folder one)
-# Maybe make a custom function for replacing the file extension
 
 import unittest
 

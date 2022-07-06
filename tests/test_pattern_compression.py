@@ -1,8 +1,5 @@
-# TODO
-# Test compressor to make sure it adds a bit to the front to indicate if it is unlimited pattern count or not (ie. is the pattern count limited to a bit length)
-
 # NOTE
-# Chosen delimiter is necessary for compression to work properly. If not this, make sure the starting bit is 0 (or the opposite of whatever the additional
+# Chosen delimiter is necessary for compression to work properly. If not this, make sure end of the delimiter can't loop back to the start from any point
 # character added to the delimiter is)
 
 import unittest

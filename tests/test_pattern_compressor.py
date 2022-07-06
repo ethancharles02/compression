@@ -1,7 +1,3 @@
-# TODO
-# Add restrictions for the compressor and decompressor such that a raw delimiter can't be longer than 7 characters
-# Maybe make a custom function for replacing the file extension
-
 import unittest
 
 from sys import path

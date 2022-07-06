@@ -1,5 +1,6 @@
 # TODO
-# Check and test for improperly formatted file extensions when decompressing
+# Add docstrings
+
 from os import getcwd, fstat, path, remove as os_remove
 from src.algorithms.pattern_compression.pattern_constants import *
 from src.algorithms.pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D

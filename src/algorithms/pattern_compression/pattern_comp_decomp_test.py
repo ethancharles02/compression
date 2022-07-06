@@ -1,5 +1,3 @@
-# TODO
-# Figure out why decompression of the test1.bin.lor file results in an error
 from sys import path
 path.append(".")
 from src.algorithms.pattern_compression.pattern_compressor import Pattern_Compressor

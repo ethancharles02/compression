@@ -1,5 +1,4 @@
 # TODO
-# Test using images
 # Add docstrings
 
 from src.algorithms.pattern_compression.pattern_constants import PATTERN_BIT_OFFSET
