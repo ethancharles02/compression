@@ -8,7 +8,7 @@ from sys import path
 path.append("..")
 from os import listdir, remove as os_remove, path as os_path
 
-from pattern_compression.pattern_compressor import Pattern_Compressor
+from src.algorithms.pattern_compression.pattern_compressor import Pattern_Compressor
 
 BIN_FOLDER = "tests/compressor_binary_files"
 INPUT_FOLDER = f"{BIN_FOLDER}/test_files/"
@@ -17,7 +17,7 @@ OUTPUT_FOLDER = f"{BIN_FOLDER}/dump_files/"
 
 class TestPatternCompressor(unittest.TestCase):
     def setUp(self):
-        self.compressor = Pattern_Compressor(chunk_size=10, pattern_bit_offset=1, max_look_ahead=15, raw_delimiter="01011", pattern_count_num_bits=4)
+        self.compressor = Pattern_Compressor(chunk_size=10, pattern_bit_offset=1, max_look_ahead=15, raw_delimiter="01011", pattern_count_num_bits=4, compressed_file_extension=".lor")
         # self.compressor.input_folder = INPUT_FOLDER
         # self.compressor.output_folder = OUTPUT_FOLDER
     

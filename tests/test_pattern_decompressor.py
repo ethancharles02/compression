@@ -5,7 +5,7 @@ from sys import path
 path.append("..")
 from os import getcwd, listdir, remove as os_remove, path as os_path
 
-from pattern_compression.pattern_decompressor import Pattern_Decompressor
+from src.algorithms.pattern_compression.pattern_decompressor import Pattern_Decompressor
 
 
 BIN_FOLDER = "tests/compressor_binary_files"
