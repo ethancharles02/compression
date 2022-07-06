@@ -1,7 +1,3 @@
-# TODO
-# Get sentence grammar from discrete math code
-# Create a smaller list for each set of words
-
 from random import *
 from sys import *
 from math import floor

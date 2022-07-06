@@ -1,5 +1,6 @@
 # TODO
-# Check and test for improperly formatted file extensions when decompressing
+# Add docstrings
+
 from os import getcwd, fstat, path, remove as os_remove
 from src.algorithms.pattern_compression.pattern_constants import *
 from src.algorithms.pattern_compression.pattern_algorithm_d import Pattern_Algorithm_D
@@ -12,7 +13,7 @@ class WrongFileFormatError(Exception):
         super().__init__(*args)
 
 class Pattern_Decompressor(Basic_Compressor):
-    def __init__(self, chunk_size=1024, raw_delimiter=None, pattern_count_num_bits=None, pattern_bit_offset=None, input_file_extension=None) -> None:
+    def __init__(self, chunk_size=1024, raw_delimiter=None, pattern_count_num_bits=None, pattern_bit_offset=None, compressed_file_extension=None) -> None:
         # self.input_folder = getcwd()
         # self.output_folder = self.input_folder
         # self.output_folder = None
@@ -25,8 +26,10 @@ class Pattern_Decompressor(Basic_Compressor):
             pattern_count_num_bits = PATTERN_COUNT_NUM_BITS
         if pattern_bit_offset is None:
             pattern_bit_offset = PATTERN_BIT_OFFSET
-        if input_file_extension is None:
-            self.input_file_extension = OUT_FILE_EXTENSION
+        if compressed_file_extension is None:
+            compressed_file_extension = OUT_FILE_EXTENSION
+        self.compressed_file_extension = compressed_file_extension
+        super().__init__(compressed_file_extension)
 
         self.pattern_decompressor = Pattern_Algorithm_D(raw_delimiter, pattern_count_num_bits, pattern_bit_offset)
 
@@ -68,19 +71,19 @@ class Pattern_Decompressor(Basic_Compressor):
     def _check_and_update_io_files(self, in_file, out_file):
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
-            out_file = path.basename(self._remove_file_extension(in_file))
-
-        # If the input folder or output folders are specified, it updates the corresponding file with a path
-        # if self.input_folder is not None:
-        #     in_file = f"{self.input_folder}/{in_file}"
-        # if self.output_folder is not None:
-        #     out_file = f"{self.output_folder}/{out_file}"
+            out_file = self._remove_file_extension(in_file)
+        elif path.isdir(out_file):
+            out_file = path.join(out_file, self._remove_file_extension(path.basename(in_file)))
         
-        # If the input file doesn't exist, an error will be raised
+        # If the output file already exists, it will remove it first
         if not path.exists(in_file):
             raise(FileNotFoundError())
+        # If the output file already exists, it will remove it first
         if path.exists(out_file):
             os_remove(out_file)
+        # If the directory given doesn't exist, it will error
+        if not path.exists(path.dirname(out_file)):
+            raise(Exception(f"No path found to the directory: {path.dirname(out_file)}"))
 
         return in_file, out_file
 

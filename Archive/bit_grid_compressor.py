@@ -1,10 +1,3 @@
-# TODO
-# Count number of row b delimiters until it == num_rows then switch to columns
-# Add tests for all functions
-# Maybe add a mode that doesn't have symbol specifiers at the start of each column or row (default to 1). See if it changes much
-# Prioritize decompressibility to a certain level (finish decompression to figure this out) This could mean that a certain percentage needs to be reached
-# Add functionality for a file to be compressed in multiple grids
-
 from bit_string_generator import generate_string
 from constants import *
 from math import floor, ceil, log2
