@@ -181,7 +181,7 @@ class Pattern_Compressor(Basic_Compressor):
             # out_file = path.basename(in_file) + self.compressed_file_extension
             out_file = in_file + self.compressed_file_extension
         elif path.isdir(out_file):
-            out_file = out_file + path.basename(in_file) + self.compressed_file_extension
+            out_file = path.join(out_file, path.basename(in_file) + self.compressed_file_extension)
         # If the input folder or output folders are specified, it updates the corresponding file with a path
         # if self.input_folder is not None:
         #     in_file = f"{self.input_folder}/{in_file}"

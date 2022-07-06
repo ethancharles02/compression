@@ -112,7 +112,7 @@ class TestPatternCompressor(unittest.TestCase):
     def test_compress_to_different_output_folder(self):
         filename = "32_bits.bin"
         input_file = INPUT_FOLDER + filename
-        output_file = "tests/compressor_binary_files"
+        output_file = "tests/compressor_binary_files/"
 
         result = self.compressor.run(input_file, output_file)
         self.assertTrue(result)
