@@ -1,4 +1,5 @@
 # TODO
+# Test with chunks enabled
 # Add docstrings
 
 from os import path, fstat, remove as os_remove

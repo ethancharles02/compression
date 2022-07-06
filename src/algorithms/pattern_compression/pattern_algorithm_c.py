@@ -1,5 +1,6 @@
 # TODO
 # Finish docstrings, add types as necessary to methods
+# Optimize compression
 # Create parent class for compression and decompression since so many of the methods are similar
 
 from math import log2, floor
