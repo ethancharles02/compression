@@ -10,7 +10,7 @@ from time import monotonic
 COMPRESSION_FOLDER = "Research_Testing/random_textstring_files"
 
 class Text_Compressor(Basic_Compressor):
-    def __init__(self, chunk_size=1024, look_ahead=5):
+    def __init__(self, chunk_size=131072, look_ahead=512):
         super().__init__(".lort")
         self.chunk_size = chunk_size
         self.look_ahead = look_ahead
