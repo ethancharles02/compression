@@ -13,12 +13,20 @@ class WrongFileFormatError(Exception):
         super().__init__(*args)
 
 class Pattern_Decompressor(Basic_Compressor):
-    def __init__(self, chunk_size=1024, raw_delimiter=None, pattern_count_num_bits=None, pattern_bit_offset=None, compressed_file_extension=None) -> None:
-        # self.input_folder = getcwd()
-        # self.output_folder = self.input_folder
-        # self.output_folder = None
+    """ The pattern decompressor is used to facilitate decompressing of binary strings.
 
+    Attributes:
+        
+
+    Constructor Args:
+        
+    
+    Class Methods:
+        
+    """
+    def __init__(self, chunk_size=1024, raw_delimiter=None, pattern_count_num_bits=None, pattern_bit_offset=None, compressed_file_extension=None, override_chunk_size=False) -> None:
         self.chunk_size = chunk_size
+        self.override_chunk_size = override_chunk_size
 
         if raw_delimiter is None:
             raw_delimiter = RAW_DELIMITER
@@ -49,7 +57,8 @@ class Pattern_Decompressor(Basic_Compressor):
         #     os_remove(output_file)
         with open(input_file, "rb") as in_f:
             with open(output_file, "ab+") as out_f:
-                self.chunk_size = fstat(in_f.fileno()).st_size
+                if self.override_chunk_size:
+                    self.chunk_size = fstat(in_f.fileno()).st_size
 
                 self._chunk_data = self._read_chunk_data_to_delimiter(in_f, self.chunk_size)
                 while self._chunk_data:
