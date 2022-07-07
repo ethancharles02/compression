@@ -1,9 +1,10 @@
 # TODO
+# Test with chunks enabled
 # Add docstrings
-# Add in a 1 or a 0 at the beginning of the output file only if dynamic bit storing is fixed
-from os import path, listdir, fstat, remove as os_remove
+
+from os import path, fstat, remove as os_remove
 from src.algorithms.pattern_compression.pattern_algorithm_c import Pattern_Algorithm_C
-from time import monotonic
+# from time import monotonic
 from src.algorithms.pattern_compression.pattern_constants import *
 from bitarray import bitarray
 from math import ceil
@@ -36,7 +37,7 @@ class Pattern_Compressor(Basic_Compressor):
         self._num_bits_output = 0
         self._file_size = 0
         self._print_time = 5
-        self._print_cur_time = 0
+        # self._print_cur_time = 0
 
         self.override_compression_check = override_compression_check
         
@@ -56,13 +57,13 @@ class Pattern_Compressor(Basic_Compressor):
             # Get chunk data
             self._chunk_data = self._get_new_data(f, self.chunk_size)
 
-            self._print_cur_time = monotonic()
+            # self._print_cur_time = monotonic()
 
             # As long as there is more data to read:
             while self._chunk_data:
-                if monotonic() - self._print_cur_time >= self._print_time:
-                    self._print_percentage_completion(2)
-                    self._print_cur_time = monotonic()
+                # if monotonic() - self._print_cur_time >= self._print_time:
+                #     self._print_percentage_completion(2)
+                #     self._print_cur_time = monotonic()
 
                 # Compress the chunk
                 self.pattern_compressor.compress(self._chunk_data)
@@ -177,19 +178,19 @@ class Pattern_Compressor(Basic_Compressor):
     def _check_and_update_io_files(self, in_file, out_file):
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
-            out_file = path.basename(in_file) + self.compressed_file_extension
-            
-        # If the input folder or output folders are specified, it updates the corresponding file with a path
-        # if self.input_folder is not None:
-        #     in_file = f"{self.input_folder}/{in_file}"
-        # if self.output_folder is not None:
-        #     out_file = f"{self.output_folder}/{out_file}"
+            out_file = in_file + self.compressed_file_extension
+        elif path.isdir(out_file):
+            out_file = path.join(out_file, path.basename(in_file) + self.compressed_file_extension)
         
         # If the input file doesn't exist, an error will be raised
         if not path.exists(in_file):
             raise(FileNotFoundError())
+        # If the output file already exists, it will remove it first
         if path.exists(out_file):
             os_remove(out_file)
+        # If the directory given doesn't exist, it will error
+        if not path.exists(path.dirname(out_file)):
+            raise(Exception(f"No path found to the directory: {path.dirname(out_file)}"))
 
         return in_file, out_file
 

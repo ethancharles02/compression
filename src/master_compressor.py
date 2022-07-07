@@ -1,9 +1,3 @@
-# TODO
-# Move get file extension function from here and pattern compressor to helper function file
-
-# from os import path
-# from json import load
-
 class WrongFileType(Exception):
     pass
 
