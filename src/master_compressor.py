@@ -1,31 +1,18 @@
+from os import mkdir
+from src.algorithms.algorithms import ALGORITHMS, ALGORITHMS_OBJECTS
+
 class WrongFileType(Exception):
     pass
 
 class Master_Compressor(object):
-    def __init__(self, algorithms, algorithms_objects) -> None:
-        # from algorithms.text_compression.text_compressor import Text_Compressor
-        # from algorithms.text_compression.text_decompressor import Text_Decompressor
-
-        # from algorithms.pattern_compression.pattern_compressor import Pattern_Compressor
-        # from algorithms.pattern_compression.pattern_decompressor import Pattern_Decompressor
-
-        self.algorithms = algorithms
+    def __init__(self) -> None:
+        self.algorithms = ALGORITHMS
         self.file_extensions = {}
         for key in self.algorithms:
             self.file_extensions[self.algorithms[key][0]] = key
 
         self.algorithms_list = self.algorithms.keys()
-        self.compressor_objects = algorithms_objects
-
-        # for algorithm in self.algorithms:
-        #     exec(f"from {self.algorithms[algorithm][1][0]} import {self.algorithms[algorithm][1][1]}")
-        #     exec(f"from {self.algorithms[algorithm][2][0]} import {self.algorithms[algorithm][2][1]}")
-        #     self.compressor_objects[algorithm] = [eval(f"{self.algorithms[algorithm][1][1]}()"), eval(f"{self.algorithms[algorithm][2][1]}()")]
-
-        # self.text_compr = Text_Compressor()
-        # self.text_decompr = Text_Decompressor()
-        # self.patter_compr = Pattern_Compressor()
-        # self.patter_decompr = Pattern_Decompressor()
+        self.compressor_objects = ALGORITHMS_OBJECTS
 
     def _get_file_extension(self, string:str):
         index = string.rfind(".")
@@ -34,33 +21,21 @@ class Master_Compressor(object):
         else:
             raise ValueError(f"File extension did not exist on the given file: {string}")
 
-    def compress(self, in_file:str, out_folder=None, algorithm=None):
+    def _get_compressor(self, algorithm):
         if algorithm is None:
-            algorithm = self.algorithms_list[0]
-        compress_success = self.compressor_objects[algorithm][0].run(in_file, out_folder)
-        # choice = self.some_decision_logic()
-        # if choice == 1:
-        #     if ".txt" not in in_file:
-        #         raise WrongFileType()
-        #     compress_success = self.text_compr.run(in_file, out_folder)
-        # elif choice == 2:
-        #     compress_success = self.patter_compr.run(in_file, out_folder)
-        # else:
-        #     compress_success = False
+            compressor = self.compressor_objects[self.algorithms_list[0]][0]
+        else:
+            compressor = self.compressor_objects[algorithm][0]
+        return compressor
+
+    def compress(self, in_file:str, out_folder=None, algorithm=None):
+        compressor = self._get_compressor(algorithm)
+        compress_success = compressor.run(in_file, out_folder)
         return compress_success
 
     def decompress(self, in_file:str, out_folder=None):
         algorithm = self._get_algorithm_for_file_extension(self._get_file_extension(in_file))
         decompress_success = self.compressor_objects[algorithm][1].run(in_file, out_folder)
-        # choice = self.some_decision_logic()
-        # if choice == 1:
-        #     if ".lor" not in in_file:
-        #         raise WrongFileType()
-        #     compress_success = self.text_decompr.run(in_file, out_folder)
-        # elif choice == 2:
-        #     compress_success = self.patter_decompr.run(in_file, out_folder)
-        # else:
-        #     compress_success = False
         return decompress_success
 
     def _get_algorithm_for_file_extension(self, file_extension):
@@ -69,5 +44,27 @@ class Master_Compressor(object):
 
         return self.file_extensions[file_extension]
 
-    def some_decision_logic(self):
-        return 1
+    def compress_folder(self, in_folder:str, out_folder=None, algorithm=None):
+        compressor = self._get_compressor(algorithm)
+        results = self.run_function_on_files_in_folder(in_folder, compressor.run)
+        # TODO filter results. If all failed, delete the folder and files.
+        return False  # This will change to if all the results failed or not.
+
+    def decompress_folder(self, in_folder:str, out_folder=None):
+        folder_files = []
+        algorithms = []
+        # TODO Get a list of files. 
+        for file in folder_files:
+            algorithms.append((self._get_algorithm_for_file_extension(self._get_file_extension(file)), file))
+        results = []
+        for algorithm in algorithms:
+            results.append(self.compressor_objects[algorithms[0]][1].run(algorithms[1], out_folder))
+        return results  # TODO This should really return if all of them failed or not.
+
+    def run_function_on_files_in_folder(self, function, folder):
+        folder_files = []
+        # TODO grab all files in the folder
+        results = []
+        for file in folder_files:
+            results.append(function(file))
+        return results

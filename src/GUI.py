@@ -3,12 +3,9 @@ from tkinter import ttk
 from tkinter import filedialog
 from functools import partial
 from os import path
-import json
-
-# eval(f"from algorithms.{'master_compressor'} import Master_Compressor")
 
 from src.master_compressor import Master_Compressor, WrongFileType
-from src.algorithms.algorithms import ALGORITHMS, ALGORITHMS_OBJECTS
+from src.algorithms.algorithms import ALGORITHMS
 
 COMPRESS = "compress"
 DECOMPRESS = "decompress"
@@ -18,7 +15,7 @@ THIS_FILE = path.basename(__file__)
 class Compression_GUI():
     def __init__(self) -> None:
         self.get_algorithm_data()
-        self.compresser = Master_Compressor(self.algorithms, ALGORITHMS_OBJECTS)
+        self.compresser = Master_Compressor()
         self.define_grid_locations()
         self.root = self.create_root()
         self.frm = self.create_frame()
@@ -43,10 +40,6 @@ class Compression_GUI():
 
     def get_algorithm_data(self):
         self.algorithms = ALGORITHMS
-        # if not path.exists("algorithms/algorithms.json"):
-        #     raise FileNotFoundError("No algorithms json file found")
-        # with open("algorithms/algorithms.json") as f:
-        #     self.algorithms = json.load(f)
 
     def create_root(self):
         root = tk.Tk()
