@@ -43,6 +43,8 @@ class Pattern_Decompressor(Basic_Compressor):
 
     def run(self, input_file:str, output_file=None):
         input_file, output_file = self._check_and_update_io_files(input_file, output_file)
+        if not input_file:
+            return False
         # if output_file is None:
         #     output_file = self._remove_file_extension(input_file)
         # if path.exists(output_file):
@@ -69,6 +71,8 @@ class Pattern_Decompressor(Basic_Compressor):
         return True
 
     def _check_and_update_io_files(self, in_file, out_file):
+        if not self._file_has_correct_file_extension(in_file):
+            return False, False
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
             out_file = self._remove_file_extension(in_file)

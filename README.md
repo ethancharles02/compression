@@ -77,15 +77,11 @@ System test documents can be found in the test folder. These documents include t
 * Folder compression
 
 #### Both
-* add a src folder?
-* variable to say if algorithm works for folder compression?
+* Add button to GUI for folder compression or decide on how folder compression will work.
+* Test for bad file extensions copying files to output folder anyway
 
 #### ETHAN
-* Finish Compressor and Decompressor for Pattern Compression
-* have compressor take in output folder
-* Check if pattern compression works through GUI
 * Add comments and documentation
 
 #### JOSH
-* Text Decompress doesn't output to specified output folder 
-
+* Test folder compression

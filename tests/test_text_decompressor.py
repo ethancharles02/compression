@@ -31,7 +31,7 @@ class Test_Decompressor(unittest.TestCase):
 
     def test_reading_improperly_formatted_file(self):
         in_file = TST_FOLDER + '/' + "wrong_format.txt"
-        self.assertRaises(WrongFileFormatError, self.decompressor.run, in_file)
+        self.assertFalse(self.decompressor.run(in_file))
 
     def test_gets_correct_look_ahead_value_from_generic_file(self):
         filename = INPUT_FOLDER + '/' + "text_generic.txt.lor"

@@ -19,6 +19,10 @@ class Text_Decompressor(Basic_Compressor):
         output file.
         """
         input_file = path.basename(input_filepath)
+
+        if not self._file_has_correct_file_extension(input_file):
+            return False
+
         if out_folder is not None:
             self.output_folder = out_folder
         elif self.output_folder is None:
@@ -33,6 +37,8 @@ class Text_Decompressor(Basic_Compressor):
                 if self._decompressed_data and self._decompressed_data[-1] == '\n':
                     self._decompressed_data.append('') 
                 self._write_data_to_output_file(out_f)
+        
+        return True
 
     def _update_look_ahead_from_file(self, f:FileIO):
         """
