@@ -4,5 +4,7 @@ PATTERN_BIT_OFFSET = 1
 MAX_LOOK_AHEAD = 15
 # The basic delimiter, the actual delimiter has a bit added to the end
 RAW_DELIMITER = "01011"
+# The number of bits that are dedicated to specifying how many patterns there are
 PATTERN_COUNT_NUM_BITS = 4
+# The default file extension to use on compressed files
 OUT_FILE_EXTENSION = ".lorp"

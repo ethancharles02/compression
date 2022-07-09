@@ -29,17 +29,17 @@ class TestPatternCompression(unittest.TestCase):
         self.assertEqual(self.compressor.get_compressed_data(), "0")
 
     def test_compressor_pattern_count_bits_setter_getter(self):
-        self.assertEqual(self.compressor.is_pattern_count_limited, True)
+        self.assertEqual(self.compressor._is_pattern_count_limited, True)
         self.assertEqual(self.compressor.pattern_count_num_bits, 3)
 
         self.compressor.pattern_count_num_bits = None
 
-        self.assertEqual(self.compressor.is_pattern_count_limited, False)
+        self.assertEqual(self.compressor._is_pattern_count_limited, False)
         self.assertIsNone(self.compressor.pattern_count_num_bits)
 
         self.compressor.pattern_count_num_bits = 10
 
-        self.assertEqual(self.compressor.is_pattern_count_limited, True)
+        self.assertEqual(self.compressor._is_pattern_count_limited, True)
         self.assertEqual(self.compressor.pattern_count_num_bits, 10)
     
     def test_compress_adds_bits_to_one_existing_delimiter_strings(self):

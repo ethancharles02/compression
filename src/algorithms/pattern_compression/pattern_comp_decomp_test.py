@@ -9,7 +9,12 @@ from time import monotonic
 INPUT_FOLDER = "src/algorithms/pattern_compression/"
 OUTPUT_FOLDER = "src/algorithms/pattern_compression/"
 
-def are_files_in_test_folders_equal(filepath1, filepath2):
+def are_files_equal(filepath1:str, filepath2:str) -> bool:
+    """ Checks if two files are equal to each other
+
+    Arguments:
+        filepath1, filepath2 (str): Files to check against each other
+    """
     with open(filepath1, "rb") as f:
         list1 = list(f)
     with open(filepath2, "rb") as f:
@@ -21,7 +26,12 @@ def are_files_in_test_folders_equal(filepath1, filepath2):
 
     return lists_equal
 
-def analyze_strings(string1, string2):
+def analyze_strings(string1:str, string2:str) -> int:
+    """ Analyzes two strings and prints out the indexes where they don't line up
+
+    Arguments:
+        string1, string2 (str): Strings to compare
+    """
     string1_length = len(string1)
     string2_length = len(string2)
 
@@ -39,7 +49,12 @@ def analyze_strings(string1, string2):
                 print(string1[i], string2[i])
                 return i
 
-def analyze_lists(list1, list2):
+def analyze_lists(list1:list, list2:list) -> int:
+    """ Compares two lists together and returns how many bytes were read
+
+    Arguments:
+        list1, list2 (list): Lists to compare
+    """
     list1_length = len(list1)
     list2_length = len(list2)
 
@@ -90,7 +105,7 @@ if __name__ == "__main__":
         result = decompressor.run(in_path_d, out_path_d)
         print(f"Decompression took {(monotonic() - old_time):.2f} seconds. Successful: {result}")
     
-        files_equal = are_files_in_test_folders_equal(in_path, out_path_d)
+        files_equal = are_files_equal(in_path, out_path_d)
         print(f"File was successfully compressed and decompressed: {files_equal}")
 
     # print(are_files_in_test_folders_equal(f"{INPUT_FOLDER}/{in_file}", f"{OUTPUT_FOLDER}/{out_file}"))

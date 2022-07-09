@@ -1,5 +1,14 @@
-
 def special_replace(string:str, old:str, new:str="", num_replaces_per_ignore:int=None, num_ignore_characters:int=None) -> str:
+    """ Replaces substrings within a string with new substrings. It has the additional
+    ability to ignore a number of characters and a number of replacement substrings after replacing a string
+
+    Arguments:
+        string (str): The string to have replacements take place
+        old (str): The substring to search for
+        new (str): The substring to replace with
+        num_replaces_per_ignore (int): Number of replacement strings to ignore after a replacement
+        num_ignore_characters (int): Number of characters to ignore after a replacement
+    """
     old_string_length = len(old)
     # new_string_length = len(new)
     string_length = len(string)
@@ -35,6 +44,21 @@ def special_replace(string:str, old:str, new:str="", num_replaces_per_ignore:int
     return "".join(new_string_list)
 
 def special_replace2(string:str, replace_dict:dict) -> str:
+    """ Replaces substrings within a string with new substrings. It has the additional
+    ability to replace multiple strings at a time with the replace_dict.
+
+    Within the replace_dict is a chain number that can be specified. This will allow a
+    number of characters to be ignored when searching for replacement strings. For instance,
+    a replace dict of {"01" : ["10", 1]} searches for 01s and replaces them with 10s. However,
+    since there is a chain of 1, a string of 01111 will chain since the chain of 1 allows the first
+    character to be ignored after a substring is found. This will be replaced with 10000
+
+    Arguments:
+        string (str): The string to have replacements take place
+        replace_dict (dict): The dictionary that contains substrings to search for as the keys
+            and the lists as the value where the 0th index is the replacement string and the 1st index is
+            the chain number
+    """
     # Gets a list of the replacement strings for checking if a particular part of the string needs to be replaced
     replace_key_list = replace_dict.keys()
     # Gets the length of the longest replacement string
@@ -123,6 +147,10 @@ if __name__ == "__main__":
     # }
     # print(special_replace2(new_string, replace_dict))
     replace_dict = {
-        "01011" : ["010110", 1]
+        "01" : ["10", 1]
     }
-    print(special_replace2("01110000110001000010101110111011", replace_dict))
+    print(special_replace2("01111", replace_dict))
+    # replace_dict = {
+    #     "01011" : ["010110", 1]
+    # }
+    # print(special_replace2("01110000110001000010101110111011", replace_dict))
