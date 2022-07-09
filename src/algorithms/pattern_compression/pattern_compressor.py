@@ -1,5 +1,7 @@
 # TODO
 # Test with chunks enabled
+# Update input parameters to consistent with the decompressor
+# Make parent class for similar methods and attributes
 # Consider adjusting the output to only do the final delimiter with bits at the end of the file
 # Read in bits to get the chunk to be appended to be in byte format
 
