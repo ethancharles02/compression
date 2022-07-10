@@ -1,5 +1,8 @@
-from os import mkdir, path, listdir
+from os import mkdir, path, listdir, remove, rmdir
 from shutil import copyfile
+from unittest import result
+
+from sympy import false
 from src.basic_compressor import WrongFileFormatError
 from src.algorithms.algorithms import ALGORITHMS, ALGORITHMS_OBJECTS
 
@@ -21,7 +24,7 @@ class Master_Compressor(object):
         if index != -1:
             return string[index:]
         else:
-            raise ValueError(f"File extension did not exist on the given file: {string}")
+            return None
 
     def _get_compressor(self, algorithm):
         if algorithm is None:
@@ -36,19 +39,18 @@ class Master_Compressor(object):
         return compress_success
 
     def decompress(self, in_file:str, out_folder=None):
-        algorithm = self._get_algorithm_for_file_extension(self._get_file_extension(in_file))
+        file_extension = self._get_file_extension(in_file)
+        if not file_extension:
+            return False
+        algorithm = self._get_algorithm_for_file_extension(file_extension)
         if not algorithm:
             return False
         decompress_success = self.compressor_objects[algorithm][1].run(in_file, out_folder)
         return decompress_success
 
-    def _get_algorithm_for_file_extension(self, file_extension, optional:bool = False):
+    def _get_algorithm_for_file_extension(self, file_extension):
         if file_extension not in self.file_extensions:
-            if optional:
-                return False
-            else:
-                raise ValueError(f"No file extension found for decompressing {file_extension} files")
-
+            return None
         return self.file_extensions[file_extension]
 
     def _remove_file_extension(self, string:str, file_extension:str, optional:bool = False):
@@ -66,22 +68,39 @@ class Master_Compressor(object):
         if path.exists(compressed_folder):
             raise Exception("Folder already exists")
         mkdir(compressed_folder)
-        results = self.run_function_on_files_in_folder(self.compress, in_folder, [compressed_folder, algorithm])
-        return any(results)  
+        result = self.run_function_on_files_in_folder(self.compress, in_folder, [compressed_folder, algorithm])
+        return result  
 
     def decompress_folder(self, in_folder:str, out_folder=None):
         decompressed_folder = path.join(out_folder, path.basename(path.normpath(self._remove_file_extension(in_folder, ".lor", True))))
         if path.exists(decompressed_folder):
             raise Exception("Folder already exists")
         mkdir(decompressed_folder)
-        results = self.run_function_on_files_in_folder(self.decompress, in_folder, [decompressed_folder])
-        return any(results) 
+        result = self.run_function_on_files_in_folder(self.decompress, in_folder, [decompressed_folder])
+        return result
 
     def run_function_on_files_in_folder(self, func, folder:str, args:list):
         results = []
+        fails = []
         for f in listdir(folder):
             result = func(path.join(folder, f), *args)
             if not result:
-                copyfile(path.join(folder, f), args[0])
+                fails.append((path.join(folder, f), args[0]))
             results.append(result)
-        return results
+        final_result = any(results)
+        if not final_result:
+            self.remove_failed_folder(args[0])
+        else:
+            for fail in fails:
+                self.copy_over(*fail)
+        return final_result
+
+    def remove_failed_folder(self, folder):
+        for f in listdir(folder):
+            remove(path.join(folder, f))
+        rmdir(folder)
+
+
+    def copy_over(self, in_file, out_folder):
+        out_file = out_folder + '/' + path.basename(in_file)
+        copyfile(in_file, out_file)
