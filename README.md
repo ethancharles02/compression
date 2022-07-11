@@ -78,10 +78,9 @@ System test documents can be found in the test folder. These documents include t
 
 #### Both
 * Add button to GUI for folder compression or decide on how folder compression will work.
-* Test for bad file extensions copying files to output folder anyway
 
 #### ETHAN
 * Add comments and documentation
 
 #### JOSH
-* Test folder compression
+* Test changes made to GUI
