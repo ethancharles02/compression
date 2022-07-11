@@ -13,5 +13,5 @@ ALGORITHMS = {
 
 ALGORITHMS_OBJECTS = {
     "Text Compression" : [Text_Compressor(), Text_Decompressor()],
-    "Pattern Compression" : [Pattern_Compressor(), Pattern_Decompressor()]
+    "Pattern Compression" : [Pattern_Compressor(override_chunk_size=True), Pattern_Decompressor(override_chunk_size=True)]
 }

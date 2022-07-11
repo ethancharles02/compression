@@ -33,17 +33,17 @@ class TestPatternDecompression(unittest.TestCase):
         self.assertEqual(self.decompressor.get_decompressed_data(), "0")
 
     def test_decompressor_pattern_count_bits_setter_getter(self):
-        self.assertEqual(self.decompressor.is_pattern_count_limited, True)
+        self.assertEqual(self.decompressor._is_pattern_count_limited, True)
         self.assertEqual(self.decompressor.pattern_count_num_bits, 3)
 
         self.decompressor.pattern_count_num_bits = None
 
-        self.assertEqual(self.decompressor.is_pattern_count_limited, False)
+        self.assertEqual(self.decompressor._is_pattern_count_limited, False)
         self.assertIsNone(self.decompressor.pattern_count_num_bits)
 
         self.decompressor.pattern_count_num_bits = 10
 
-        self.assertEqual(self.decompressor.is_pattern_count_limited, True)
+        self.assertEqual(self.decompressor._is_pattern_count_limited, True)
         self.assertEqual(self.decompressor.pattern_count_num_bits, 10)
     
     def test_decompressor_delimiter_setter_getter(self):

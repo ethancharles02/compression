@@ -89,7 +89,7 @@ class TestPatternCompressor(unittest.TestCase):
     
     def test_raw_delimiter_between_chunks_compresses_correctly(self):
         self.compressor.chunk_size = 6
-        self.compressor.pattern_compressor._max_look_ahead = 8
+        self.compressor.pattern_algorithm._max_look_ahead = 8
         filename = "raw_delimiter_between_chunks.bin"
         self.assert_file_compresses_correctly(filename)
 
