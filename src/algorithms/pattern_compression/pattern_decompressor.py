@@ -114,13 +114,7 @@ class Pattern_Decompressor(Basic_Compressor):
         
         return True
 
-    def _check_and_update_io_files(self, in_file:str, out_file:str):
-        """ Fixes any filepath issues and returns good filepaths (or errors)
 
-        Arguments:
-            in_file (str): Input file, this is expected to be a good path to a file
-            out_file (str): Output file, this is flexible and can take information from the input file if not enough is given
-        """
         # If an output file isn't specified, use the input with a replaced file extension
         if out_file is None:
             out_file = self._remove_file_extension(in_file)

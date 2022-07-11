@@ -15,16 +15,26 @@ class Basic_Compressor(object):
             out_file = in_file + self.compressed_file_extension
         return out_file == in_file
     
-    def _remove_file_extension(self, string:str):
+    def _remove_file_extension(self, string:str, optional:bool = False):
         index = string.rfind(self.compressed_file_extension)
         if index != -1:
             return string[:index]
         else:
-            raise WrongFileFormatError(f"No file extension of {self.compressed_file_extension} found for {string}")
+            if optional:
+                return string
+            else:
+                raise WrongFileFormatError(f"No file extension of {self.compressed_file_extension} found for {string}")
     
-    def _get_file_extension(self, string:str):
+    def _get_file_extension(self, string:str, optional:bool = False):
         index = string.rfind(".")
         if index != -1:
             return string[index:]
         else:
-            raise WrongFileFormatError(f"File extension did not exist on the given file: {string}")
+            if optional:
+                return False
+            else:
+                raise WrongFileFormatError(f"File extension did not exist on the given file: {string}")
+    
+    def _file_has_correct_file_extension(self, file:str):
+        file_extension = self._get_file_extension(file, optional=True)
+        return file_extension and file_extension == self.compressed_file_extension

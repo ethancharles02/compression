@@ -10,7 +10,7 @@ from time import monotonic
 COMPRESSION_FOLDER = "Research_Testing/random_textstring_files"
 
 class Text_Compressor(Basic_Compressor):
-    def __init__(self, chunk_size=1024, look_ahead=5):
+    def __init__(self, chunk_size=131072, look_ahead=512):
         super().__init__(".lort")
         self.chunk_size = chunk_size
         self.look_ahead = look_ahead
@@ -23,6 +23,15 @@ class Text_Compressor(Basic_Compressor):
         self._print_cur_time = 0
         
     def run(self, in_file:str, out_folder=None):
+        """
+        Input:  file to compress:str, destination of compressed file:str
+        Output: Did the file compress successfully:Boolean
+        Description:
+        Creates and writes the look_ahead to the output file. Opens and 
+        reads in chunks of data from the input file. Periodically,
+        appends chunks of compressed data to the output file. 
+        Updates a progress percentage.
+        """
         if out_folder is not None:
             self.output_folder = out_folder
         if not path.exists(in_file):
@@ -69,6 +78,8 @@ class Text_Compressor(Basic_Compressor):
             return False
 
     def _compressed_successfully(self, input_filepath, output_filepath):
+        """
+        """
         with open(input_filepath, 'r') as f:
             input_size = fstat(f.fileno()).st_size
 
@@ -88,11 +99,21 @@ class Text_Compressor(Basic_Compressor):
             return 1
 
     def _read_chunk_data(self, file, chunk_size = 1):
+        """
+        Input:  open file, chunk size
+        Output: data
+        Description:
+        Reads in a chunk of data from the file. Returns
+        the data.
+        """
         self._bits_read += chunk_size
         data = file.read(chunk_size)
         return data
 
     def _update_chunk_data_to_end_of_word(self, f):
+        """
+        Continue to read in one character of data, until you reach the end of a word.
+        """
         # Keeps reading in chunk data till the last character is a space
         while self._chunk_data[-1] != " ":
             new_character = self._read_chunk_data(f, 1)
@@ -103,6 +124,13 @@ class Text_Compressor(Basic_Compressor):
                 break
 
     def _get_out_file(self, in_file):
+        """
+        Input:  input file:string
+        Output: output file:string
+        Description:
+        Creates the filepath to the output file based on the output folder,
+        and input file.
+        """
         # If an output folder isn't specified, the out file is 
         # the same as the in file except with the added file extension
         if self.output_folder is None:
@@ -111,9 +139,3 @@ class Text_Compressor(Basic_Compressor):
         else:
             out_file = self.output_folder + '/' + path.basename(in_file) + self.compressed_file_extension
         return out_file
-
-# if __name__ == "__main__":
-#     file_compressor = Text_Compressor(15, 5)
-    
-#     file_compressor.input_folder = COMPRESSION_FOLDER
-#     file_compressor.run("textstring_5words_10lines.txt")

@@ -3,12 +3,9 @@ from tkinter import ttk
 from tkinter import filedialog
 from functools import partial
 from os import path
-import json
-
-# eval(f"from algorithms.{'master_compressor'} import Master_Compressor")
 
 from src.master_compressor import Master_Compressor, WrongFileType
-from src.algorithms.algorithms import ALGORITHMS, ALGORITHMS_OBJECTS
+from src.algorithms.algorithms import ALGORITHMS
 
 COMPRESS = "compress"
 DECOMPRESS = "decompress"
@@ -18,7 +15,7 @@ THIS_FILE = path.basename(__file__)
 class Compression_GUI():
     def __init__(self) -> None:
         self.get_algorithm_data()
-        self.compresser = Master_Compressor(self.algorithms, ALGORITHMS_OBJECTS)
+        self.compresser = Master_Compressor()
         self.define_grid_locations()
         self.root = self.create_root()
         self.frm = self.create_frame()
@@ -32,6 +29,7 @@ class Compression_GUI():
         self.in_file_label_loc =            (0,0)
         self.in_file_entry_loc =            (1,0)
         self.select_in_file_button_loc =    (2,0)
+        self.select_in_folder_button_loc =  (3,0)
         self.out_folder_label_loc =         (0,1)
         self.out_folder_entry_loc =         (1,1)
         self.select_out_folder_button_loc = (2,1)
@@ -43,10 +41,6 @@ class Compression_GUI():
 
     def get_algorithm_data(self):
         self.algorithms = ALGORITHMS
-        # if not path.exists("algorithms/algorithms.json"):
-        #     raise FileNotFoundError("No algorithms json file found")
-        # with open("algorithms/algorithms.json") as f:
-        #     self.algorithms = json.load(f)
 
     def create_root(self):
         root = tk.Tk()
@@ -63,21 +57,23 @@ class Compression_GUI():
         run_button.grid(row=self.run_botton_loc[1], column=self.run_botton_loc[0], sticky="we")
 
     def create_outfile_entry_and_label(self):
-        out_folder_label = ttk.Label(self.frm, text="Out folder:")
+        out_folder_label = ttk.Label(self.frm, text="Destination:")
         out_folder_label.grid(row=self.out_folder_label_loc[1], column=self.out_folder_label_loc[0], sticky="e")
         out_folder_entry=ttk.Entry(self.frm)
         out_folder_entry.grid(row=self.out_folder_entry_loc[1], column=self.out_folder_entry_loc[0], sticky="we")
-        select_out_folder_button=ttk.Button(self.frm,text="Browse",command=partial(self.openFolder,out_folder_entry))
+        select_out_folder_button=ttk.Button(self.frm,text="Browse",command=partial(self.open_folder,out_folder_entry))
         select_out_folder_button.grid(row=self.select_out_folder_button_loc[1], column=self.select_out_folder_button_loc[0], sticky="we")
         return out_folder_entry
 
     def create_infile_entry_and_label(self):
-        in_file_label = ttk.Label(self.frm, text="In file:")
+        in_file_label = ttk.Label(self.frm, text="Compress:")
         in_file_label.grid(row=self.in_file_label_loc[1], column=self.in_file_label_loc[0], sticky="e")
         in_file_entry = ttk.Entry(self.frm)
         in_file_entry.grid(row=self.in_file_entry_loc[1], column=self.in_file_entry_loc[0], sticky="we")
-        select_in_file_button = ttk.Button(self.frm, text="Browse", command=partial(self.openfile, in_file_entry))
+        select_in_file_button = ttk.Button(self.frm, text="File", command=partial(self.open_file, in_file_entry))
         select_in_file_button.grid(row=self.select_in_file_button_loc[1], column=self.select_in_file_button_loc[0], sticky="we")
+        select_in_folder_button = ttk.Button(self.frm, text="Folder", command=partial(self.open_folder, in_file_entry))
+        select_in_folder_button.grid(row=self.select_in_folder_button_loc[1], column=self.select_in_folder_button_loc[0], sticky="we")
         return in_file_entry
 
     def set_up_run_type_radio_buttons(self):
@@ -114,11 +110,11 @@ class Compression_GUI():
         self.algorithm_box.set(self.old_algorithm)
         self.algorithm_box.grid(row=self.algorithm_box_loc[1], column=self.algorithm_box_loc[0], sticky="we")
 
-    def openfile(self, entryBox:ttk.Entry):
+    def open_file(self, entryBox:ttk.Entry):
         filename = filedialog.askopenfilename()
         self.update_entry(entryBox, filename)
 
-    def openFolder(self, entryBox:ttk.Entry):
+    def open_folder(self, entryBox:ttk.Entry):
         filename = filedialog.askdirectory()
         self.update_entry(entryBox, filename)
 
@@ -128,34 +124,62 @@ class Compression_GUI():
 
     def run(self):
         choice = self.run_type.get()
-        in_file = self.in_file_entry.get()
+        input_ = self.in_file_entry.get()
         out_folder = self.out_file_entry.get()
         if len(out_folder) == 0:
-            out_folder = path.dirname(in_file)
+            out_folder = path.dirname(input_)
         if choice == COMPRESS:
-            try:
-                if self.compresser.compress(in_file, out_folder, self.algorithm.get()):
-                    self.NewWindow(in_file + "\ncompressed successfully to\n" + out_folder)
-                else:
-                    self.NewWindow("Failed to compress. File is not compressible with this algorithm.")
-            except WrongFileType:
-                self.NewWindow("ERROR! Wrong file type!")
-            except FileNotFoundError:
-                self.NewWindow("ERROR! file not found!")
-            except Exception:
-                self.NewWindow("There was an error!")
+            self.run_choice(self.compress_file, self.compress_folder, [input_, out_folder])
         elif choice == DECOMPRESS:
-            try:
-                self.compresser.decompress(in_file, out_folder)
-                self.NewWindow(in_file + "\ndecompressed successfully to\n" + out_folder)
-            except WrongFileType:
-                self.NewWindow("ERROR! Wrong file type!")
-            except FileNotFoundError:
-                self.NewWindow("ERROR! file not found!")
-            except Exception:
-                self.NewWindow("There was an error!")
+            self.run_choice(self.decompress_file, self.decompress_folder, [input_, out_folder])
         else:
             self.NewWindow("ERROR: Compress/Decompress not selected!")
+
+    def run_choice(self, func_file, func_folder, args):
+        if path.isdir(args[0]):
+            func_folder(*args)
+        else:
+            func_file(*args)
+
+    def compress_file(self, input_, out_folder):
+        try:
+            if self.compresser.compress(input_, out_folder, self.algorithm.get()):
+                self.NewWindow(input_ + "\ncompressed successfully to\n" + out_folder)
+            else:
+                self.NewWindow("Failed to compress. File is not compressible with this algorithm.")
+        except WrongFileType:
+            self.NewWindow("ERROR! Wrong file type!")
+        except FileNotFoundError:
+            self.NewWindow("ERROR! file not found!")
+        except Exception:
+            self.NewWindow("There was an error!")
+
+    def compress_folder(self, input_, out_folder):
+        try:
+            if self.compresser.compress_folder(input_, out_folder, self.algorithm.get()):
+                self.NewWindow(input_ + "\ncompressed successfully to\n" + out_folder)
+            else:
+                self.NewWindow("Failed to compress. File is not compressible with this algorithm.")
+        except Exception:
+            self.NewWindow("There was an error!")
+
+    def decompress_folder(self, input_, out_folder):
+        try:
+            self.compresser.decompress_folder(input_, out_folder)
+            self.NewWindow(input_ + "\ndecompressed successfully to\n" + out_folder)
+        except Exception:
+            self.NewWindow("There was an error!")
+
+    def decompress_file(self, input_, out_folder):
+        try:
+            self.compresser.decompress(input_, out_folder)
+            self.NewWindow(input_ + "\ndecompressed successfully to\n" + out_folder)
+        except WrongFileType:
+            self.NewWindow("ERROR! Wrong file type!")
+        except FileNotFoundError:
+            self.NewWindow("ERROR! file not found!")
+        except Exception:
+            self.NewWindow("There was an error!")
 
     def NewWindow(self, text):
         text_len = max([len(line) for line in text.split('\n')])
