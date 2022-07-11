@@ -29,7 +29,7 @@ In order to run this program you will need the src directory from this project, 
 #### Basic instructions
 Once run, the program should bring up the Graphical User Interface (GUI). 
 
-From the GUI you should be able to use the browse buttons to select an input file/folder and an output folder. If you don't select an output folder, then the result will be placed in the same folder as the input file/folder. There should be a drop down menu to choose which algorithm for compression you would like to run, as well as an option to choose either compression or decompression.
+From the GUI you should be able to use the file/folder buttons to select an input file/folder respectively, and you can use the browse button to select an output folder. If you don't select an output folder, then the result will be placed in the same folder as the input file/folder. There should be a drop down menu to choose which algorithm for compression you would like to run, as well as an option to choose either compression or decompression.
 
 Once you have input those locations and settings, you should be able to click the run button, and a window will pop up with the results of the compression/decompression and the input path and output folder used.
 
@@ -44,10 +44,10 @@ Once you have input those locations and settings, you should be able to click th
 This project includes several python modules. The following is a list of them.
 * os 
 * sys
-* time 
+* time
+* shutil 
 * io 
 * functools
-* json
 * random 
 * math
 * tkinter
@@ -56,7 +56,6 @@ This project includes several python modules. The following is a list of them.
 * unittest for testing
 
 ### Architecture
-
 
 
 ### Testing
@@ -70,17 +69,14 @@ Some of the Unit tests also work as integration tests. Other integration test do
 #### System Testing
 System test documents can be found in the test folder. These documents include test cases with results for the tests we ran.
 
-### TODO
-### Requirements
-* be a .exe file
-* Create progress bar for compression and decompression
-* Folder compression
+### Future Work
 
-#### Both
-* Add button to GUI for folder compression or decide on how folder compression will work.
+* Introduce parallelism with multiprocessing for folder compression
+* Run all tests in the SRS
+* Update diagrams for architecture documentation
+* Create progress bar for compression and decompression
 
 #### ETHAN
-* Add comments and documentation
 
 #### JOSH
 * Test changes made to GUI

@@ -126,6 +126,9 @@ class Compression_GUI():
         choice = self.run_type.get()
         input_ = self.in_file_entry.get()
         out_folder = self.out_file_entry.get()
+        if input_ in out_folder:
+            self.NewWindow("ERROR! Destination for compressed folder cannot be inside the original folder!")
+            return
         if len(out_folder) == 0:
             out_folder = path.dirname(input_)
         if choice == COMPRESS:
@@ -190,10 +193,3 @@ class Compression_GUI():
 
     def start(self):
         self.root.mainloop()
-
-    
-if __name__ == "__main__":
-    gui = Compression_GUI()
-    # print(gui.file_extensions[".lorp"])
-    # print(gui.algorithms)
-    gui.start()

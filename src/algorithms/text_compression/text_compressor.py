@@ -1,11 +1,6 @@
-# TODO
-# Add docstrings
-# Create decompressors for each algorithm
-# Move/create constants for compressors
 from os import path, fstat, remove as os_remove
 from src.algorithms.text_compression.text_compression_algorithm import Text_Compression_Algorithm
 from src.basic_compressor import Basic_Compressor
-from time import monotonic
 
 COMPRESSION_FOLDER = "Research_Testing/random_textstring_files"
 
@@ -19,8 +14,6 @@ class Text_Compressor(Basic_Compressor):
         self._chunk_data = None
         self._bits_read = 0
         self._file_size = 0
-        self._print_time = 5
-        self._print_cur_time = 0
         
     def run(self, in_file:str, out_folder=None):
         """
@@ -48,14 +41,9 @@ class Text_Compressor(Basic_Compressor):
             # self.chunk_data = f.read(self.chunk_size)
             self._chunk_data = self._read_chunk_data(f, self.chunk_size)
 
-            
-            self._print_cur_time = monotonic()
 
             # As long as there is more data to read:
             while self._chunk_data:
-                if monotonic() - self._print_cur_time >= self._print_time:
-                    self._print_percentage_completion(2)
-                    self._print_cur_time = monotonic()
 
                 # Append additional chunk data till it has a full word at the end
                 self._update_chunk_data_to_end_of_word(f)
@@ -66,10 +54,7 @@ class Text_Compressor(Basic_Compressor):
                 with open(out_file, 'a') as new_f:
                     new_f.write(self.text_compr_alg.get_compressed_data())
                 
-                # Get new chunk data
-                # self.chunk_data = f.read(self.chunk_size)
                 self._chunk_data = self._read_chunk_data(f, self.chunk_size)
-            self._print_percentage_completion(2)
         
         if self._compressed_successfully(in_file, out_file):
             return True

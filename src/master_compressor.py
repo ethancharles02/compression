@@ -1,8 +1,6 @@
 from os import mkdir, path, listdir, remove, rmdir
 from shutil import copyfile
-from unittest import result
 
-from sympy import false
 from src.basic_compressor import WrongFileFormatError
 from src.algorithms.algorithms import ALGORITHMS, ALGORITHMS_OBJECTS
 
