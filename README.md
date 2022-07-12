@@ -54,6 +54,7 @@ This project includes several python modules. The following is a list of them.
 * Numpy (IMPORTANT must be: 1.20.1. The command is "pip install numpy==1.20.1")
 * BitArray
 * unittest for testing
+* multiprocessing
 
 ### Architecture
 
@@ -71,7 +72,6 @@ System test documents can be found in the test folder. These documents include t
 
 ### Future Work
 
-* Introduce parallelism with multiprocessing for folder compression
 * Run all tests in the SRS
 * Update diagrams for architecture documentation
 * Create progress bar for compression and decompression

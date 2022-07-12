@@ -13,6 +13,8 @@ OUTPUT_FOLDER = f"{TXT_FOLDER}/dump_files"
 
 class TestMaster_Compressor(TestCase):
     def setUp(self) -> None:
+        self.wipe_folder_contents(OUTPUT_FOLDER)
+        
         self.MCompressor = Master_Compressor()
         self.MCompressor.compressor_objects["Pattern Compression"][0].run = \
             mock.MagicMock(name="run", return_value=True)
@@ -22,19 +24,33 @@ class TestMaster_Compressor(TestCase):
             mock.MagicMock(name="run", return_value=True)
         self.MCompressor.compressor_objects["Text Compression"][1].run = \
             mock.MagicMock(name="run",return_value=True)
-    
+        
+        self.mock_pool = mock.sentinel
+        self.mock_pool.close = mock.MagicMock()
+        self.mock_pool.join = mock.MagicMock()
+        def side_effect(func, args, callback):
+            result = func(*args)
+            callback(result)
+        self.mock_pool.apply_async = mock.MagicMock(side_effect=side_effect)
+        self.MCompressor.create_pool = mock.MagicMock(name="create_pool", return_value=self.mock_pool)
+
         self.MCompressor.file_extensions[".lor"] = "Text Compression"
         self.MCompressor.compressor_objects["Text Compression"][0].compressed_file_extension = ".lor"
         self.MCompressor.compressor_objects["Text Compression"][1].compressed_file_extension = ".lor"
 
-    def tearDown(self) -> None:
-        for f in os.listdir(OUTPUT_FOLDER):
-            folder_path = os.path.join(OUTPUT_FOLDER, f)
-            if os.path.isdir(folder_path):
+    def wipe_folder_contents(self, folder):
+        for f in os.listdir(folder):
+            folder_path = os.path.join(folder, f)
+            if os.path.isfile(folder_path):
+                os.remove(folder_path)
+            elif os.path.isdir(folder_path):
                 os.rmdir(folder_path)
+                
+    def tearDown(self) -> None:
+        self.wipe_folder_contents(OUTPUT_FOLDER)
     
     def test_compress_folder_calls_compressor_run(self):
-        self.MCompressor.compress_folder(INPUT_FOLDER, OUTPUT_FOLDER)
+        self.MCompressor.compress_folder(INPUT_FOLDER, OUTPUT_FOLDER, "Text Compression")
         compressed_folder = os.path.join(OUTPUT_FOLDER, os.path.basename(os.path.normpath(INPUT_FOLDER + ".lor")))
         calls = [mock.call(INPUT_FOLDER + '\\' + "text_generic.txt",compressed_folder),
                  mock.call(INPUT_FOLDER + '\\' + "text_three_chunks.txt",compressed_folder),
@@ -42,7 +58,7 @@ class TestMaster_Compressor(TestCase):
         self.MCompressor.compressor_objects["Text Compression"][0].run.assert_has_calls(calls, any_order=False)
 
     def test_compress_folder_returns_true_when_compresses_some_file(self):
-        self.assertEqual(self.MCompressor.compress_folder(INPUT_FOLDER, OUTPUT_FOLDER), True)
+        self.assertEqual(self.MCompressor.compress_folder(INPUT_FOLDER, OUTPUT_FOLDER, "Text Compression"), True)
 
     def test_compress_folder_returns_false_when_no_file_is_compressed(self):
         self.MCompressor.copy_over = mock.MagicMock(return_value=True, name="copy_over")
@@ -50,7 +66,7 @@ class TestMaster_Compressor(TestCase):
             mock.MagicMock(name="run", return_value=False)
         self.MCompressor.compressor_objects["Text Compression"][1].run = \
             mock.MagicMock(name="run",return_value=False)
-        self.assertEqual(self.MCompressor.compress_folder(INPUT_FOLDER, OUTPUT_FOLDER), False)
+        self.assertEqual(self.MCompressor.compress_folder(INPUT_FOLDER, OUTPUT_FOLDER, "Text Compression"), False)
         self.MCompressor.copy_over.assert_has_calls([])
        
     def test_decompress_folder_calls_decompressor_run(self):
@@ -84,3 +100,21 @@ class TestMaster_Compressor(TestCase):
                  mock.call(in_folder + '\\' + "text_with_newlines.txt",decompressed_folder)]
         self.MCompressor.copy_over.assert_has_calls(calls, any_order=False)
 
+    def test_parallel_folder_compression(self):
+        self.MCompressor.compress_folder(INPUT_FOLDER, OUTPUT_FOLDER, "Text Compression")
+        compressed_folder = os.path.join(OUTPUT_FOLDER, os.path.basename(os.path.normpath(INPUT_FOLDER + ".lor")))
+        empty_call = [mock.call()]
+        calls = [mock.call(self.MCompressor.compress,
+                            args=(INPUT_FOLDER+'\\'+"text_generic.txt", compressed_folder, "Text Compression"), 
+                            callback=self.MCompressor.callback_result),
+                 mock.call(self.MCompressor.compress,
+                            args=(INPUT_FOLDER+'\\'+"text_three_chunks.txt", compressed_folder, "Text Compression"), 
+                            callback=self.MCompressor.callback_result),
+                 mock.call(self.MCompressor.compress,
+                            args=(INPUT_FOLDER+'\\'+"text_with_newlines.txt", compressed_folder, "Text Compression"), 
+                            callback=self.MCompressor.callback_result)]
+        
+        self.MCompressor.create_pool.assert_has_calls(empty_call)
+        self.mock_pool.apply_async.assert_has_calls(calls)
+        self.mock_pool.join.assert_has_calls(empty_call)
+        self.mock_pool.close.assert_has_calls(empty_call)
