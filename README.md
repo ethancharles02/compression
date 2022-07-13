@@ -2,11 +2,16 @@
 
 ## Contact
 Ethan Charles:
+
 GitHub: ethancharles02
+
 Email: ethan.charles02@gmail.com
 
+
 Josh Pettingill:
+
 GitHub: JoshPettingill
+
 Email: jpett4@gmail.com
 
 ## Purpose
