@@ -46,7 +46,8 @@ class Text_Compressor(Basic_Compressor):
             while self._chunk_data:
 
                 # Append additional chunk data till it has a full word at the end
-                self._update_chunk_data_to_end_of_word(f)
+                if not self._update_chunk_data_to_end_of_word(f):
+                    return False
 
                 # Compress the chunk 
                 self.text_compr_alg.compress(self._chunk_data)
@@ -105,8 +106,12 @@ class Text_Compressor(Basic_Compressor):
             # Updates the chunk data unless it hits the end of the file
             if new_character:
                 self._chunk_data = self._chunk_data + new_character
+                if len(self._chunk_data) > 512:
+                    return False
             else:
-                break
+                return True
+        return True
+
 
     def _get_out_file(self, in_file):
         """
