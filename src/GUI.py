@@ -159,7 +159,7 @@ class Compression_GUI():
 
     def compress_folder(self, input_, out_folder):
         try:
-            if self.compresser.compress_folder(input_, out_folder, self.algorithm.get())[0]:
+            if self.compresser.compress_folder(input_, out_folder, self.algorithm.get()):
                 self.NewWindow(input_ + "\ncompressed successfully to\n" + out_folder)
             else:
                 self.NewWindow("Failed to compress. File is not compressible with this algorithm.")
