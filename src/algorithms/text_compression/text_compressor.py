@@ -101,12 +101,15 @@ class Text_Compressor(Basic_Compressor):
         Continue to read in one character of data, until you reach the end of a word.
         """
         # Keeps reading in chunk data till the last character is a space
+        num_read = 0
         while self._chunk_data[-1] != " ":
-            new_character = self._read_chunk_data(f, 1)
+            num = 1
+            new_character = self._read_chunk_data(f, num)
+            num_read += num
             # Updates the chunk data unless it hits the end of the file
             if new_character:
                 self._chunk_data = self._chunk_data + new_character
-                if len(self._chunk_data) > 512:
+                if num_read > 512:
                     return False
             else:
                 return True
