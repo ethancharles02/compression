@@ -18,6 +18,7 @@ class Text_Decompressor(Basic_Compressor):
         the input file, and writes the decompressed versions to the 
         output file.
         """
+        self._decompressed_data.clear()
         input_file = path.basename(input_filepath)
 
         if not self._file_has_correct_file_extension(input_file):
@@ -149,4 +150,4 @@ class Text_Decompressor(Basic_Compressor):
         file that is passed in. 
         """
         f.write(self.get_decompressed_data().replace(" \n ", "\n"))
-        self._decompressed_data.clear()
+        
