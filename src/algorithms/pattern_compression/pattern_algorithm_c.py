@@ -1,4 +1,5 @@
 # TODO
+# Consider only looking ahead by powers of 2
 # Optimize compression
 # Create parent class for compression and decompression since so many of the methods are similar
 
