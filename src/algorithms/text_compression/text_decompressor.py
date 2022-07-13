@@ -148,4 +148,5 @@ class Text_Decompressor(Basic_Compressor):
         Formats the decompressed data, then writes it to the
         file that is passed in. 
         """
-        f.write(self.get_decompressed_data().replace(" \n ", "\n"))  
+        f.write(self.get_decompressed_data().replace(" \n ", "\n"))
+        self._decompressed_data.clear()

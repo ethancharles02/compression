@@ -15,7 +15,7 @@ THIS_FILE = path.basename(__file__)
 class Compression_GUI():
     def __init__(self) -> None:
         self.get_algorithm_data()
-        self.compresser = Master_Compressor()
+        self.compresser = Master_Compressor(run_in_parallel=True)
         self.define_grid_locations()
         self.root = self.create_root()
         self.frm = self.create_frame()

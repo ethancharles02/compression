@@ -1,7 +1,7 @@
 from os import mkdir, path, listdir, remove, rmdir
 from shutil import copyfile
 import multiprocessing as mp
-# from time import monotonic
+from time import monotonic
 
 from src.basic_compressor import WrongFileFormatError
 from src.algorithms.algorithms import ALGORITHMS, ALGORITHMS_OBJECTS
@@ -100,7 +100,7 @@ class Master_Compressor(object):
         return mp.Pool(self.processor_count)
 
     def run_function_on_files_in_folder(self, func, folder:str, args:list):
-        # old_time = monotonic()
+        old_time = monotonic()
         if self.run_in_parallel:
             folder_pool = self.create_pool()
             for f in listdir(folder):
@@ -113,7 +113,7 @@ class Master_Compressor(object):
                 result = func(path.join(folder, f), *args)
                 self.results.append(result)
 
-        # print(f"Time to completion{' with parallelism' if self.run_in_parallel else ''}: {monotonic() - old_time}")
+        print(f"Time to completion{' with parallelism' if self.run_in_parallel else ''}: {monotonic() - old_time}")
 
         final_result = any([result[0] for result in self.results])
         if not final_result:
