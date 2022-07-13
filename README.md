@@ -63,6 +63,7 @@ This project includes several python modules. The following is a list of them.
 
 ### Architecture
 
+<img title="The application architecture" alt="The application architecture" src="Diagrams\Compression_Architecture.drawio.png">
 
 ### Testing
 
