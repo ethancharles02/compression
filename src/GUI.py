@@ -66,7 +66,7 @@ class Compression_GUI():
         return out_folder_entry
 
     def create_infile_entry_and_label(self):
-        in_file_label = ttk.Label(self.frm, text="Compress:")
+        in_file_label = ttk.Label(self.frm, text="Input:")
         in_file_label.grid(row=self.in_file_label_loc[1], column=self.in_file_label_loc[0], sticky="e")
         in_file_entry = ttk.Entry(self.frm)
         in_file_entry.grid(row=self.in_file_entry_loc[1], column=self.in_file_entry_loc[0], sticky="we")
